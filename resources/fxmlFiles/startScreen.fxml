@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.StartScreen">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.StartScreen">
    <children>
       <GridPane prefHeight="300.0" prefWidth="540.0">
         <columnConstraints>
@@ -72,7 +72,7 @@
                   <TextArea fx:id="_nameDetails" editable="false" prefHeight="200.0" prefWidth="200.0" promptText="Select a name from the left to begin!" BorderPane.alignment="CENTER" />
                </center>
                <bottom>
-                  <Button fx:id="_switch" mnemonicParsing="false" prefHeight="10.0" prefWidth="189.0" text="Add to Playlist!" BorderPane.alignment="CENTER">
+                  <Button fx:id="_switch" onAction="#sendNameToPlaylist" mnemonicParsing="false" prefHeight="10.0" prefWidth="189.0" text="Add to Playlist!" BorderPane.alignment="CENTER">
                      <font>
                         <Font size="15.0" />
                      </font>

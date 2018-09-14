@@ -1,11 +1,11 @@
-package sample;
+package controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.util.Callback;
+import main.Name;
 
 import java.io.File;
 
@@ -64,8 +64,33 @@ public class StartScreen {
 
     @FXML
     private void nameSelected() {
+        // Error handling for empty names list
+        if(_names.getSelectionModel().isEmpty()) {
+            return;
+        }
+
         _currentName.setText(_names.getSelectionModel().getSelectedItem().toString());
         _nameDetails.setText(((Name)_names.getSelectionModel().getSelectedItem()).getDetails());
     }
 
+    @FXML
+    private void sendNameToPlaylist(){
+
+        ObservableList selectedItems = _names.getSelectionModel().getSelectedItems();
+        ObservableList playlistItems = _playlist.getItems();
+
+        // Error handling for no selections or an empty names list
+        if(_names.getSelectionModel().isEmpty()) {
+            return;
+        } else if(selectedItems.isEmpty()){
+            return;
+        }
+
+        // Add only selections that weren't originally on the playlist
+        for(Object o: selectedItems){
+            if(!playlistItems.contains(o)){
+                playlistItems.add(o);
+            }
+        }
+    }
 }
