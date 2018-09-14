@@ -7,12 +7,14 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.StartScreen">
    <children>
       <GridPane prefHeight="300.0" prefWidth="540.0">
         <columnConstraints>
@@ -58,14 +60,26 @@
                   <Font size="15.0" />
                </font>
             </TitledPane>
-            <TextArea fx:id="_nameDetails" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <top>
+                  <Label fx:id="_currentName" BorderPane.alignment="CENTER">
+                     <font>
+                        <Font size="23.0" />
+                     </font>
+                  </Label>
+               </top>
+               <center>
+                  <TextArea fx:id="_nameDetails" editable="false" prefHeight="200.0" prefWidth="200.0" promptText="Select a name from the left to begin!" BorderPane.alignment="CENTER" />
+               </center>
+               <bottom>
+                  <Button fx:id="_switch" mnemonicParsing="false" prefHeight="10.0" prefWidth="189.0" text="Add to Playlist!" BorderPane.alignment="CENTER">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
+               </bottom>
+            </BorderPane>
          </children>
       </GridPane>
    </children>
-   <columnConstraints>
-      <ColumnConstraints />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints />
-   </rowConstraints>
-</GridPane>
+</AnchorPane>

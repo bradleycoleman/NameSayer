@@ -22,6 +22,10 @@ public class Name {
 
     }
 
+    public String getDetails() {
+        return "Attempts: \nRating:";
+    }
+
     public String toString() {
         return _name;
     }
