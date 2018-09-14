@@ -32,7 +32,11 @@ public class Controller {
      */
     @FXML
     private void initialize() {
-
-        
+   
+    }
+    
+    @FXML
+    private void practiceAction() {
+    	System.out.println("end my life");
     }
 }

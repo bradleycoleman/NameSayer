@@ -28,7 +28,7 @@
                <font>
                   <Font size="17.0" />
                </font></Text>
-            <Button fx:id="practice" mnemonicParsing="false" onAction="#handleButtonAction" text="Practice" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button fx:id="practice" mnemonicParsing="false" onAction="#practiceAction" text="Practice" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Button mnemonicParsing="false" text="Test Mic" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
             <CheckBox mnemonicParsing="false" text="Shuffle" GridPane.rowIndex="2" />
             <ScrollPane hbarPolicy="NEVER" GridPane.rowIndex="1">
