@@ -33,7 +33,7 @@
                <content>
                   <ScrollPane hbarPolicy="NEVER">
                      <content>
-                        <ListView fx:id="_names" />
+                        <ListView fx:id="_names" onMouseClicked="#nameSelected" prefHeight="205.0" prefWidth="169.0" />
                      </content>
                   </ScrollPane>
                </content>
@@ -48,9 +48,9 @@
             </Label>
             <TitledPane alignment="CENTER" animated="false" collapsible="false" text="Current Playlist" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <content>
-                  <ScrollPane hbarPolicy="NEVER">
+                  <ScrollPane hbarPolicy="NEVER" prefWidth="169.0">
                      <content>
-                        <ListView fx:id="_playlist" />
+                        <ListView fx:id="_playlist" prefHeight="205.0" prefWidth="169.0" />
                      </content>
                   </ScrollPane>
                </content>
@@ -58,14 +58,7 @@
                   <Font size="15.0" />
                </font>
             </TitledPane>
-            <TitledPane fx:id="_currentName" animated="false" collapsible="false" prefHeight="263.0" prefWidth="189.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <font>
-                  <Font size="15.0" />
-               </font>
-               <content>
-                  <TextArea fx:id="_nameDetails" prefHeight="200.0" prefWidth="200.0" />
-               </content>
-            </TitledPane>
+            <TextArea fx:id="_nameDetails" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
       </GridPane>
    </children>
