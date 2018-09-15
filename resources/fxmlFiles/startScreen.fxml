@@ -28,7 +28,7 @@
           <RowConstraints maxHeight="90.0" minHeight="0.0" prefHeight="23.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="_practice" mnemonicParsing="false" text="Practice" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Button fx:id="_practice" mnemonicParsing="false" onAction="#startPractice" text="Practice" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
             <Button fx:id="_testMic" mnemonicParsing="false" text="Test Mic" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
             <CheckBox fx:id="_shuffle" mnemonicParsing="false" text="Shuffle" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
             <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="354.0" prefWidth="171.0" text="Names" textAlignment="CENTER" GridPane.rowIndex="1">

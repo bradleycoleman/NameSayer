@@ -1,11 +1,10 @@
 package controllers;
 
-import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import main.Main;
 import main.Name;
 
 import java.io.File;
@@ -147,4 +146,12 @@ public class StartScreen {
         _names.setItems(FXCollections.observableArrayList(filteredNames));
     }
 
+    /**
+     * Method to start the playScreen upon pressing of the practice button.
+     */
+    @FXML
+    private void startPractice(){
+        Main.SECONDARY_STAGE.show();
+        Main.PRIMARY_STAGE.hide();
+    }
 }
