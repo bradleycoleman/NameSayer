@@ -1,10 +1,10 @@
 package controllers;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.util.Callback;
 import main.Name;
 
 import java.io.File;
@@ -19,7 +19,8 @@ public class StartScreen {
     @FXML private TextArea _nameDetails;
     @FXML private ListView _playlist;
     @FXML private ListView _names;
-
+    private ListView _currentList = null;
+    private ListView _otherList = null;
 
 
     /**
@@ -37,60 +38,68 @@ public class StartScreen {
         }
         _names.setItems(names);
 
-        // Allows the ListView to show Strings of the names, while each index refers
-        // to a Name object
-        _names.setCellFactory(new Callback<ListView<Name>, ListCell<Name>>(){
-
+        _names.getSelectionModel().getSelectedItems().addListener(new ListChangeListener() {
             @Override
-            public ListCell<Name> call(ListView<Name> p) {
-
-                ListCell<Name> cell = new ListCell<Name>(){
-
-                    @Override
-                    protected void updateItem(Name t, boolean bln) {
-                        super.updateItem(t, bln);
-                        if (t != null) {
-                            setText(t.toString());
-                        }
-                    }
-
-                };
-
-                return cell;
+            public void onChanged(Change c) {
+                if (c.next() & c.wasAdded()) {
+                    swapList(_names,_playlist);
+                }
             }
         });
 
+        _playlist.getSelectionModel().getSelectedItems().addListener(new ListChangeListener() {
+            @Override
+            public void onChanged(Change c) {
+                if (c.next() & c.wasAdded()) {
+                    swapList(_playlist,_names);
+                }
+            }
+        });
     }
 
-    @FXML
-    private void nameSelected() {
-        // Error handling for empty names list
-        if(_names.getSelectionModel().isEmpty()) {
-            return;
+    /**
+     * This method will make the currently selected name whatever is selected in the "selectedList", while
+     * deselecting the other list (if it was selected) to avoid confusion.
+     * @param selectedList The list that was last clicked on
+     * @param oldList The other list
+     */
+    private void swapList(ListView selectedList, ListView oldList) {
+        _currentName.setText(selectedList.getSelectionModel().getSelectedItem().toString());
+        _nameDetails.setText(((Name) selectedList.getSelectionModel().getSelectedItem()).getDetails());
+        // If the other list was selected, deselect.
+        if (oldList.getSelectionModel().getSelectedItems() != null) {
+            oldList.getSelectionModel().clearSelection();
         }
+        if (selectedList == _playlist) {
+            _switch.setText("Remove from Playlist");
 
-        _currentName.setText(_names.getSelectionModel().getSelectedItem().toString());
-        _nameDetails.setText(((Name)_names.getSelectionModel().getSelectedItem()).getDetails());
+        } else {
+            _switch.setText("Add to Playlist");
+        }
+        _currentList = selectedList;
+        _otherList = oldList;
     }
 
+    /**
+     * This will swap the currently selected name from the list it is currently in, to the other list.
+     */
     @FXML
-    private void sendNameToPlaylist(){
-
-        ObservableList selectedItems = _names.getSelectionModel().getSelectedItems();
-        ObservableList playlistItems = _playlist.getItems();
-
-        // Error handling for no selections or an empty names list
-        if(_names.getSelectionModel().isEmpty()) {
-            return;
-        } else if(selectedItems.isEmpty()){
-            return;
-        }
-
-        // Add only selections that weren't originally on the playlist
-        for(Object o: selectedItems){
-            if(!playlistItems.contains(o)){
-                playlistItems.add(o);
+    private void swapName(){
+        // Checking if no name/list is currently selected
+        if (_currentList == null) {
+            _nameDetails.setText("No name selected");
+            _currentName.setText("");
+        } else {
+            // the current list may be empty if all items are moved to the other
+            if (_currentList.getItems().isEmpty()) {
+                _nameDetails.setText("No name selected");
+                _currentName.setText("");
+            } else {
+                _otherList.getItems().add(_currentList.getSelectionModel().getSelectedItem());
+                _currentList.getItems().remove(_currentList.getSelectionModel().getSelectedItem());
             }
         }
     }
+
+
 }

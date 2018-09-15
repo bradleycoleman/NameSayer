@@ -35,7 +35,7 @@
                <content>
                   <ScrollPane hbarPolicy="NEVER">
                      <content>
-                        <ListView fx:id="_names" onMouseClicked="#nameSelected" prefHeight="205.0" prefWidth="169.0" />
+                        <ListView fx:id="_names" prefHeight="205.0" prefWidth="169.0" />
                      </content>
                   </ScrollPane>
                </content>
@@ -72,7 +72,7 @@
                   <TextArea fx:id="_nameDetails" editable="false" prefHeight="200.0" prefWidth="200.0" promptText="Select a name from the left to begin!" BorderPane.alignment="CENTER" />
                </center>
                <bottom>
-                  <Button fx:id="_switch" onAction="#sendNameToPlaylist" mnemonicParsing="false" prefHeight="10.0" prefWidth="189.0" text="Add to Playlist!" BorderPane.alignment="CENTER">
+                  <Button fx:id="_switch" mnemonicParsing="false" onAction="#swapName" prefHeight="10.0" prefWidth="189.0" text="Add to Playlist!" BorderPane.alignment="CENTER">
                      <font>
                         <Font size="15.0" />
                      </font>
