@@ -1,5 +1,6 @@
 package controllers;
 
+import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -8,10 +9,7 @@ import javafx.scene.control.*;
 import main.Name;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 
 public class StartScreen {
@@ -21,11 +19,14 @@ public class StartScreen {
     @FXML private CheckBox _shuffle;
     @FXML private Label _currentName;
     @FXML private TextArea _nameDetails;
-    @FXML private ListView _playlist;
-    @FXML private ListView _names;
-    private ListView _currentList = null;
-    private ListView _otherList = null;
+    @FXML private ListView<Name> _playlist;
+    @FXML private ListView<Name> _names;
+    @FXML private TextField _searchBar;
 
+    private ListView<Name> _currentList = null;
+    private ListView<Name> _otherList = null;
+
+    private List<Name> _allNamesList = null;
 
     /**
      * Initializes the controller class.
@@ -46,6 +47,7 @@ public class StartScreen {
             }
         });
 
+        _allNamesList = names;
         _names.setItems(FXCollections.observableArrayList(names));
 
         _names.getSelectionModel().getSelectedItems().addListener(new ListChangeListener() {
@@ -100,12 +102,12 @@ public class StartScreen {
             _nameDetails.setText("No name selected");
             _currentName.setText("");
         } else {
-            // the current list may be empty if all items are moved to the other
+            // The current list may be empty if all items are moved to the other.
             if (_currentList.getItems().isEmpty()) {
                 _nameDetails.setText("No name selected");
                 _currentName.setText("");
             } else {
-                // Adding the selected name to the other list, then removing it from the current list
+                // Adding the selected name to the other list, then removing it from the current list.
                 _otherList.getItems().add(_currentList.getSelectionModel().getSelectedItem());
                 _currentList.getItems().remove(_currentList.getSelectionModel().getSelectedItem());
 
@@ -115,5 +117,34 @@ public class StartScreen {
         }
     }
 
+    /**
+     * Method to filter the names list by the contents of the search bar.
+     */
+    @FXML
+    private void searchNamesList(){
+
+        List<Name> filteredNames = new ArrayList<Name>();
+
+        _names.setItems(FXCollections.observableArrayList(_allNamesList));
+
+        // Add all names that contain the text from the search bar
+        for(Name n: _names.getItems()){
+            if(n.toString().toLowerCase().contains(_searchBar.getText().toLowerCase())){
+                filteredNames.add(n);
+            }
+        }
+
+        // Sort with priority of the search bar text appearing earlier in the name.
+        filteredNames.sort(new Comparator<Name>() {
+            @Override
+            public int compare(Name o1, Name o2) {
+                String i = o1.toString().toLowerCase().indexOf(_searchBar.getText().toLowerCase())+"";
+                String j = o2.toString().toLowerCase().indexOf(_searchBar.getText().toLowerCase())+"";
+                return (i.compareTo(j));
+            }
+        });
+
+        _names.setItems(FXCollections.observableArrayList(filteredNames));
+    }
 
 }

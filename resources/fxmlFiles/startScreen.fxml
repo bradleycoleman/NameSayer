@@ -4,8 +4,8 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -31,36 +31,28 @@
             <Button fx:id="_practice" mnemonicParsing="false" text="Practice" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
             <Button fx:id="_testMic" mnemonicParsing="false" text="Test Mic" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
             <CheckBox fx:id="_shuffle" mnemonicParsing="false" text="Shuffle" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-            <TitledPane alignment="CENTER" animated="false" collapsible="false" text="Names" textAlignment="CENTER" GridPane.rowIndex="1">
-               <content>
-                  <ScrollPane hbarPolicy="NEVER">
-                     <content>
-                        <ListView fx:id="_names" prefHeight="205.0" prefWidth="169.0" />
-                     </content>
-                  </ScrollPane>
-               </content>
+            <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="354.0" prefWidth="171.0" text="Names" textAlignment="CENTER" GridPane.rowIndex="1">
                <font>
                   <Font size="15.0" />
                </font>
+               <content>
+                  <ListView fx:id="_names" prefHeight="205.0" prefWidth="154.0" />
+               </content>
             </TitledPane>
             <Label alignment="CENTER" text="Name Sayer" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <TitledPane alignment="CENTER" animated="false" collapsible="false" text="Current Playlist" GridPane.columnIndex="2" GridPane.rowIndex="1">
-               <content>
-                  <ScrollPane hbarPolicy="NEVER" prefWidth="169.0">
-                     <content>
-                        <ListView fx:id="_playlist" prefHeight="205.0" prefWidth="169.0" />
-                     </content>
-                  </ScrollPane>
-               </content>
+            <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="452.0" prefWidth="180.0" text="Current Playlist" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <font>
                   <Font size="15.0" />
                </font>
+               <content>
+                  <ListView fx:id="_playlist" prefHeight="205.0" prefWidth="169.0" />
+               </content>
             </TitledPane>
-            <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <BorderPane prefHeight="171.0" prefWidth="189.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <top>
                   <Label fx:id="_currentName" BorderPane.alignment="CENTER">
                      <font>
@@ -69,7 +61,7 @@
                   </Label>
                </top>
                <center>
-                  <TextArea fx:id="_nameDetails" editable="false" prefHeight="200.0" prefWidth="200.0" promptText="Select a name from the left to begin!" BorderPane.alignment="CENTER" />
+                  <TextArea fx:id="_nameDetails" editable="false" prefHeight="117.0" prefWidth="157.0" promptText="Select a name from the left to begin!" BorderPane.alignment="CENTER" />
                </center>
                <bottom>
                   <Button fx:id="_switch" mnemonicParsing="false" onAction="#swapName" prefHeight="10.0" prefWidth="189.0" text="Add to Playlist!" BorderPane.alignment="CENTER">
@@ -79,6 +71,7 @@
                   </Button>
                </bottom>
             </BorderPane>
+            <TextField fx:id="_searchBar" onAction="#searchNamesList" onKeyReleased="#searchNamesList" onKeyTyped="#searchNamesList" prefHeight="25.0" prefWidth="46.0" promptText="Search for name" />
          </children>
       </GridPane>
    </children>
