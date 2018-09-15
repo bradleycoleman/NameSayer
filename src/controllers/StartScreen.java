@@ -8,6 +8,10 @@ import javafx.scene.control.*;
 import main.Name;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 
 public class StartScreen {
@@ -29,14 +33,20 @@ public class StartScreen {
     @FXML
     private void initialize() {
         // Initializing the list of names
-        ListView<Name> listView = new ListView<>();
         File folder = new File("names");
         File[] listOfFiles = folder.listFiles();
-        ObservableList<Name> names = FXCollections.observableArrayList();
+        List<Name> names = new ArrayList();
         for (File file : listOfFiles) {
             names.add(new Name(file.getName()));
         }
-        _names.setItems(names);
+        names.sort(new Comparator<Name>() {
+            @Override
+            public int compare(Name o1, Name o2) {
+                return (o1.compareTo(o2));
+            }
+        });
+
+        _names.setItems(FXCollections.observableArrayList(names));
 
         _names.getSelectionModel().getSelectedItems().addListener(new ListChangeListener() {
             @Override
@@ -95,8 +105,12 @@ public class StartScreen {
                 _nameDetails.setText("No name selected");
                 _currentName.setText("");
             } else {
+                // Adding the selected name to the other list, then removing it from the current list
                 _otherList.getItems().add(_currentList.getSelectionModel().getSelectedItem());
                 _currentList.getItems().remove(_currentList.getSelectionModel().getSelectedItem());
+
+                // Only the other list needs to be re-sorted, as it has been added to.
+                _otherList.setItems(FXCollections.observableArrayList(_otherList.getItems().sorted()));
             }
         }
     }

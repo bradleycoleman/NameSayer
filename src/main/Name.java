@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
  * Represents a name in the database.
  * Holds information about the past attempts and rating.
  */
-public class Name {
+public class Name implements Comparable<Object> {
     private String _name;
     private int _rating;
 
@@ -20,6 +20,14 @@ public class Name {
             _name = fileName;
         }
 
+    }
+
+    /**
+     * Names are sorted alphabetically regardless of case
+     */
+    @Override
+    public int compareTo(Object n) {
+        return (toString().toLowerCase().compareTo(n.toString().toLowerCase()));
     }
 
     public String getDetails() {
