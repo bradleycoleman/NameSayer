@@ -23,12 +23,12 @@ public class Main extends Application {
         PLAY_SCREEN = FXMLLoader.load(getClass().getClassLoader().getResource("fxmlFiles/playScreen.fxml"));
 
         PRIMARY_STAGE.setTitle("Name Sayer");
-        PRIMARY_STAGE.setScene(new Scene(START_SCREEN, 540,300));
+        PRIMARY_STAGE.setScene(new Scene(START_SCREEN, 600,400));
         PRIMARY_STAGE.setResizable(false);
         PRIMARY_STAGE.show();
 
         SECONDARY_STAGE.setTitle("Practice makes perfect!");
-        SECONDARY_STAGE.setScene(new Scene(PLAY_SCREEN,540,300));
+        SECONDARY_STAGE.setScene(new Scene(PLAY_SCREEN,600,400));
         SECONDARY_STAGE.setResizable(false);
     }
 

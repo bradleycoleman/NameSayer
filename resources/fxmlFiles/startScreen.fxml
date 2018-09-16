@@ -16,16 +16,16 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.StartScreen">
    <children>
-      <GridPane prefHeight="300.0" prefWidth="540.0">
+      <GridPane prefHeight="400.0" prefWidth="600.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="214.0" minWidth="10.0" prefWidth="169.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="270.0" minWidth="10.0" prefWidth="188.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="270.0" minWidth="10.0" prefWidth="179.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints maxHeight="42.0" minHeight="3.0" prefHeight="27.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="235.0" minHeight="10.0" prefHeight="235.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="90.0" minHeight="0.0" prefHeight="23.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="54.0" minHeight="0.0" prefHeight="27.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="367.0" minHeight="10.0" prefHeight="343.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="90.0" minHeight="0.0" prefHeight="29.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Button fx:id="_practice" mnemonicParsing="false" onAction="#startPractice" text="Practice" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
@@ -52,7 +52,7 @@
                   <ListView fx:id="_playlist" prefHeight="205.0" prefWidth="169.0" />
                </content>
             </TitledPane>
-            <BorderPane prefHeight="171.0" prefWidth="189.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <BorderPane prefHeight="337.0" prefWidth="209.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <top>
                   <Label fx:id="_currentName" BorderPane.alignment="CENTER">
                      <font>

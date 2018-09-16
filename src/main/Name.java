@@ -9,9 +9,11 @@ import java.util.regex.Pattern;
  */
 public class Name implements Comparable<Object> {
     private String _name;
+    private String _fileName;
     private int _rating;
 
     public Name(String fileName) {
+        _fileName = fileName;
         Pattern p = Pattern.compile("_([a-zA-Z]*)\\.wav");
         Matcher m = p.matcher(fileName);
         if (m.find()) {
@@ -37,4 +39,6 @@ public class Name implements Comparable<Object> {
     public String toString() {
         return _name;
     }
+
+    public String getFile() { return _fileName; }
 }

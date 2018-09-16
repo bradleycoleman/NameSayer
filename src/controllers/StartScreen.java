@@ -151,7 +151,12 @@ public class StartScreen {
      */
     @FXML
     private void startPractice(){
-        Main.SECONDARY_STAGE.show();
-        Main.PRIMARY_STAGE.hide();
+        if (_playlist.getItems().isEmpty()) {
+            _currentName.setText("");
+            _nameDetails.setText("Add names to your playlist \nfirst!");
+        } else {
+            Main.SECONDARY_STAGE.show();
+            Main.PRIMARY_STAGE.hide();
+        }
     }
 }
