@@ -155,8 +155,7 @@ public class StartScreen {
             _currentName.setText("");
             _nameDetails.setText("Add names to your playlist \nfirst!");
         } else {
-            Main.SECONDARY_STAGE.show();
-            Main.PRIMARY_STAGE.hide();
+            Main.startPractice(_names.getItems());
         }
     }
 }
