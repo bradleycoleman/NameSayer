@@ -15,6 +15,9 @@ public class Main extends Application {
 
     private Stage _window;
     private Scene startScene, playScene;
+    private StartScreenController _startScreenController;
+    private PlayScreenController _playScreenController;
+    private NameSayerModel _nameSayerModel;
 
     @Override
     public void start(Stage window) throws Exception{
@@ -32,13 +35,13 @@ public class Main extends Application {
         window.setTitle("Name Sayer");
 
         // Inject the data model into PlayScreen and StartScreen
-        NameSayerModel nameSayerModel = new NameSayerModel();
+        _nameSayerModel = new NameSayerModel();
 
-        StartScreenController startScreenController = (StartScreenController) startPaneLoader.getController();
-        PlayScreenController playScreenController = (PlayScreenController) playPaneLoader.getController();
+        _startScreenController = (StartScreenController) startPaneLoader.getController();
+        _playScreenController = (PlayScreenController) playPaneLoader.getController();
 
-        startScreenController.initializeData(nameSayerModel, this);
-        playScreenController.initializeData(nameSayerModel, this);
+        _startScreenController.initializeData(_nameSayerModel, this);
+        _playScreenController.initializeData(_nameSayerModel, this);
 
         // The first scene will be the playlist editing scene
         window.setScene(startScene);
@@ -56,6 +59,7 @@ public class Main extends Application {
 
     public void setSceneToPlay(){
         _window.setScene(playScene);
+        _playScreenController.startPractice(_nameSayerModel.getPlaylist());
     }
 
     public static void main(String[] args) {

@@ -129,6 +129,7 @@ public class StartScreenController {
             _nameDetails.setText("Add names to your playlist \nfirst!");
         } else {
             // Set scene to start scene
+            _nameSayerModel.setPlaylist(_playlistView.getItems());
             _main.setSceneToPlay();
         }
     }

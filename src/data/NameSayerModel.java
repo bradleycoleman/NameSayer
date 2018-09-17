@@ -46,6 +46,9 @@ public class NameSayerModel {
     public List<Name> getPlaylist(){
         return _playlist;
     }
+    public void setPlaylist(List<Name> playlist) {
+        _playlist = playlist;
+    }
     public List<Name> getFilteredNamesList(){
         return _filteredNameslist;
     }
