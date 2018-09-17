@@ -1,5 +1,8 @@
 package main;
 
+import controllers.PlayScreenController;
+import controllers.StartScreenController;
+import data.NameSayerModel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,33 +13,50 @@ import java.util.List;
 
 public class Main extends Application {
 
-    public static Stage PRIMARY_STAGE;
-    public static Scene START_SCENE;
-    public static Parent START_SCREEN;
-    public static Parent PLAY_SCREEN;
-    private static List<Name> _names;
+    private Stage _window;
+    private Scene startScene, playScene;
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage window) throws Exception{
+        _window = window;
 
-        PRIMARY_STAGE = primaryStage;
+        // Load all the scenes
+        FXMLLoader startPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/startScreen.fxml"));
+        Parent startPane = startPaneLoader.load();
+        startScene = new Scene(startPane, 600, 400);
 
-        START_SCREEN = FXMLLoader.load(getClass().getClassLoader().getResource("fxmlFiles/startScreen.fxml"));
-        PLAY_SCREEN = FXMLLoader.load(getClass().getClassLoader().getResource("fxmlFiles/playScreen.fxml"));
+        FXMLLoader playPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/playScreen.fxml"));
+        Parent playPane = playPaneLoader.load();
+        playScene = new Scene(playPane, 600, 400);
 
-        PRIMARY_STAGE.setTitle("Name Sayer");
-        START_SCENE = new Scene(START_SCREEN, 600,400);
-        PRIMARY_STAGE.setScene(START_SCENE);
-        PRIMARY_STAGE.setResizable(false);
-        PRIMARY_STAGE.show();
+        window.setTitle("Name Sayer");
+
+        // Inject the data model into PlayScreen and StartScreen
+        NameSayerModel nameSayerModel = new NameSayerModel();
+
+        StartScreenController startScreenController = (StartScreenController) startPaneLoader.getController();
+        PlayScreenController playScreenController = (PlayScreenController) playPaneLoader.getController();
+
+        startScreenController.initializeData(nameSayerModel, this);
+        playScreenController.initializeData(nameSayerModel, this);
+
+        // The first scene will be the playlist editing scene
+        window.setScene(startScene);
+        window.setResizable(false);
+        window.show();
     }
 
-    public static void startPractice(List<Name> names) {
-        _names = names;
-        PRIMARY_STAGE.setScene(new Scene(PLAY_SCREEN,600,400));
+    public Stage getStage(){
+        return _window;
     }
 
-    public static List<Name> getNames() { return _names; }
+    public void setSceneToStart(){
+        _window.setScene(startScene);
+    }
+
+    public void setSceneToPlay(){
+        _window.setScene(playScene);
+    }
 
     public static void main(String[] args) {
         launch(args);
