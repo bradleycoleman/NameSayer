@@ -55,9 +55,9 @@ public class NameSayerModel {
                     }
                     // Finding all the recorded attempts of this name
                     for (File attempt : listOfAttemptsData) {
-                        Pattern attemptp = Pattern.compile(name + "_");
-                        Matcher attemptm = attemptp.matcher(attempt.getName());
-                        if (attemptm.find()) {
+                        Pattern attemptpat = Pattern.compile(name + "_");
+                        Matcher attemptmat = attemptpat.matcher(attempt.getName());
+                        if (attemptmat.find()) {
                             attempts.add(attempt);
                         }
                     }

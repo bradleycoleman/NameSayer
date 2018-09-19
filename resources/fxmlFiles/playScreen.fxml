@@ -62,11 +62,6 @@
                   <Label fx:id="_timer" text="0s" GridPane.columnIndex="2" />
                </children>
             </GridPane>
-            <ChoiceBox fx:id="_chooser" prefWidth="150.0" GridPane.rowIndex="3">
-               <GridPane.margin>
-                  <Insets left="5.0" />
-               </GridPane.margin>
-            </ChoiceBox>
             <Polygon fx:id="_play" fill="#1eff1e" onMouseClicked="#playRecording" rotate="90.0" scaleX="0.3" scaleY="0.3" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
               <points>
                 <Double fx:value="-50.0" />
@@ -102,6 +97,11 @@
                   <Insets bottom="-22.0" left="90.0" right="-50.0" />
                </GridPane.margin>
             </Slider>
+            <ChoiceBox fx:id="_chooser" prefWidth="150.0" GridPane.rowIndex="3">
+               <GridPane.margin>
+                  <Insets left="5.0" />
+               </GridPane.margin>
+            </ChoiceBox>
          </children>
       </GridPane>
    </children>

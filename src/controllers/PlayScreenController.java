@@ -3,13 +3,17 @@ package controllers;
 import data.FileCommands;
 import data.NameSayerModel;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import javafx.util.StringConverter;
 import main.Main;
 import data.Name;
 
@@ -56,6 +60,9 @@ public class PlayScreenController {
     private enum State {IDLE, PLAYING, RECORDING}
     private Timer _timeWorker;
 
+    @FXML
+    private void initialize() {
+    }
 
     public void initializeData(NameSayerModel nameSayerModel, Main main){
         _nameSayerModel = nameSayerModel;
@@ -75,8 +82,26 @@ public class PlayScreenController {
 
         _index = index;
         _name = _playlist.get(_index);
-        _chooser = new ChoiceBox(FXCollections.observableArrayList(_name.getFiles(), new Separator(), _name.getAttempts()));
-        _chooser.setValue(_name.getFiles().get(0));
+        _chooser.setConverter(new StringConverter<File>() {
+            @Override
+            public String toString(File file) {
+                if (file.toString().contains("userdata/attempts")) {
+                    return ("Practice Attempt: " + file.getName());
+                } else if (_name.getFiles().size() > 1) {
+                    return ("Database Recording: " + file.getName());
+                }
+                return ("Database Recording");
+            }
+
+            @Override
+            public File fromString(String string) {
+                return null;
+            }
+        });
+        List<File> all = _name.getFiles();
+        all.addAll(_name.getAttempts());
+        ObservableList items = FXCollections.observableArrayList(all);
+        _chooser.setItems(items);
         _nameNumber.setText("Name " + (_index + 1) +" of " + _playlist.size());
         _currentName.setText(_playlist.get(_index).toString());
         if (_index < 1) {

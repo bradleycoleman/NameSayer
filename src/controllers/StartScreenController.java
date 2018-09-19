@@ -30,10 +30,6 @@ public class StartScreenController {
 
     private NameSayerModel _nameSayerModel = null;
 
-    @FXML
-    private void initialize(){
-
-    }
 
     /**
      * Initializes the controller class.
