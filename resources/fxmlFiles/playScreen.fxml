@@ -67,7 +67,7 @@
                   <Insets left="5.0" />
                </GridPane.margin>
             </ChoiceBox>
-            <Polygon fx:id="_play" fill="#1eff1e" rotate="90.0" scaleX="0.3" scaleY="0.3" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+            <Polygon fx:id="_play" fill="#1eff1e" onMouseClicked="#playRecording" rotate="90.0" scaleX="0.3" scaleY="0.3" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
               <points>
                 <Double fx:value="-50.0" />
                 <Double fx:value="40.0" />

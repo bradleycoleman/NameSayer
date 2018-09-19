@@ -59,7 +59,7 @@ public class Main extends Application {
 
     public void setSceneToPlay(){
         _window.setScene(playScene);
-        _playScreenController.startPractice(_nameSayerModel.getPlaylist());
+        _playScreenController.startPractice();
     }
 
     public static void main(String[] args) {

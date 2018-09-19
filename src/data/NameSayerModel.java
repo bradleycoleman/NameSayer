@@ -23,7 +23,7 @@ public class NameSayerModel {
         File folder = new File("names");
         File[] listOfFiles = folder.listFiles();
         for (File file : listOfFiles) {
-            _database.add(new Name(file.getName()));
+            _database.add(new Name(file));
             System.out.println();
         }
         _database.sort(new Comparator<Name>() {
@@ -45,9 +45,6 @@ public class NameSayerModel {
     }
     public List<Name> getPlaylist(){
         return _playlist;
-    }
-    public void setPlaylist(List<Name> playlist) {
-        _playlist = playlist;
     }
     public List<Name> getFilteredNamesList(){
         return _filteredNameslist;

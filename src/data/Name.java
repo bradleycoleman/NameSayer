@@ -1,5 +1,6 @@
 package data;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,17 +10,17 @@ import java.util.regex.Pattern;
  */
 public class Name implements Comparable<Object> {
     private String _name;
-    private String _fileName;
+    private File _file;
     private int _rating;
 
-    public Name(String fileName) {
-        _fileName = fileName;
+    public Name(File file) {
+        _file = file;
         Pattern p = Pattern.compile("_([a-zA-Z]*)\\.wav");
-        Matcher m = p.matcher(fileName);
+        Matcher m = p.matcher(file.getName());
         if (m.find()) {
             _name = m.group(1);
         } else {
-            _name = fileName;
+            _name = file.getName();
         }
 
     }
@@ -40,5 +41,5 @@ public class Name implements Comparable<Object> {
         return _name;
     }
 
-    public String getFile() { return _fileName; }
+    public File getFile() { return _file; }
 }

@@ -101,6 +101,16 @@ public class StartScreenController {
             _nameDetails.setText("No name selected");
             _currentName.setText("");
         } else {
+
+            // Update the NameSayerModel on changes to the lists
+            if(_currentView == _nameslistView){
+                _nameSayerModel.getPlaylist().add(_currentView.getSelectionModel().getSelectedItem());
+                _nameSayerModel.getNameslist().remove(_currentView.getSelectionModel().getSelectedItem());
+            } else {
+                _nameSayerModel.getNameslist().add(_currentView.getSelectionModel().getSelectedItem());
+                _nameSayerModel.getPlaylist().remove(_currentView.getSelectionModel().getSelectedItem());
+            }
+
             // Adding the selected name to the other list, then removing it from the current list.
             _otherView.getItems().add(_currentView.getSelectionModel().getSelectedItem());
             _currentView.getItems().remove(_currentView.getSelectionModel().getSelectedItem());
@@ -129,7 +139,6 @@ public class StartScreenController {
             _nameDetails.setText("Add names to your playlist \nfirst!");
         } else {
             // Set scene to start scene
-            _nameSayerModel.setPlaylist(_playlistView.getItems());
             _main.setSceneToPlay();
         }
     }

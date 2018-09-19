@@ -6,13 +6,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
+import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import main.Main;
 import data.Name;
-
 import java.util.List;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 /**
  * Edit this, along with the playScreen.fxml file, to make the play screen
@@ -38,13 +40,15 @@ public class PlayScreenController {
     private NameSayerModel _nameSayerModel;
     private Main _main;
 
+    private Name _nameFile;
+
     public void initializeData(NameSayerModel nameSayerModel, Main main){
         _nameSayerModel = nameSayerModel;
         _main = main;
     }
 
-    public void startPractice(List<Name> playlist) {
-        _playlist = playlist;
+    public void startPractice() {
+        _playlist = _nameSayerModel.getPlaylist();
         setIndex(0);
     }
 
@@ -54,6 +58,7 @@ public class PlayScreenController {
      */
     private void setIndex(int index) {
         _index = index;
+        _nameFile = _playlist.get(_index);
         _nameNumber.setText("Name " + (_index + 1) +" of " + _playlist.size());
         _currentName.setText(_playlist.get(_index).toString());
         if (_index < 1) {
@@ -77,8 +82,25 @@ public class PlayScreenController {
     @FXML
     private void prevName() {
         _index--;
-        setIndex(_index--);
+        setIndex(_index);
     }
+
+    @FXML
+    private void playRecording(){
+
+        Thread soundThread = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                String uriString = _nameFile.getFile().toURI().toString();
+                AudioClip sound = new AudioClip(uriString);
+                System.out.println(sound.getSource());
+                sound.play();
+                System.out.println("Sound played.");
+            }
+        });
+        soundThread.run();
+    }
+
     /**
      * Button method for returning to the start screen.
      */
