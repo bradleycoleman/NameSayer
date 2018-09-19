@@ -189,14 +189,22 @@ public class PlayScreenController {
     }
 
     /**
-     * Plays the current name
+     * Plays the current name.
      */
     @FXML
     private void playRecording(){
+
         // If the last playback is still playing, end it
         if (_soundThread != null) {
             _soundThread.interrupt();
         }
+
+        // If there is nothing selected, then tell the user to select something.
+        if(_chooser.getSelectionModel().getSelectedItem()==null){
+            System.out.println("It's empty fam, pick a recording");
+            return;
+        }
+
         setState(State.PLAYING);
         _soundThread = new Thread(new Runnable(){
             @Override

@@ -22,12 +22,19 @@ public class NameSayerModel {
 
 
     public NameSayerModel(){
+
         // load the database from the folder
         File namesData = new File("names");
+        if(!namesData.exists()){
+            namesData.mkdirs();
+        }
         List<File> listOfNamesData = new ArrayList<>();
         listOfNamesData = Arrays.asList(namesData.listFiles());
         // load the attempts from the folder
         File attemptsData = new File("userdata/attempts");
+        if(!attemptsData.exists()){
+            attemptsData.mkdirs();
+        }
         List<File> listOfAttemptsData = new ArrayList<>();
         listOfAttemptsData = Arrays.asList(attemptsData.listFiles());
 

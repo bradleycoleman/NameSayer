@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
@@ -28,9 +29,18 @@
           <RowConstraints maxHeight="90.0" minHeight="0.0" prefHeight="29.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="_practice" mnemonicParsing="false" onAction="#startPractice" text="Practice" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-            <Button fx:id="_testMic" mnemonicParsing="false" text="Test Mic" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-            <CheckBox fx:id="_shuffle" mnemonicParsing="false" text="Shuffle" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Button fx:id="_practice" mnemonicParsing="false" onAction="#startPractice" text="Practice" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+            <Button fx:id="_testMic" mnemonicParsing="false" text="Test Mic" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+            <CheckBox fx:id="_shuffle" mnemonicParsing="false" text="Shuffle" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></CheckBox>
             <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="354.0" prefWidth="171.0" text="Names" textAlignment="CENTER" GridPane.rowIndex="1">
                <font>
                   <Font size="15.0" />
@@ -61,17 +71,26 @@
                   </Label>
                </top>
                <center>
-                  <TextArea fx:id="_nameDetails" editable="false" prefHeight="117.0" prefWidth="157.0" promptText="Select a name from the left to begin!" BorderPane.alignment="CENTER" />
+                  <TextArea fx:id="_nameDetails" editable="false" prefHeight="117.0" prefWidth="157.0" promptText="Select a name from the left to begin!" BorderPane.alignment="CENTER">
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor></TextArea>
                </center>
                <bottom>
                   <Button fx:id="_switch" mnemonicParsing="false" onAction="#swapName" prefHeight="10.0" prefWidth="189.0" text="Add to Playlist!" BorderPane.alignment="CENTER">
                      <font>
                         <Font size="15.0" />
                      </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </Button>
                </bottom>
             </BorderPane>
-            <TextField fx:id="_searchBar" onAction="#searchNamesList" onKeyReleased="#searchNamesList" onKeyTyped="#searchNamesList" prefHeight="25.0" prefWidth="46.0" promptText="Search for name" />
+            <TextField fx:id="_searchBar" onAction="#searchNamesList" onKeyReleased="#searchNamesList" onKeyTyped="#searchNamesList" prefHeight="25.0" prefWidth="46.0" promptText="Search for name">
+               <cursor>
+                  <Cursor fx:constant="TEXT" />
+               </cursor></TextField>
          </children>
       </GridPane>
    </children>
