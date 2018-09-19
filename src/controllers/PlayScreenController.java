@@ -6,15 +6,18 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
-import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import main.Main;
 import data.Name;
+import java.io.IOException;
 import java.util.List;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * Edit this, along with the playScreen.fxml file, to make the play screen
@@ -91,13 +94,21 @@ public class PlayScreenController {
         Thread soundThread = new Thread(new Runnable(){
             @Override
             public void run() {
-                String uriString = _nameFile.getFile().toURI().toString();
-                AudioClip sound = new AudioClip(uriString);
-                System.out.println(sound.getSource());
-                sound.play();
-                System.out.println("Sound played.");
+                AudioInputStream audio;
+                try {
+                    audio = AudioSystem.getAudioInputStream(_nameFile.getFile());
+                    Clip clip = AudioSystem.getClip();
+                    clip.open(audio);
+                    clip.start();
+                } catch (UnsupportedAudioFileException | IOException e) {
+                    e.printStackTrace();
+                } catch (LineUnavailableException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
+
         soundThread.run();
     }
 
