@@ -56,13 +56,13 @@
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Circle fx:id="_record" fill="#ff1f1f" radius="14.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0" GridPane.columnIndex="1" />
+                  <Circle fx:id="_record" fill="#ff1f1f" onMouseClicked="#recordAttempt" radius="14.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0" GridPane.columnIndex="1" />
                   <Label fx:id="_recordPrompt" text="Record Attempt:" GridPane.halignment="CENTER" />
-                  <Rectangle fx:id="_stop" arcHeight="5.0" arcWidth="5.0" disable="true" fill="#ff1f1f" height="28.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0" visible="false" width="28.0" GridPane.columnIndex="1" />
-                  <Label fx:id="_timer" text="0:00" GridPane.columnIndex="2" />
+                  <Rectangle fx:id="_stop" arcHeight="5.0" arcWidth="5.0" disable="true" fill="#ff1f1f" height="28.0" onMouseClicked="#stopAttempt" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0" visible="false" width="28.0" GridPane.columnIndex="1" />
+                  <Label fx:id="_timer" text="0s" GridPane.columnIndex="2" />
                </children>
             </GridPane>
-            <ChoiceBox prefWidth="150.0" GridPane.rowIndex="3">
+            <ChoiceBox fx:id="_chooser" prefWidth="150.0" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets left="5.0" />
                </GridPane.margin>

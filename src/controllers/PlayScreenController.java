@@ -1,18 +1,26 @@
 package controllers;
 
+import data.FileCommands;
 import data.NameSayerModel;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import main.Main;
 import data.Name;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -37,13 +45,17 @@ public class PlayScreenController {
     @FXML private Button _next;
     @FXML private Label _ratingPrompt;
     @FXML private Slider _rating;
+    @FXML private ChoiceBox<File> _chooser;
 
+    private Thread _soundThread;
     private List<Name> _playlist;
     private int _index;
     private NameSayerModel _nameSayerModel;
     private Main _main;
+    private Name _name;
+    private enum State {IDLE, PLAYING, RECORDING}
+    private Timer _timeWorker;
 
-    private Name _nameFile;
 
     public void initializeData(NameSayerModel nameSayerModel, Main main){
         _nameSayerModel = nameSayerModel;
@@ -60,8 +72,11 @@ public class PlayScreenController {
      * @param index int which signifies the index of the name to be practiced.
      */
     private void setIndex(int index) {
+
         _index = index;
-        _nameFile = _playlist.get(_index);
+        _name = _playlist.get(_index);
+        _chooser = new ChoiceBox(FXCollections.observableArrayList(_name.getFiles(), new Separator(), _name.getAttempts()));
+        _chooser.setValue(_name.getFiles().get(0));
         _nameNumber.setText("Name " + (_index + 1) +" of " + _playlist.size());
         _currentName.setText(_playlist.get(_index).toString());
         if (_index < 1) {
@@ -73,6 +88,24 @@ public class PlayScreenController {
             _next.setDisable(true);
         } else {
             _next.setDisable(false);
+        }
+    }
+
+    private void setState(State state) {
+        if (state == State.PLAYING) {
+            _record.setDisable(true);
+        } else if (state == State.RECORDING){
+            _recordPrompt.setText("Stop Recording:");
+            _record.setVisible(false);
+            _record.setDisable(true);
+            _stop.setVisible(true);
+            _stop.setDisable(false);
+        } else {
+            _recordPrompt.setText("Record Attempt:");
+            _record.setDisable(false);
+            _record.setVisible(true);
+            _stop.setVisible(false);
+            _stop.setDisable(true);
         }
     }
 
@@ -88,15 +121,64 @@ public class PlayScreenController {
         setIndex(_index);
     }
 
+    /**
+     * Starts a background task to record the name using ffmpeg, and another to count every second
+     * and indicate to the user how long they've been recording for.
+     */
+    @FXML
+    private void recordAttempt() {
+        Task<Void> recordTask = new Task<Void>() {
+            @Override
+            protected Void call() {
+                try {
+                    _name.addAttempt();
+                } catch (InterruptedException e) {
+                    // if FileCommands.cancelRecording is called, an InterruptedException
+                    // will be thrown
+                    done();
+                }
+                return null;
+            }
+        };
+        TimerTask timerTask = new TimerTask() {
+            private int seconds = 0;
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                    _timer.setText(seconds + "s");
+                });
+                seconds++;
+            }
+        };
+        _timeWorker = new Timer();
+        _timeWorker.schedule(timerTask,1000l,1000l);
+        setState(State.RECORDING);
+        new Thread(recordTask).start();
+    }
+
+    @FXML
+    private void stopAttempt() {
+        FileCommands.cancelRecording();
+        setState(State.IDLE);
+        _timeWorker.cancel();
+    }
+
+    /**
+     * Plays the current name
+     */
     @FXML
     private void playRecording(){
-
-        Thread soundThread = new Thread(new Runnable(){
+        // If the last playback is still playing, end it
+        if (_soundThread != null) {
+            _soundThread.interrupt();
+        }
+        setState(State.PLAYING);
+        _soundThread = new Thread(new Runnable(){
             @Override
             public void run() {
                 AudioInputStream audio;
                 try {
-                    audio = AudioSystem.getAudioInputStream(_nameFile.getFile());
+                    audio = AudioSystem.getAudioInputStream(_chooser.getValue());
                     Clip clip = AudioSystem.getClip();
                     clip.open(audio);
                     clip.start();
@@ -109,7 +191,7 @@ public class PlayScreenController {
             }
         });
 
-        soundThread.run();
+        _soundThread.run();
     }
 
     /**
@@ -117,6 +199,10 @@ public class PlayScreenController {
      */
     @FXML
     private void returnToStartScreen(){
+        // If the last playback is still playing, end it
+        if (_soundThread != null) {
+            _soundThread.interrupt();
+        }
         _main.setSceneToStart();
     }
 
