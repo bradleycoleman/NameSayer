@@ -1,6 +1,8 @@
 package data;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,7 +33,15 @@ public class Name implements Comparable<Object> {
     }
 
     public void addAttempt() throws InterruptedException {
-        FileCommands.record(_name + "_" + _attempts.size());
+        DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy_HH:mm:ss");
+        String attemptName = (_name + "_" + dateFormat.format(new Date()));
+        FileCommands.record(attemptName);
+        _attempts.add(new File("userdata/attempts/" + attemptName + ".wav"));
+    }
+
+    public void deleteAttempt(File attempt) {
+        _attempts.remove(attempt);
+        FileCommands.deleteAudio(attempt);
     }
 
     /**

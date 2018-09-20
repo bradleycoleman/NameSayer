@@ -51,6 +51,7 @@ public class PlayScreenController {
     @FXML private Slider _rating;
     @FXML private ChoiceBox<File> _chooser;
 
+    private ObservableList _items;
     private Thread _soundThread;
     private List<Name> _playlist;
     private int _index;
@@ -98,10 +99,32 @@ public class PlayScreenController {
                 return null;
             }
         });
-        List<File> all = _name.getFiles();
+        List<File> all = new ArrayList<>();
+        all.addAll(_name.getFiles());
         all.addAll(_name.getAttempts());
-        ObservableList items = FXCollections.observableArrayList(all);
-        _chooser.setItems(items);
+        _items = FXCollections.observableArrayList();
+        _items.addAll(_name.getFiles());
+        _items.addAll(_name.getAttempts());
+        _chooser.setItems(_items);
+        _chooser.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<File>() {
+            @Override
+            public void changed(ObservableValue<? extends File> observable, File oldValue, File newValue) {
+                if (newValue.toString().contains("userdata/attempts")) {
+                    _delete.setDisable(false);
+                    _delete.setVisible(true);
+                    _rating.setVisible(false);
+                    _rating.setDisable(true);
+                    _ratingPrompt.setVisible(false);
+                } else {
+                    _delete.setVisible(false);
+                    _delete.setDisable(true);
+                    _rating.setDisable(false);
+                    _rating.setVisible(true);
+                    _ratingPrompt.setVisible(true);
+                }
+            }
+        });
+        _chooser.setValue(_name.getFiles().get(0));
         _nameNumber.setText("Name " + (_index + 1) +" of " + _playlist.size());
         _currentName.setText(_playlist.get(_index).toString());
         if (_index < 1) {
@@ -158,11 +181,14 @@ public class PlayScreenController {
                 try {
                     _name.addAttempt();
                 } catch (InterruptedException e) {
-                    // if FileCommands.cancelRecording is called, an InterruptedException
-                    // will be thrown
-                    done();
+                    e.printStackTrace();
                 }
                 return null;
+            }
+
+            protected void done() {
+                // Add the attempt which was just recorded.
+                _items.add(_name.getAttempts().get(_name.getAttempts().size()-1));
             }
         };
         TimerTask timerTask = new TimerTask() {
@@ -225,6 +251,18 @@ public class PlayScreenController {
         });
 
         _soundThread.run();
+    }
+
+    @FXML
+    private void deleteRecording() {
+        File toDelete = _chooser.getValue();
+        if (toDelete.toString().contains("userdata/attempts")) {
+            _name.deleteAttempt(toDelete);
+            // Setting the selection to a database recording
+            _chooser.setValue(_name.getFiles().get(0));
+            // Removing deleted item as option
+            _chooser.getItems().remove(toDelete);
+        }
     }
 
     /**

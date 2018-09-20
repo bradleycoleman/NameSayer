@@ -40,6 +40,8 @@ public class NameSayerModel {
 
         List<String> readNames = new ArrayList<>();
         // For every name this finds all names that match it to make a list of files for the Name constructor
+        // get number of files, n. while i < n, read listofnamesdata(0)
+
         for (File file1 : listOfNamesData) {
             List<File> database = new ArrayList<>();
             List<File> attempts = new ArrayList<>();

@@ -40,14 +40,14 @@ public class FileCommands {
     }
 
     /**
-     * This method will delete the audio file related to the name entered, if it exists.
-     * @param name [name].wav will be deleted from "creations"
+     * This method will delete the audio file
+     * @param audio the file to be deleted
      */
-    public static void deleteAudio(String name) {
+    public static void deleteAudio(File audio) {
         try {
-            Files.deleteIfExists(Paths.get("userdata/attempts/"+name+".wav"));
+            Files.deleteIfExists(Paths.get(audio.getPath()));
         } catch (DirectoryNotEmptyException x) {
-            System.err.format("%s not empty%n", Paths.get("userdata/attempts/"+name+".wav"));
+            System.err.format("%s not empty%n", Paths.get(audio.getPath()));
         } catch (IOException x) {
             System.err.println(x);
         }
