@@ -22,7 +22,6 @@ public class Main extends Application {
     @Override
     public void start(Stage window) throws Exception{
         _window = window;
-
         // Load all the scenes
         FXMLLoader startPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/startScreen.fxml"));
         Parent startPane = startPaneLoader.load();
