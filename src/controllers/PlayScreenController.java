@@ -276,6 +276,12 @@ public class PlayScreenController {
         }
     }
 
+    @FXML
+    private void updateRating(){
+        _nameSayerModel.updateDatabaseRating(_chooser.getValue().getPath(), (int)_rating.getValue());
+        _nameSayerModel.updateRatingsFile(_chooser.getValue().getPath(), (int)_rating.getValue());
+    }
+
     /**
      * Button method for returning to the start screen.
      */
@@ -290,6 +296,5 @@ public class PlayScreenController {
         }
         _main.setSceneToStart();
     }
-
 
 }

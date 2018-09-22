@@ -72,4 +72,13 @@ public class Name implements Comparable<Object> {
 
     public List<File> getAttempts() {return _attempts;}
     public List<File> getFiles() { return _files; }
+
+    public void updateRatingOfFile(File file, int rating){
+        _filesToRatings.replace(file, rating);
+        _rating = rating;
+    }
+
+    public void setRating(int rating){
+        _rating = rating;
+    }
 }
