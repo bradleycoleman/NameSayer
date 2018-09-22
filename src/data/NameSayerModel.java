@@ -2,7 +2,9 @@ package data;
 
 import javafx.collections.FXCollections;
 
-import java.io.File;
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -30,6 +32,7 @@ public class NameSayerModel {
         }
         List<File> listOfNamesData = new ArrayList<>();
         listOfNamesData = Arrays.asList(namesData.listFiles());
+
         // load the attempts from the folder
         File attemptsData = new File("userdata/attempts");
         if(!attemptsData.exists()){
@@ -38,10 +41,11 @@ public class NameSayerModel {
         List<File> listOfAttemptsData = new ArrayList<>();
         listOfAttemptsData = Arrays.asList(attemptsData.listFiles());
 
+
         List<String> readNames = new ArrayList<>();
+
         // For every name this finds all names that match it to make a list of files for the Name constructor
         // get number of files, n. while i < n, read listofnamesdata(0)
-
         for (File file1 : listOfNamesData) {
             List<File> database = new ArrayList<>();
             List<File> attempts = new ArrayList<>();
@@ -86,7 +90,22 @@ public class NameSayerModel {
             }
         });
 
-        _nameslist = _database;
+        // Create ratings.txt if it has hasn't already been created.
+        try{
+            // load all the ratings data
+            File ratingsData = new File("userdata/ratings.txt");
+            if(!ratingsData.exists()) {
+                ratingsData.createNewFile();
+                writeAllRatingsData();
+            }
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
+        // Add all the rating data to the database
+        readAllRatingsData();
+
+        _nameslist.addAll(_database);
     }
 
     // Getters
@@ -126,5 +145,98 @@ public class NameSayerModel {
                 return (i.compareTo(j));
             }
         });
+    }
+
+    /**
+     * This method will initialize all ratings data into the ratings txt.
+     */
+    public void writeAllRatingsData(){
+
+        BufferedWriter writer = null;
+        try{
+            File ratingsFile = new File("userdata/ratings.txt");
+            writer = new BufferedWriter(new FileWriter(ratingsFile, true));
+
+            for(Name n: _database){
+                for(File f: n.getFiles()){
+                    writer.write(f.getPath()+" "+5+"\n");
+                }
+            }
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This method will update the ratings data of the database.
+     */
+    public void readAllRatingsData(){
+        BufferedReader reader = null;
+        try{
+            File ratingsFile = new File("userdata/ratings.txt");
+            reader = new BufferedReader(new FileReader(ratingsFile));
+
+            String line;
+            while((line = reader.readLine())!= null){
+                String[] splitLine = line.split(" ");
+                updateDatabaseRating(splitLine[0], Integer.parseInt(splitLine[1]));
+            }
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void updateDatabaseRating(String path, int rating){
+
+        for(Name n:_database){
+            for(File f: n.getFiles()){
+                if(f.getPath().equals(path)){
+                    n.updateRatingOfFile(f, rating);
+                    n.setRating(rating);
+                }
+            }
+        }
+    }
+
+    public void updateRatingsFile(String path, int rating){
+        Thread ratingsFileEditThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                BufferedReader reader = null;
+                FileWriter writer = null;
+                FileWriter fileClearer = null;
+                try{
+                    File ratingsFile = new File("userdata/ratings.txt");
+
+                    reader = new BufferedReader(new FileReader(ratingsFile));
+
+                    List<String> newFile = new ArrayList<String>();
+                    String line;
+                    while((line = reader.readLine())!= null){
+                        String[] splitLine = line.split(" ");
+                        if(splitLine[0].equals(path)){
+                            newFile.add(path+" "+rating);
+                        } else {
+                            newFile.add(line);
+                        }
+                    }
+
+                    PrintWriter pw = new PrintWriter("userdata/ratings.txt");
+                    pw.close();
+
+                    writer = new FileWriter("userdata/ratings.txt", true);
+                    for(String s: newFile){
+                        writer.write(s+"\n");
+                    }
+
+                    writer.close();
+                } catch(IOException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        ratingsFileEditThread.start();
     }
 }
