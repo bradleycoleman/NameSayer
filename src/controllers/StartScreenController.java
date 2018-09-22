@@ -142,4 +142,9 @@ public class StartScreenController {
             _main.setSceneToPlay();
         }
     }
+
+    @FXML
+    private void startTest() {
+        _main.setSceneToTest();
+    }
 }

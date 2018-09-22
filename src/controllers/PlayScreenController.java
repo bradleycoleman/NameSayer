@@ -10,15 +10,9 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
 import main.Main;
 import data.Name;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,10 +22,12 @@ import java.util.TimerTask;
 import javax.sound.sampled.*;
 
 /**
- * Edit this, along with the playScreen.fxml file, to make the play screen
+ * This controls the playback/practice screen of the app. Users can listen to recordings of each of the
+ * names in the playlist they determined on the start screen. They can then add their own attempts of the
+ * names, which are saved, and can be deleted later. They can update the ratings of the database recording(s)
+ * of the names. These ratings are saved to a text file, and displayed to future users when they select the name.
  */
 public class PlayScreenController {
-    @FXML private Button _testButton;
     @FXML private Button _delete;
     @FXML private Label _nameNumber;
     @FXML private Label _currentName;
@@ -57,10 +53,6 @@ public class PlayScreenController {
     private Timer _timeWorker;
     private AudioInputStream _audio;
     private Clip _clip;
-
-    @FXML
-    private void initialize() {
-    }
 
     public void initializeData(NameSayerModel nameSayerModel, Main main){
         _nameSayerModel = nameSayerModel;

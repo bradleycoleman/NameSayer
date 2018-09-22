@@ -32,7 +32,7 @@
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor></Button>
-            <Button fx:id="_testMic" mnemonicParsing="false" text="Test Mic" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+            <Button fx:id="_testMic" mnemonicParsing="false" onAction="#startTest" text="Test Mic" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor></Button>

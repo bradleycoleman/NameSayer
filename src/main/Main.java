@@ -2,6 +2,7 @@ package main;
 
 import controllers.PlayScreenController;
 import controllers.StartScreenController;
+import controllers.TestScreenController;
 import data.NameSayerModel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -14,9 +15,10 @@ import java.util.List;
 public class Main extends Application {
 
     private Stage _window;
-    private Scene startScene, playScene;
+    private Scene startScene, playScene, testScene;
     private StartScreenController _startScreenController;
     private PlayScreenController _playScreenController;
+    private TestScreenController _testScreenController;
     private NameSayerModel _nameSayerModel;
 
     @Override
@@ -31,13 +33,18 @@ public class Main extends Application {
         Parent playPane = playPaneLoader.load();
         playScene = new Scene(playPane, 600, 400);
 
+        FXMLLoader testPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/testScreen.fxml"));
+        Parent testPane = testPaneLoader.load();
+        testScene = new Scene(testPane, 600, 400);
+
         window.setTitle("Name Sayer");
 
         // Inject the data model into PlayScreen and StartScreen
         _nameSayerModel = new NameSayerModel();
 
-        _startScreenController = (StartScreenController) startPaneLoader.getController();
-        _playScreenController = (PlayScreenController) playPaneLoader.getController();
+        _startScreenController = startPaneLoader.getController();
+        _playScreenController = playPaneLoader.getController();
+        _testScreenController = testPaneLoader.getController();
 
         _startScreenController.initializeData(_nameSayerModel, this);
         _playScreenController.initializeData(_nameSayerModel, this);
@@ -59,6 +66,11 @@ public class Main extends Application {
     public void setSceneToPlay(){
         _window.setScene(playScene);
         _playScreenController.startPractice();
+    }
+
+    public void setSceneToTest() {
+        _window.setScene(testScene);
+        _testScreenController.startTest(this);
     }
 
     public static void main(String[] args) {

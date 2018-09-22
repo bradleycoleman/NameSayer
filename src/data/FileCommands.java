@@ -33,6 +33,26 @@ public class FileCommands {
     }
 
     /**
+     * Using bash, this records five seconds of audio, saving the result to a file to userdata/test.wav
+     */
+    public static void recordTest() throws InterruptedException {
+        // Making a directory for the test, will not make directory if it already exists.
+        new File("userdata").mkdirs();
+
+        // Recording until the process is cancelled
+        try {
+            ProcessBuilder recordingProcessBuilder = new ProcessBuilder("bash", "-c", "ffmpeg -f alsa -i default -t 5 test.wav");
+            recordingProcessBuilder.directory(new File("userdata"));
+            _recordingProcess = recordingProcessBuilder.start();
+            _recordingProcess.waitFor();
+            _recordingProcess.destroy();
+        }
+        catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+
+    /**
      * This method ends the recording process in bash
      */
     public static void cancelRecording() {

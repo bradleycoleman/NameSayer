@@ -76,7 +76,7 @@
                      </graphic>
                   </Button>
                   <Label fx:id="_recordPrompt" text="Record Attempt:" GridPane.halignment="CENTER" />
-                  <Label fx:id="_timer" text="0s" GridPane.columnIndex="2" />
+                  <Label fx:id="_timer" text="0s" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
                </children>
             </GridPane>
             <ProgressBar fx:id="_progressIndicator" prefWidth="200.0" progress="0.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
