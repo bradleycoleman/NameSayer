@@ -278,6 +278,7 @@ public class PlayScreenController {
 
     @FXML
     private void updateRating(){
+        System.out.println((int)_rating.getValue());
         _nameSayerModel.updateDatabaseRating(_chooser.getValue().getPath(), (int)_rating.getValue());
         _nameSayerModel.updateRatingsFile(_chooser.getValue().getPath(), (int)_rating.getValue());
     }
