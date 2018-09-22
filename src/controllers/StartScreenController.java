@@ -16,7 +16,7 @@ public class StartScreenController {
     @FXML private Button _practice;
     @FXML private Button _testMic;
     @FXML private Button _switch;
-    @FXML private CheckBox _shuffle;
+    @FXML private Button _shuffle;
     @FXML private Label _currentName;
     @FXML private TextArea _nameDetails;
     @FXML private ListView<Name> _playlistView;
@@ -41,6 +41,8 @@ public class StartScreenController {
         _nameslistView.setItems(FXCollections.observableArrayList(_nameSayerModel.getNameslist()));
         _playlistView.setItems(FXCollections.observableArrayList(_nameSayerModel.getPlaylist()));
 
+        // When a name from one of the lists is selected, the information displayed in the middle changes to reflect
+        // the name selected (done by swapList() method)
         _nameslistView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener() {
             @Override
             public void onChanged(Change c) {
@@ -89,31 +91,27 @@ public class StartScreenController {
     @FXML
     private void swapName(){
         // Checking if no name/list is currently selected
-        if (_currentView == null) {
+        if (_currentView == null || _currentView.getItems().isEmpty()) {
             _nameDetails.setText("No name selected");
             _currentName.setText("");
-        } else if (_currentView.getItems().isEmpty()) {
-            // The current list may be empty if all items are moved to the other.
-            _nameDetails.setText("No name selected");
-            _currentName.setText("");
-        } else {
-
-            // Update the NameSayerModel on changes to the lists
-            if(_currentView == _nameslistView){
-                _nameSayerModel.getPlaylist().add(_currentView.getSelectionModel().getSelectedItem());
-                _nameSayerModel.getNameslist().remove(_currentView.getSelectionModel().getSelectedItem());
-            } else {
-                _nameSayerModel.getNameslist().add(_currentView.getSelectionModel().getSelectedItem());
-                _nameSayerModel.getPlaylist().remove(_currentView.getSelectionModel().getSelectedItem());
-            }
-
-            // Adding the selected name to the other list, then removing it from the current list.
-            _otherView.getItems().add(_currentView.getSelectionModel().getSelectedItem());
-            _currentView.getItems().remove(_currentView.getSelectionModel().getSelectedItem());
-
-            // Only the other list needs to be re-sorted, as it has been added to.
-            _otherView.setItems(FXCollections.observableArrayList(_otherView.getItems().sorted()));
+            return;
         }
+        // Update the NameSayerModel on changes to the lists
+        if (_currentView == _nameslistView) {
+            _nameSayerModel.getPlaylist().add(_currentView.getSelectionModel().getSelectedItem());
+            _nameSayerModel.getNameslist().remove(_currentView.getSelectionModel().getSelectedItem());
+        } else {
+            _nameSayerModel.getNameslist().add(_currentView.getSelectionModel().getSelectedItem());
+            _nameSayerModel.getPlaylist().remove(_currentView.getSelectionModel().getSelectedItem());
+        }
+
+        // Adding the selected name to the other list, then removing it from the current list.
+        _otherView.getItems().add(_currentView.getSelectionModel().getSelectedItem());
+        _currentView.getItems().remove(_currentView.getSelectionModel().getSelectedItem());
+
+        // The names list is sorted, in case the changes have resulted in it being un alphabetical
+        // playlistView doesn't need to be sorted as the order is determined by the user.
+        _nameslistView.setItems(FXCollections.observableArrayList(_nameslistView.getItems().sorted()));
     }
 
     /**
@@ -123,6 +121,12 @@ public class StartScreenController {
     private void searchNamesList(){
         _nameSayerModel.filterNamesList(_searchBar.getText());
         _nameslistView.setItems(FXCollections.observableArrayList(_nameSayerModel.getFilteredNamesList()));
+    }
+
+    @FXML
+    private void shuffle() {
+        Collections.shuffle(_nameSayerModel.getPlaylist());
+        _playlistView.setItems(FXCollections.observableArrayList(_nameSayerModel.getPlaylist()));
     }
 
     /**
