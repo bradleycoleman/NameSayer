@@ -1,10 +1,6 @@
 package data;
 
-import javafx.collections.FXCollections;
-
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -188,8 +184,12 @@ public class NameSayerModel {
         }
     }
 
+    /**
+     * This method will update the rating of a specific name in the database.
+     * @param path
+     * @param rating
+     */
     public void updateDatabaseRating(String path, int rating){
-
         for(Name n:_database){
             for(File f: n.getFiles()){
                 if(f.getPath().equals(path)){

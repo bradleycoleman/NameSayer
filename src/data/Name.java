@@ -73,6 +73,11 @@ public class Name implements Comparable<Object> {
     public List<File> getAttempts() {return _attempts;}
     public List<File> getFiles() { return _files; }
 
+    /**
+     * This updates the filesToRatings hashmap.
+     * @param file
+     * @param rating
+     */
     public void updateRatingOfFile(File file, int rating){
         _filesToRatings.replace(file, rating);
         _rating = rating;

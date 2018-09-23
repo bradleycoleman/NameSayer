@@ -103,6 +103,9 @@ public class PlayScreenController {
         });
     }
 
+    /**
+     * Initializes the practice menu.
+     */
     public void startPractice() {
         _playlist = _nameSayerModel.getPlaylist();
         setIndex(0);
@@ -163,6 +166,8 @@ public class PlayScreenController {
             _next.setDisable(false);
             _previous.setDisable(false);
         }
+
+        // Disables the previous or next button based on the current index selected.
         if (_index < 1) {
             _previous.setDisable(true);
         } else {
@@ -287,6 +292,9 @@ public class PlayScreenController {
         _timeWorker.schedule(progessBar,_clip.getLength()/10000, _clip.getLength()/10000);
     }
 
+    /**
+     * Deletes selected attempt in the attempts folder.
+     */
     @FXML
     private void deleteRecording() {
         File toDelete = _chooser.getValue();
@@ -299,6 +307,9 @@ public class PlayScreenController {
         }
     }
 
+    /**
+     * This updates the rating of a chosen name.
+     */
     @FXML
     private void updateRating(){
         _nameSayerModel.updateDatabaseRating(_chooser.getValue().getPath(), (int)_rating.getValue());
