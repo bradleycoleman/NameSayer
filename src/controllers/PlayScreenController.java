@@ -13,8 +13,10 @@ import javafx.scene.control.*;
 import javafx.util.StringConverter;
 import main.Main;
 import data.Name;
-import java.io.File;
-import java.io.IOException;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -52,35 +54,25 @@ public class PlayScreenController {
     private enum State {IDLE, PLAYING, RECORDING}
     private Timer _timeWorker;
     private AudioInputStream _audio;
-    private Clip _clip;
+    private AudioStream _clip;
+    private InputStream _in;
 
     public void initializeData(NameSayerModel nameSayerModel, Main main){
         _nameSayerModel = nameSayerModel;
         _main = main;
-    }
-
-    public void startPractice() {
-        _playlist = _nameSayerModel.getPlaylist();
-        setIndex(0);
-    }
-
-    /**
-     * Refreshes various components based on an inputted index of the playlist
-     * @param index int which signifies the index of the name to be practiced.
-     */
-    private void setIndex(int index) {
-        setState(State.IDLE);
-        _index = index;
-        _name = _playlist.get(_index);
-        _progressIndicator.setProgress(0);
+        // Making the drop down menu show a custom label for each file depending on whether the file is an attempt
+        // or a database recording
         _chooser.setConverter(new StringConverter<File>() {
             @Override
             public String toString(File file) {
                 if (file.toString().contains("userdata/attempts")) {
+                    // If it is an attempt, it is specified
                     return ("Practice Attempt: " + file.getName());
                 } else if (_name.getFiles().size() > 1) {
+                    // If there is more than one database recording, the filename is specified
                     return ("Database Recording: " + file.getName());
                 }
+                // There is only one database recording, so the user doesn't need to know the file name
                 return ("Database Recording");
             }
 
@@ -89,13 +81,8 @@ public class PlayScreenController {
                 return null;
             }
         });
-        List<File> all = new ArrayList<>();
-        all.addAll(_name.getFiles());
-        all.addAll(_name.getAttempts());
-        _items = FXCollections.observableArrayList();
-        _items.addAll(_name.getFiles());
-        _items.addAll(_name.getAttempts());
-        _chooser.setItems(_items);
+        // Based on whther the user selects a database recording or an attempt, they will have access to different
+        // components.
         _chooser.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<File>() {
             @Override
             public void changed(ObservableValue<? extends File> observable, File oldValue, File newValue) {
@@ -114,6 +101,29 @@ public class PlayScreenController {
                 }
             }
         });
+    }
+
+    public void startPractice() {
+        _playlist = _nameSayerModel.getPlaylist();
+        setIndex(0);
+    }
+
+    /**
+     * Refreshes various components based on an inputted index of the playlist
+     * @param index int which signifies the index of the name to be practiced.
+     */
+    private void setIndex(int index) {
+        setState(State.IDLE);
+        _index = index;
+        _name = _playlist.get(_index);
+        _progressIndicator.setProgress(0);
+        List<File> all = new ArrayList<>();
+        all.addAll(_name.getFiles());
+        all.addAll(_name.getAttempts());
+        _items = FXCollections.observableArrayList();
+        _items.addAll(_name.getFiles());
+        _items.addAll(_name.getAttempts());
+        _chooser.setItems(_items);
         _chooser.setValue(_name.getFiles().get(0));
         _nameNumber.setText("Name " + (_index + 1) +" of " + _playlist.size());
         _currentName.setText(_playlist.get(_index).toString());
@@ -129,12 +139,18 @@ public class PlayScreenController {
         }
     }
 
+    /**
+     * Set the current state for this screen. The state determines what components are enabled for the user.
+     * @param state input the State to change to
+     */
     private void setState(State state) {
         if (state == State.PLAYING) {
             _chooser.setDisable(true);
             _play.setDisable(true);
             _record.setDisable(true);
             _delete.setDisable(true);
+            _next.setDisable(true);
+            _previous.setDisable(true);
         } else if (state == State.RECORDING){
             _recordPrompt.setText("Stop Recording:");
             _chooser.setDisable(true);
@@ -143,6 +159,8 @@ public class PlayScreenController {
             _stop.setDisable(false);
             _delete.setDisable(true);
             _play.setDisable(true);
+            _next.setDisable(true);
+            _previous.setDisable(true);
         } else {
             _recordPrompt.setText("Record Attempt:");
             _chooser.setDisable(false);
@@ -152,6 +170,8 @@ public class PlayScreenController {
             _stop.setVisible(false);
             _stop.setDisable(true);
             _delete.setDisable(false);
+            _next.setDisable(false);
+            _previous.setDisable(false);
         }
     }
 
@@ -221,8 +241,8 @@ public class PlayScreenController {
     private void playRecording(){
 
         // If the last playback is still playing, end it
-        if (_clip != null) {
-            _clip.stop();
+        if (AudioPlayer.player.isAlive()) {
+            AudioPlayer.player.stop();
         }
 
         // If there is nothing selected, then tell the user to select something.
@@ -232,14 +252,13 @@ public class PlayScreenController {
         }
 
         try {
-            _clip = AudioSystem.getClip();
-            _audio = AudioSystem.getAudioInputStream(_chooser.getValue());
-            _clip.open(_audio);
-            _clip.start();
-        } catch (UnsupportedAudioFileException | IOException e) {
+            _in = new FileInputStream(_chooser.getValue());
+            _clip = new AudioStream(_in);
+            AudioPlayer.player.start(_clip);
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
+        } catch (IOException a) {
+            a.printStackTrace();
         }
 
         TimerTask progessBar = new TimerTask() {
@@ -249,7 +268,7 @@ public class PlayScreenController {
                 Platform.runLater(() -> {
                     _progressIndicator.setProgress(progress/100.0);
                 });
-                if (!_clip.isRunning()) {
+                if (progress>100) {
                     Platform.runLater(() -> {
                         setState(State.IDLE);
                     });
@@ -261,7 +280,7 @@ public class PlayScreenController {
 
         _timeWorker = new Timer();
         setState(State.PLAYING);
-        _timeWorker.schedule(progessBar,_clip.getMicrosecondLength()/100000, _clip.getMicrosecondLength()/100000);
+        _timeWorker.schedule(progessBar,_clip.getLength()/10000, _clip.getLength()/10000);
     }
 
     @FXML
@@ -278,7 +297,6 @@ public class PlayScreenController {
 
     @FXML
     private void updateRating(){
-        System.out.println((int)_rating.getValue());
         _nameSayerModel.updateDatabaseRating(_chooser.getValue().getPath(), (int)_rating.getValue());
         _nameSayerModel.updateRatingsFile(_chooser.getValue().getPath(), (int)_rating.getValue());
     }
@@ -289,9 +307,10 @@ public class PlayScreenController {
     @FXML
     private void returnToStartScreen(){
         // If the last playback is still playing, end it
-        if (_clip != null) {
-            _clip.stop();
+        if (AudioPlayer.player.isAlive()) {
+            AudioPlayer.player.stop();
         }
+
         if (_timeWorker != null) {
             _timeWorker.cancel();
         }

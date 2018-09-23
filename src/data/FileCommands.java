@@ -6,6 +6,9 @@ import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * This class includes various static methods relating to file manipulation. Many of the methods use bash processes
+ */
 public class FileCommands {
     private static Process _recordingProcess;
 
