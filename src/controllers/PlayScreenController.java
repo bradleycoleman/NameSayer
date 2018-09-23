@@ -127,16 +127,6 @@ public class PlayScreenController {
         _chooser.setValue(_name.getFiles().get(0));
         _nameNumber.setText("Name " + (_index + 1) +" of " + _playlist.size());
         _currentName.setText(_playlist.get(_index).toString());
-        if (_index < 1) {
-            _previous.setDisable(true);
-        } else {
-            _previous.setDisable(false);
-        }
-        if (_index >= _playlist.size() - 1) {
-            _next.setDisable(true);
-        } else {
-            _next.setDisable(false);
-        }
     }
 
     /**
@@ -172,6 +162,16 @@ public class PlayScreenController {
             _delete.setDisable(false);
             _next.setDisable(false);
             _previous.setDisable(false);
+        }
+        if (_index < 1) {
+            _previous.setDisable(true);
+        } else {
+            _previous.setDisable(false);
+        }
+        if (_index >= _playlist.size() - 1) {
+            _next.setDisable(true);
+        } else {
+            _next.setDisable(false);
         }
     }
 

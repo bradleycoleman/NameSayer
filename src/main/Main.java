@@ -40,7 +40,7 @@ public class Main extends Application {
         testScene = new Scene(testPane, 600, 400);
 
         window.setTitle("Name Sayer");
-        
+
         // Set the closing operation of the stage
         window.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
