@@ -3,12 +3,12 @@ names\se206_21-5-2018_14-9-29_Antony.wav 5
 names\se206_27-4-2018_16-8-10_Ardern.wav 5
 names\se206_21-5-2018_14-8-47_Beena.wav 5
 names\se206_23-8-2018_21-11-36_Bruce.wav 5
-names\se206_27-4-2018_16-2-23_Catherine.wav 2
+names\se206_27-4-2018_16-2-23_Catherine.wav 3
 names\se206_18-5-2018_12-57-27_Chamara.wav 5
 names\se206_16-5-2018_23-37-41_Chen.wav 5
-names\se206_30-4-2018_11-21-35_chen.wav 4
+names\se206_30-4-2018_11-21-35_chen.wav 5
 names\se206_21-5-2018_14-9-57_Deepika.wav 5
-names\se206_18-5-2018_13-0-46_Dylan.wav 4
+names\se206_18-5-2018_13-0-46_Dylan.wav 5
 names\se206_27-4-2018_15-56-37_Eleanor.wav 5
 names\se206_30-4-2018_9-52-26_Eng.wav 5
 names\se206_30-4-2018_11-23-36_eric.wav 5

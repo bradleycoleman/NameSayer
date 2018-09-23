@@ -5,10 +5,12 @@ import controllers.StartScreenController;
 import controllers.TestScreenController;
 import data.NameSayerModel;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.util.List;
 
@@ -38,6 +40,15 @@ public class Main extends Application {
         testScene = new Scene(testPane, 600, 400);
 
         window.setTitle("Name Sayer");
+        
+        // Set the closing operation of the stage
+        window.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                System.out.println("Stage is closing");
+                System.exit(0);
+            }
+        });
+
 
         // Inject the data model into PlayScreen and StartScreen
         _nameSayerModel = new NameSayerModel();

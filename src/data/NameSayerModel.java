@@ -148,7 +148,7 @@ public class NameSayerModel {
     }
 
     /**
-     * This method will initialize all ratings data into the ratings txt.
+     * This method will initialize all ratings data into ratings.txt.
      */
     public void writeAllRatingsData(){
 
@@ -200,6 +200,11 @@ public class NameSayerModel {
         }
     }
 
+    /**
+     * This method will update the rating of a database recording in the ratings.txt file.
+     * @param path
+     * @param rating
+     */
     public void updateRatingsFile(String path, int rating){
         Thread ratingsFileEditThread = new Thread(new Runnable() {
             @Override

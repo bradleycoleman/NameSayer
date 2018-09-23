@@ -241,8 +241,12 @@ public class PlayScreenController {
     private void playRecording(){
 
         // If the last playback is still playing, end it
-        if (AudioPlayer.player.isAlive()) {
-            AudioPlayer.player.stop();
+        if (_clip != null) {
+            try{
+                _clip.close();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
         }
 
         // If there is nothing selected, then tell the user to select something.
@@ -307,8 +311,12 @@ public class PlayScreenController {
     @FXML
     private void returnToStartScreen(){
         // If the last playback is still playing, end it
-        if (AudioPlayer.player.isAlive()) {
-            AudioPlayer.player.stop();
+        if (_clip != null) {
+            try{
+                _clip.close();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
         }
 
         if (_timeWorker != null) {
