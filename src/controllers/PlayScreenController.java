@@ -120,6 +120,7 @@ public class PlayScreenController {
         _index = index;
         _name = _playlist.get(_index);
         _progressIndicator.setProgress(0);
+        _timer.setText("0s");
         List<File> all = new ArrayList<>();
         all.addAll(_name.getFiles());
         all.addAll(_name.getAttempts());
@@ -289,7 +290,13 @@ public class PlayScreenController {
 
         _timeWorker = new Timer();
         setState(State.PLAYING);
-        _timeWorker.schedule(progessBar,_clip.getLength()/10000, _clip.getLength()/10000);
+        // Temp fix for bug that causes attempts to have double length
+        if (_ratingPrompt.isVisible()) {
+            // If it is a database recording, the rating prompt will be visible
+            _timeWorker.schedule(progessBar,_clip.getLength()/10000, _clip.getLength()/10000);
+        } else {
+            _timeWorker.schedule(progessBar,_clip.getLength()/20000, _clip.getLength()/20000);
+        }
     }
 
     /**
