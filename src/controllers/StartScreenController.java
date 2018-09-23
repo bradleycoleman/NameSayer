@@ -124,12 +124,18 @@ public class StartScreenController {
         _nameslistView.setItems(FXCollections.observableArrayList(_nameSayerModel.getFilteredNamesList()));
     }
 
+    /**
+     * Method to shuffle the playlist.
+     */
     @FXML
     private void shuffle() {
         Collections.shuffle(_nameSayerModel.getPlaylist());
         _playlistView.setItems(FXCollections.observableArrayList(_nameSayerModel.getPlaylist()));
     }
 
+    /**
+     * Method to sort the playlist by alphabetical order.
+     */
     @FXML
     private void sort(){
         Collections.sort(_nameSayerModel.getPlaylist());
