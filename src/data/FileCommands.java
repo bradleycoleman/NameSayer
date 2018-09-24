@@ -63,14 +63,14 @@ public class FileCommands {
     }
 
     /**
-     * This method will delete the audio file
-     * @param audio the file to be deleted
+     * This method will delete the file, if it exists
+     * @param file the file to be deleted
      */
-    public static void deleteAudio(File audio) {
+    public static void deleteFile(File file) {
         try {
-            Files.deleteIfExists(Paths.get(audio.getPath()));
+            Files.deleteIfExists(Paths.get(file.getPath()));
         } catch (DirectoryNotEmptyException x) {
-            System.err.format("%s not empty%n", Paths.get(audio.getPath()));
+            System.err.format("%s not empty%n", Paths.get(file.getPath()));
         } catch (IOException x) {
             System.err.println(x);
         }

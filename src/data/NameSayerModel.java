@@ -150,12 +150,13 @@ public class NameSayerModel {
 
         BufferedWriter writer = null;
         try{
+            FileCommands.deleteAudio(new File("userdata/ratings.txt"));
             File ratingsFile = new File("userdata/ratings.txt");
             writer = new BufferedWriter(new FileWriter(ratingsFile, true));
 
             for(Name n: _database){
                 for(File f: n.getFiles()){
-                    writer.write(f.getPath()+" "+5+"\n");
+                    writer.write(f.getPath()+" "+n.getRating(f)+"\n");
                 }
             }
 
@@ -200,48 +201,5 @@ public class NameSayerModel {
         }
     }
 
-    /**
-     * This method will update the rating of a database recording in the ratings.txt file.
-     * @param path
-     * @param rating
-     */
-    public void updateRatingsFile(String path, int rating){
-        Thread ratingsFileEditThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                BufferedReader reader = null;
-                FileWriter writer = null;
-                FileWriter fileClearer = null;
-                try{
-                    File ratingsFile = new File("userdata/ratings.txt");
 
-                    reader = new BufferedReader(new FileReader(ratingsFile));
-
-                    List<String> newFile = new ArrayList<String>();
-                    String line;
-                    while((line = reader.readLine())!= null){
-                        String[] splitLine = line.split(" ");
-                        if(splitLine[0].equals(path)){
-                            newFile.add(path+" "+rating);
-                        } else {
-                            newFile.add(line);
-                        }
-                    }
-
-                    PrintWriter pw = new PrintWriter("userdata/ratings.txt");
-                    pw.close();
-
-                    writer = new FileWriter("userdata/ratings.txt", true);
-                    for(String s: newFile){
-                        writer.write(s+"\n");
-                    }
-
-                    writer.close();
-                } catch(IOException e){
-                    e.printStackTrace();
-                }
-            }
-        });
-        ratingsFileEditThread.start();
-    }
 }
