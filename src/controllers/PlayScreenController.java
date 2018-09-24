@@ -96,6 +96,7 @@ public class PlayScreenController {
                         _delete.setDisable(true);
                         _rating.setDisable(false);
                         _rating.setVisible(true);
+                        _rating.setValue(_name.getRating(newValue));
                         _ratingPrompt.setVisible(true);
                     }
                 }
@@ -306,11 +307,16 @@ public class PlayScreenController {
     private void deleteRecording() {
         File toDelete = _chooser.getValue();
         if (toDelete.toString().contains("userdata/attempts")) {
-            _name.deleteAttempt(toDelete);
-            // Setting the selection to a database recording
-            _chooser.setValue(_name.getFiles().get(0));
-            // Removing deleted item as option
-            _chooser.getItems().remove(toDelete);
+            // Asking the user to confirm the deletion
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete " + toDelete.getName() + " ?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.YES) {
+                _name.deleteAttempt(toDelete);
+                // Setting the selection to a database recording
+                _chooser.setValue(_name.getFiles().get(0));
+                // Removing deleted item as option
+                _chooser.getItems().remove(toDelete);
+            }
         }
     }
 
