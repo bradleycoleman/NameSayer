@@ -41,7 +41,7 @@ public class Name implements Comparable<Object> {
 
     public void deleteAttempt(File attempt) {
         _attempts.remove(attempt);
-        FileCommands.deleteAudio(attempt);
+        FileCommands.deleteFile(attempt);
     }
 
     /**

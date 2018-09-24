@@ -50,11 +50,11 @@ public class TestScreenController {
             _play.setDisable(true);
             _record.setDisable(true);
         } else if (state == State.RECORDING){
-            FileCommands.deleteAudio(AUDIOFILE);
+            FileCommands.deleteFile(AUDIOFILE);
             _record.setDisable(true);
             _play.setDisable(true);
         } else if (state == State.START) {
-            FileCommands.deleteAudio(AUDIOFILE);
+            FileCommands.deleteFile(AUDIOFILE);
             _progressIndicator.setProgress(0);
             _play.setDisable(true);
             _record.setDisable(false);

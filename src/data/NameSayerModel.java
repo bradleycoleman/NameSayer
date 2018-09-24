@@ -150,7 +150,7 @@ public class NameSayerModel {
 
         BufferedWriter writer = null;
         try{
-            FileCommands.deleteAudio(new File("userdata/ratings.txt"));
+            FileCommands.deleteFile(new File("userdata/ratings.txt"));
             File ratingsFile = new File("userdata/ratings.txt");
             writer = new BufferedWriter(new FileWriter(ratingsFile, true));
 
