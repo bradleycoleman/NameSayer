@@ -104,10 +104,10 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Label fx:id="_ratingPrompt" text="Rate Quality of Recording:" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
-            <Slider fx:id="_rating" blockIncrement="1.0" majorTickUnit="1.0" max="5.0" min="1.0" minorTickCount="0" onMouseReleased="#updateRating" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="5.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
+            <Label fx:id="_ratingPrompt" text="Rate Quality of Recording:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
+            <Slider fx:id="_rating" blockIncrement="1.0" majorTickUnit="1.0" max="5.0" min="1.0" minorTickCount="0" onMouseReleased="#updateRating" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="5.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP">
                <GridPane.margin>
-                  <Insets bottom="-22.0" left="90.0" right="-50.0" />
+                  <Insets bottom="-0.0" />
                </GridPane.margin>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -135,7 +135,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </ChoiceBox>
-                  <Label layoutX="7.0" layoutY="6.0" prefHeight="30.0" prefWidth="143.0" text="Select a recording:" />
+                  <Label layoutX="7.0" layoutY="6.0" prefHeight="30.0" prefWidth="143.0" text="Select a Recording:" />
                </children>
             </Pane>
          </children>

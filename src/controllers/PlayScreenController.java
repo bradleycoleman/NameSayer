@@ -1,18 +1,19 @@
 package controllers;
 
 import data.FileCommands;
+import data.Name;
 import data.NameSayerModel;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
 import main.Main;
-import data.Name;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 
@@ -21,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import javax.sound.sampled.*;
 
 /**
  * This controls the playback/practice screen of the app. Users can listen to recordings of each of the
@@ -53,9 +53,7 @@ public class PlayScreenController {
     private Name _name;
     private enum State {IDLE, PLAYING, RECORDING}
     private Timer _timeWorker;
-    private AudioInputStream _audio;
     private AudioStream _clip;
-    private InputStream _in;
 
     public void initializeData(NameSayerModel nameSayerModel, Main main){
         _nameSayerModel = nameSayerModel;
@@ -117,8 +115,8 @@ public class PlayScreenController {
      * @param index int which signifies the index of the name to be practiced.
      */
     private void setIndex(int index) {
-        setState(State.IDLE);
         _index = index;
+        setState(State.IDLE);
         _name = _playlist.get(_index);
         _progressIndicator.setProgress(0);
         _timer.setText("0s");
@@ -213,7 +211,8 @@ public class PlayScreenController {
 
             protected void done() {
                 // Add the attempt which was just recorded.
-                _items.add(_name.getAttempts().get(_name.getAttempts().size()-1));
+                File newAttempt = _name.getAttempts().get(_name.getAttempts().size()-1);
+                _items.add(newAttempt);
             }
         };
         TimerTask timerTask = new TimerTask() {
@@ -231,7 +230,7 @@ public class PlayScreenController {
         _timeWorker = new Timer();
         setState(State.RECORDING);
         new Thread(recordTask).start();
-        _timeWorker.schedule(timerTask,1000l,1000l);
+        _timeWorker.schedule(timerTask,1000,1000);
     }
 
     @FXML
@@ -242,7 +241,7 @@ public class PlayScreenController {
     }
 
     /**
-     * Plays the current name.
+     * Plays the current file
      */
     @FXML
     private void playRecording(){
@@ -263,13 +262,11 @@ public class PlayScreenController {
         }
 
         try {
-            _in = new FileInputStream(_chooser.getValue());
-            _clip = new AudioStream(_in);
+            InputStream in = new FileInputStream(_chooser.getValue());
+            _clip = new AudioStream(in);
             AudioPlayer.player.start(_clip);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-        } catch (IOException a) {
-            a.printStackTrace();
         }
 
         TimerTask progessBar = new TimerTask() {
@@ -334,7 +331,7 @@ public class PlayScreenController {
      */
     @FXML
     private void returnToStartScreen(){
-        // If the last playback is still playing, end it
+        // Ending any threads for playback/timing
         if (_clip != null) {
             try{
                 _clip.close();
@@ -342,10 +339,10 @@ public class PlayScreenController {
                 e.printStackTrace();
             }
         }
-
         if (_timeWorker != null) {
             _timeWorker.cancel();
         }
+        // commands the referenced Main to set the scene to the start
         _main.setSceneToStart();
     }
 

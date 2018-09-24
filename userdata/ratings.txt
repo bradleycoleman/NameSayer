@@ -31,8 +31,8 @@ names/se206_17-5-2018_14-43-7_Kachun.wav 5
 names/se206_18-5-2018_12-58-21_Kalana.wav 5
 names/se206_17-5-2018_14-30-38_Kun.wav 5
 names/se206_17-5-2018_14-43-55_Lam.wav 5
-names/se206_23-8-2018_20-42-12_Lee.wav 5
-names/se206_18-5-2018_11-8-55_Lee.wav 5
+names/se206_23-8-2018_20-42-12_Lee.wav 4
+names/se206_18-5-2018_11-8-55_Lee.wav 2
 names/se206_17-5-2018_12-7-35_Li.wav 5
 names/se206_17-5-2018_12-5-59_Li.wav 5
 names/se206_17-5-2018_12-3-36_Li.wav 5

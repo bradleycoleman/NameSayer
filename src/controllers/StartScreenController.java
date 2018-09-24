@@ -1,15 +1,14 @@
 package controllers;
 
-import main.Main;
+import data.Name;
 import data.NameSayerModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import data.Name;
+import main.Main;
 
-import java.io.File;
-import java.util.*;
+import java.util.Collections;
 
 
 public class StartScreenController {

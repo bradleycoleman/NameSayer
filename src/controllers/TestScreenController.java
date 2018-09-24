@@ -3,7 +3,6 @@ package controllers;
 import data.FileCommands;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -85,7 +84,7 @@ public class TestScreenController {
         };
         new Thread(_recordTask).start();
         _timerTask = new ProgessTask();
-        _timeWorker.schedule(_timerTask,50l,50l);
+        _timeWorker.schedule(_timerTask,50,50);
     }
 
     /**
@@ -99,13 +98,11 @@ public class TestScreenController {
             _audio = AudioSystem.getAudioInputStream(AUDIOFILE);
             _clip.open(_audio);
             _clip.start();
-        } catch (UnsupportedAudioFileException | IOException e) {
-            e.printStackTrace();
-        } catch (LineUnavailableException e) {
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
         _timerTask = new ProgessTask();
-        _timeWorker.schedule(_timerTask,50l,50l);
+        _timeWorker.schedule(_timerTask,50,50);
     }
 
     /**

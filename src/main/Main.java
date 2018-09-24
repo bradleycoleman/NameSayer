@@ -12,8 +12,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.util.List;
-
 public class Main extends Application {
 
     private Stage _window;

@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Represents a name in the database.
@@ -18,24 +16,31 @@ import java.util.regex.Pattern;
 public class Name implements Comparable<Object> {
     private String _name;
     private HashMap<File, Integer> _filesToRatings = new HashMap<>();
-    private List<File> _files = new ArrayList<>();
-    private List<File> _attempts = new ArrayList<>();
+    private List<File> _files;
+    private List<File> _attempts;
     private int _rating;
 
     public Name(String name, List<File> database, List<File> attempts) {
         _rating = 5;
         _attempts = attempts;
         _files = database;
+        // All database entries are given a default rating of 5/5, to be changed by user if they consider the
+        // recording to be of low quality
         for (File file : database) {
             _filesToRatings.put(file,_rating);
         }
         _name = name;
     }
 
+    /**
+     * Starts a recording process in bash which will save a audio file whose name is Name + time
+     * @throws InterruptedException FileCommands.record throws this, being a processbuilder
+     */
     public void addAttempt() throws InterruptedException {
         DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy_HH:mm:ss");
         String attemptName = (_name + "_" + dateFormat.format(new Date()));
         FileCommands.record(attemptName);
+        // After the recording is completed, the file is added to this Name's attempts
         _attempts.add(new File("userdata/attempts/" + attemptName + ".wav"));
     }
 
@@ -59,8 +64,8 @@ public class Name implements Comparable<Object> {
             sb.append("\nRating: " + _rating + "/5");
         } else {
             sb.append("\nRatings for each version:");
-            for (int i = 0; i < _files.size(); i++) {
-                sb.append("\n" + _filesToRatings.get(_files.get(i)) + "/5: " + _files.get(i));
+            for (File file : _files) {
+                sb.append("\n" + _filesToRatings.get(file) + "/5: " + file.getName());
             }
         }
         return (sb.toString());
@@ -69,7 +74,6 @@ public class Name implements Comparable<Object> {
     public String toString() {
         return _name;
     }
-
     public List<File> getAttempts() {return _attempts;}
     public List<File> getFiles() { return _files; }
     public int getRating(File recording) {
@@ -78,8 +82,6 @@ public class Name implements Comparable<Object> {
 
     /**
      * This updates the filesToRatings hashmap.
-     * @param file
-     * @param rating
      */
     public void updateRatingOfFile(File file, int rating){
         _filesToRatings.replace(file, rating);
