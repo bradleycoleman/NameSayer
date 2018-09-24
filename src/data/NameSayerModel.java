@@ -200,6 +200,39 @@ public class NameSayerModel {
             }
         }
     }
+    
+    /**
+     * This method will write the paths of all names with a bad rating to the badNames.txt file.
+     */
+    public void writeAllBadRatingsToFile() {
+    	BufferedReader reader = null;
+    	BufferedWriter writer = null;
+        System.out.println("I am doing something");
+    	try{
+    		FileCommands.deleteFile(new File("userdata/badNames.txt"));
+    		
+            File ratingsFile = new File("userdata/ratings.txt");
+            File badNamesFile = new File("userdata/badNames.txt");
+            
+            reader = new BufferedReader(new FileReader(ratingsFile));
+            
+            badNamesFile.createNewFile();
+            
+            writer = new BufferedWriter(new FileWriter(badNamesFile, true));
 
+            String line;
+            while((line = reader.readLine())!= null){
+                String[] splitLine = line.split(" ");
+                if(splitLine[1].equals("1") || splitLine[1].equals("2")) {
+                	System.out.println("I am writing a line");
+                	writer.write(splitLine[0] +" "+ splitLine[1]+ "\n");
+                }
+            }
+            
+            writer.close();
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
 
 }

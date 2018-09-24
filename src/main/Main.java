@@ -43,6 +43,7 @@ public class Main extends Application {
         window.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
                 System.out.println("Stage is closing");
+                _nameSayerModel.writeAllBadRatingsToFile();
                 System.exit(0);
             }
         });
