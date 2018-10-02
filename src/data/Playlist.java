@@ -53,6 +53,11 @@ public class Playlist {
         updateFile();
     }
 
+    @Override
+    public String toString() {
+        return _name;
+    }
+
     public void updateFile() {
         BufferedWriter writer;
         try{

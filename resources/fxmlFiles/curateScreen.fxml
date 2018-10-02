@@ -1,25 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.Cursor?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-
-  <GridPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CurateScreenController">
+<GridPane prefHeight="450.0" prefWidth="800.0" stylesheets="@NameSayerStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CurateScreenController">
       <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="214.0" minWidth="10.0" prefWidth="169.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="270.0" minWidth="10.0" prefWidth="188.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="270.0" minWidth="10.0" prefWidth="179.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="241.0" minWidth="10.0" prefWidth="228.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="332.0" minWidth="10.0" prefWidth="239.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="324.0" minWidth="10.0" prefWidth="301.0" />
       </columnConstraints>
       <rowConstraints>
           <RowConstraints maxHeight="54.0" minHeight="0.0" prefHeight="27.0" vgrow="SOMETIMES" />
@@ -27,30 +22,7 @@
           <RowConstraints maxHeight="90.0" minHeight="0.0" prefHeight="29.0" vgrow="SOMETIMES" />
       </rowConstraints>
       <children>
-          <Button fx:id="_practice" mnemonicParsing="false" onAction="#startPractice" text="Practice!" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
-              <cursor>
-                  <Cursor fx:constant="HAND" />
-              </cursor>
-      </Button>
-          <Button fx:id="_testMic" mnemonicParsing="false" onAction="#startTest" text="Test Mic" GridPane.halignment="CENTER" GridPane.rowIndex="2">
-              <cursor>
-                  <Cursor fx:constant="HAND" />
-              </cursor>
-      </Button>
-          <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="354.0" prefWidth="171.0" text="Names" textAlignment="CENTER" GridPane.rowIndex="1">
-              <font>
-                  <Font size="15.0" />
-              </font>
-              <content>
-                  <ListView fx:id="_nameslistView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
-              </content>
-          </TitledPane>
-          <Label alignment="CENTER" text="Name Sayer" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER">
-              <font>
-                  <Font name="System Bold" size="18.0" />
-              </font>
-          </Label>
-          <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="452.0" prefWidth="180.0" text="Current Playlist" GridPane.columnIndex="2" GridPane.rowIndex="1">
+          <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="452.0" prefWidth="180.0" text="Current Playlist" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="1">
               <font>
                   <Font size="15.0" />
               </font>
@@ -58,42 +30,17 @@
                   <ListView fx:id="_playlistView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
               </content>
           </TitledPane>
-          <BorderPane prefHeight="337.0" prefWidth="209.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-              <top>
-                  <Label fx:id="_currentName" BorderPane.alignment="CENTER">
-                      <font>
-                          <Font size="23.0" />
-                      </font>
-                  </Label>
-              </top>
-              <center>
-                  <TextArea fx:id="_nameDetails" editable="false" promptText="Select a name from the left to begin!" BorderPane.alignment="CENTER">
-                      <cursor>
-                          <Cursor fx:constant="DEFAULT" />
-                      </cursor>
-            </TextArea>
-              </center>
-              <bottom>
-                  <Button fx:id="_switch" mnemonicParsing="false" onAction="#swapName" prefHeight="10.0" prefWidth="189.0" text="Add to Playlist!" BorderPane.alignment="CENTER">
-                      <font>
-                          <Font size="15.0" />
-                      </font>
-                      <cursor>
-                          <Cursor fx:constant="HAND" />
-                      </cursor>
-                  </Button>
-              </bottom>
-          </BorderPane>
-          <TextField fx:id="_searchBar" onAction="#searchNamesList" onKeyReleased="#searchNamesList" onKeyTyped="#searchNamesList" prefHeight="25.0" prefWidth="46.0" promptText="Search for name">
-              <cursor>
-                  <Cursor fx:constant="TEXT" />
-              </cursor>
-      </TextField>
-          <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
-              <children>
-                  <Button fx:id="_sortButton" alignment="BOTTOM_LEFT" layoutY="2.0" mnemonicParsing="false" onAction="#sort" text="Sort!" />
-                  <Button fx:id="_shuffle" layoutX="129.0" layoutY="2.0" mnemonicParsing="false" onAction="#shuffle" text="Shuffle!" />
-              </children>
-          </Pane>
+            <Button fx:id="_shuffle" mnemonicParsing="false" onAction="#shuffle" text="Shuffle!" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+      <Label fx:id="_name" text="Playlist Name">
+         <font>
+            <Font size="22.0" />
+         </font>
+         <GridPane.margin>
+            <Insets left="2.0" />
+         </GridPane.margin>
+      </Label>
+      <Button mnemonicParsing="false" text="Rename" GridPane.halignment="RIGHT" />
+      <Button mnemonicParsing="false" onAction="#exit" text="Save &amp; Return to Main" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+            <Button fx:id="_sortButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#sort" text="Sort!" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
       </children>
   </GridPane>

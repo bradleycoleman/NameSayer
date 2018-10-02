@@ -33,7 +33,6 @@ public class Main extends Application {
         Parent browsePane = browsePaneLoader.load();
         browseScene = new Scene(browsePane,800,450);
 
-
         FXMLLoader curatePaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/curateScreen.fxml"));
         Parent curatePane = curatePaneLoader.load();
         curateScene = new Scene(curatePane, 800, 450);
