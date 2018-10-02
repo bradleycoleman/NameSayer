@@ -29,7 +29,7 @@ public class Main extends Application {
         // Load all the scenes
         FXMLLoader startPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/startScreen.fxml"));
         Parent startPane = startPaneLoader.load();
-        startScene = new Scene(startPane, 640, 360);
+        startScene = new Scene(startPane, 800, 450);
 
         FXMLLoader curatePaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/curateScreen.fxml"));
         Parent curatePane = curatePaneLoader.load();
@@ -66,7 +66,6 @@ public class Main extends Application {
         _playScreenController.initializeData(_nameSayerModel, this);
 
         // The first scene will be the playlist editing scene
-        window.setMaximized(true);
         window.setScene(startScene);
         window.setResizable(true);
 

@@ -1,0 +1,13 @@
+.button {
+    -fx-background-color: darkblue;
+    -fx-text-fill: white;
+}
+
+.title {
+    -fx-background-color: darkblue;
+    -fx-text-fill: white;
+}
+
+.button:pressed {
+    -fx-translate-y: 1;
+}
