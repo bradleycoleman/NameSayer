@@ -11,7 +11,7 @@ import main.Main;
 import java.util.Collections;
 
 
-public class StartScreenController {
+public class CurateScreenController {
     @FXML private Button _practice;
     @FXML private Button _testMic;
     @FXML private Button _switch;

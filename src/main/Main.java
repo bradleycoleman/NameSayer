@@ -1,7 +1,7 @@
 package main;
 
 import controllers.PlayScreenController;
-import controllers.StartScreenController;
+import controllers.CurateScreenController;
 import controllers.TestScreenController;
 import data.NameSayerModel;
 import javafx.application.Application;
@@ -16,7 +16,7 @@ public class Main extends Application {
 
     private Stage _window;
     private Scene startScene, playScene, testScene;
-    private StartScreenController _startScreenController;
+    private CurateScreenController _startScreenController;
     private PlayScreenController _playScreenController;
     private TestScreenController _testScreenController;
     private NameSayerModel _nameSayerModel;
@@ -25,7 +25,7 @@ public class Main extends Application {
     public void start(Stage window) throws Exception{
         _window = window;
         // Load all the scenes
-        FXMLLoader startPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/startScreen.fxml"));
+        FXMLLoader startPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/curateScreen.fxml"));
         Parent startPane = startPaneLoader.load();
         startScene = new Scene(startPane, 600, 400);
 
@@ -60,7 +60,8 @@ public class Main extends Application {
 
         // The first scene will be the playlist editing scene
         window.setScene(startScene);
-        window.setResizable(false);
+        window.setResizable(true);
+        window.setMaximized(true);
         window.show();
     }
 
