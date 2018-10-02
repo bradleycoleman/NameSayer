@@ -1,9 +1,6 @@
 package main;
 
-import controllers.PlayScreenController;
-import controllers.CurateScreenController;
-import controllers.StartScreenController;
-import controllers.TestScreenController;
+import controllers.*;
 import data.NameSayerModel;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -16,8 +13,9 @@ import javafx.stage.WindowEvent;
 public class Main extends Application {
 
     private Stage _window;
-    private Scene curateScene, playScene, testScene, startScene;
+    private Scene curateScene, playScene, testScene, startScene, browseScene;
     private StartScreenController _startScreenController;
+    private BrowseScreenController _browseScreenController;
     private CurateScreenController _curateScreenController;
     private PlayScreenController _playScreenController;
     private TestScreenController _testScreenController;
@@ -31,17 +29,22 @@ public class Main extends Application {
         Parent startPane = startPaneLoader.load();
         startScene = new Scene(startPane, 800, 450);
 
+        FXMLLoader browsePaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/browseScreen.fxml"));
+        Parent browsePane = browsePaneLoader.load();
+        browseScene = new Scene(browsePane,800,450);
+
+
         FXMLLoader curatePaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/curateScreen.fxml"));
         Parent curatePane = curatePaneLoader.load();
-        curateScene = new Scene(curatePane, 600, 400);
+        curateScene = new Scene(curatePane, 800, 450);
 
         FXMLLoader playPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/playScreen.fxml"));
         Parent playPane = playPaneLoader.load();
-        playScene = new Scene(playPane, 600, 400);
+        playScene = new Scene(playPane, 800, 450);
 
         FXMLLoader testPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/testScreen.fxml"));
         Parent testPane = testPaneLoader.load();
-        testScene = new Scene(testPane, 600, 400);
+        testScene = new Scene(testPane, 800, 450);
 
         window.setTitle("Name Sayer");
 
@@ -61,7 +64,10 @@ public class Main extends Application {
         _curateScreenController = curatePaneLoader.getController();
         _playScreenController = playPaneLoader.getController();
         _testScreenController = testPaneLoader.getController();
+        _browseScreenController = browsePaneLoader.getController();
 
+        _browseScreenController.initializeData(_nameSayerModel,this);
+        _startScreenController.initializeData(this);
         _curateScreenController.initializeData(_nameSayerModel, this);
         _playScreenController.initializeData(_nameSayerModel, this);
 
@@ -76,9 +82,13 @@ public class Main extends Application {
         return _window;
     }
 
-    public void setSceneToStart(){
+    public void setSceneToCurate(){
         _window.setScene(curateScene);
     }
+
+    public void setSceneToStart() {_window.setScene(startScene);}
+
+    public void setSceneToBrowse() {_window.setScene(browseScene);}
 
     public void setSceneToPlay(){
         _window.setScene(playScene);

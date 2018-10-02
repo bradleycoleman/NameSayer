@@ -7,7 +7,6 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -343,7 +342,7 @@ public class PlayScreenController {
             _timeWorker.cancel();
         }
         // commands the referenced Main to set the scene to the start
-        _main.setSceneToStart();
+        _main.setSceneToCurate();
     }
 
 }

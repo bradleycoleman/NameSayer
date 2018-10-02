@@ -35,7 +35,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Microphone">
             <items>
-              <MenuItem mnemonicParsing="false" text="Test Microphone" />
+              <MenuItem mnemonicParsing="false" onAction="#testMic" text="Test Microphone" />
             </items>
           </Menu>
         </menus>
@@ -45,21 +45,27 @@
             <Font size="36.0" />
          </font>
       </Label>
-      <Button fx:id="_browse" mnemonicParsing="false" text="Browse Playlists" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+      <Button fx:id="_browse" mnemonicParsing="false" onAction="#browse" text="Browse Playlists" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <font>
             <Font size="22.0" />
          </font>
       </Button>
       <TitledPane alignment="CENTER" animated="false" collapsible="false" maxHeight="1.7976931348623157E308" text="Try These Names:" textAlignment="CENTER" textFill="WHITE" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.rowSpan="2" GridPane.vgrow="ALWAYS">
          <content>
-            <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0">
+            <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" spacing="2.0">
                <children>
                   <ListView fx:id="_defaultNames" maxHeight="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                   <Button fx:id="_practice" mnemonicParsing="false" text="Practice" VBox.vgrow="ALWAYS">
                      <font>
                         <Font size="22.0" />
-                     </font></Button>
+                     </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin></Button>
                </children>
+               <padding>
+                  <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+               </padding>
             </VBox>
          </content>
          <padding>
