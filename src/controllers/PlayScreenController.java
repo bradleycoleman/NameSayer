@@ -119,12 +119,9 @@ public class PlayScreenController {
         _name = _playlist.get(_index);
         _progressIndicator.setProgress(0);
         _timer.setText("0s");
-        List<File> all = new ArrayList<>();
-        all.addAll(_name.getFiles());
-        all.addAll(_name.getAttempts());
         _items = FXCollections.observableArrayList();
         _items.addAll(_name.getFiles());
-        _items.addAll(_name.getAttempts());
+        _items.addAll(_name.getAttempt());
         _chooser.setItems(_items);
         _chooser.setValue(_name.getFiles().get(0));
         _nameNumber.setText("Name " + (_index + 1) +" of " + _playlist.size());
@@ -210,8 +207,7 @@ public class PlayScreenController {
 
             protected void done() {
                 // Add the attempt which was just recorded.
-                File newAttempt = _name.getAttempts().get(_name.getAttempts().size()-1);
-                _items.add(newAttempt);
+                _items.add(_name.getAttempt());
             }
         };
         TimerTask timerTask = new TimerTask() {
@@ -321,8 +317,8 @@ public class PlayScreenController {
      */
     @FXML
     private void updateRating(){
-        _nameSayerModel.updateDatabaseRating(_chooser.getValue().getPath(), (int)_rating.getValue());
-        _nameSayerModel.writeAllRatingsData();
+        _name.updateRatingOfFile(_chooser.getValue(),(int)_rating.getValue());
+        _nameSayerModel.writeGoodBadNames();
     }
 
     /**

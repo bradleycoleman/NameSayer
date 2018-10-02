@@ -1,6 +1,9 @@
 package data;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,19 +20,43 @@ public class Name implements Comparable<Object> {
     private String _name;
     private HashMap<File, Integer> _filesToRatings = new HashMap<>();
     private List<File> _files;
-    private List<File> _attempts;
+    private File _attempt;
     private int _rating;
 
-    public Name(String name, List<File> database, List<File> attempts) {
-        _rating = 5;
-        _attempts = attempts;
+    public Name(String name, List<File> database, File goodFiles, File badFiles) {
+        _name = name;
         _files = database;
-        // All database entries are given a default rating of 5/5, to be changed by user if they consider the
-        // recording to be of low quality
+        _rating = 0;
+        // All database entries are given a default rating of 0/2, to be changed by the text files if they exist
         for (File file : database) {
             _filesToRatings.put(file,_rating);
         }
-        _name = name;
+        if (goodFiles.exists()) {
+            setRatingGoodBad(goodFiles,true);
+        }
+        if (badFiles.exists()) {
+            setRatingGoodBad(badFiles, false);
+        }
+    }
+
+    private void setRatingGoodBad(File textFile, Boolean isGood){
+        BufferedReader reader;
+        try{
+            reader = new BufferedReader(new FileReader(textFile));
+            String line;
+            // reding the goodnames to find those from this name
+            while((line = reader.readLine())!= null){
+                if (_files.contains(new File(line))) {
+                    if (isGood) {
+                        updateRatingOfFile(new File(line), 2);
+                    } else {
+                        updateRatingOfFile(new File(line), 1);
+                    }
+                }
+            }
+        } catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -41,11 +68,11 @@ public class Name implements Comparable<Object> {
         String attemptName = (_name + "_" + dateFormat.format(new Date()));
         FileCommands.record(attemptName);
         // After the recording is completed, the file is added to this Name's attempts
-        _attempts.add(new File("userdata/attempts/" + attemptName + ".wav"));
+        _attempt = new File("userdata/attempts/" + attemptName + ".wav");
     }
 
     public void deleteAttempt(File attempt) {
-        _attempts.remove(attempt);
+        _attempt = null;
         FileCommands.deleteFile(attempt);
     }
 
@@ -57,28 +84,14 @@ public class Name implements Comparable<Object> {
         return (toString().toLowerCase().compareTo(n.toString().toLowerCase()));
     }
 
-    public String getDetails() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Attempts: " + _attempts.size() + "\nDatabase Versions: " + _files.size());
-        if (_files.size() == 1) {
-            sb.append("\nRating: " + _rating + "/5");
-        } else {
-            sb.append("\nRatings for each version:");
-            for (File file : _files) {
-                sb.append("\n" + _filesToRatings.get(file) + "/5: " + file.getName());
-            }
-        }
-        return (sb.toString());
+    public int getRating(File file) {
+        return _filesToRatings.get(file);
     }
-
     public String toString() {
         return _name;
     }
-    public List<File> getAttempts() {return _attempts;}
+    public File getAttempt() {return _attempt;}
     public List<File> getFiles() { return _files; }
-    public int getRating(File recording) {
-        return _filesToRatings.get(recording);
-    }
 
     /**
      * This updates the filesToRatings hashmap.

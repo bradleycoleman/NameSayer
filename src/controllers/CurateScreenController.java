@@ -70,7 +70,7 @@ public class CurateScreenController {
      */
     private void swapList(ListView selectedView, ListView oldView) {
         _currentName.setText(selectedView.getSelectionModel().getSelectedItem().toString());
-        _nameDetails.setText(((Name) selectedView.getSelectionModel().getSelectedItem()).getDetails());
+        _nameDetails.setText("nothing for now");
         // If the other list was selected, deselect.
         if (oldView.getSelectionModel().getSelectedItems() != null) {
             oldView.getSelectionModel().clearSelection();

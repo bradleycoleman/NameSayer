@@ -17,9 +17,12 @@ public class NameSayerModel {
     private List<Name> _nameslist = new ArrayList<Name>();
     private List<Name> _filteredNameslist = new ArrayList<Name>();
     private List<Name> _playlist = new ArrayList<Name>();
+    private List<Playlist> _playlists = new ArrayList<>();
 
 
     public NameSayerModel(){
+        File goodNames = new File("userdata/goodNames.txt");
+        File badNames = new File("userdata/badNames.txt");
 
         // load the database from the folder
         File namesData = new File("names");
@@ -29,22 +32,12 @@ public class NameSayerModel {
         List<File> listOfNamesData = new ArrayList<>();
         listOfNamesData = Arrays.asList(namesData.listFiles());
 
-        // load the attempts from the folder
-        File attemptsData = new File("userdata/attempts");
-        if(!attemptsData.exists()){
-            attemptsData.mkdirs();
-        }
-        List<File> listOfAttemptsData = new ArrayList<>();
-        listOfAttemptsData = Arrays.asList(attemptsData.listFiles());
-
-
         List<String> readNames = new ArrayList<>();
 
         // For every name this finds all names that match it to make a list of files for the Name constructor
         // get number of files, n. while i < n, read listofnamesdata(0)
         for (File file1 : listOfNamesData) {
             List<File> database = new ArrayList<>();
-            List<File> attempts = new ArrayList<>();
             database.add(file1);
             String name;
             Pattern p = Pattern.compile("_([a-zA-Z]*)\\.wav");
@@ -62,20 +55,12 @@ public class NameSayerModel {
                             }
                         }
                     }
-                    // Finding all the recorded attempts of this name
-                    for (File attempt : listOfAttemptsData) {
-                        Pattern attemptpat = Pattern.compile(name + "_");
-                        Matcher attemptmat = attemptpat.matcher(attempt.getName());
-                        if (attemptmat.find()) {
-                            attempts.add(attempt);
-                        }
-                    }
-                    _database.add(new Name(name, database, attempts));
+                    _database.add(new Name(name, database, goodNames, badNames));
                 }
             } else {
                 // This will not have any other files with same name, as the name is the file name
                 name = file1.getName();
-                _database.add(new Name(name, database, attempts));
+                _database.add(new Name(name, database, goodNames, badNames));
             }
 
         }
@@ -86,21 +71,12 @@ public class NameSayerModel {
             }
         });
 
-        // Create ratings.txt if it has hasn't already been created.
-        try{
-            // load all the ratings data
-            File ratingsData = new File("userdata/ratings.txt");
-            if(!ratingsData.exists()) {
-                ratingsData.createNewFile();
-                writeAllRatingsData();
+        File playlistDir = new File("userdata/playlists");
+        if (playlistDir.isDirectory()) {
+            for (File playlist: playlistDir.listFiles()) {
+                _playlists.add(new Playlist(playlist,this));
             }
-        }catch(IOException e){
-            e.printStackTrace();
         }
-
-        // Add all the rating data to the database
-        readAllRatingsData();
-
         _nameslist.addAll(_database);
     }
 
@@ -114,6 +90,7 @@ public class NameSayerModel {
     public List<Name> getPlaylist(){
         return _playlist;
     }
+    public List<Playlist> getPlatlists() { return _playlists; }
     public List<Name> getFilteredNamesList(){
         return _filteredNameslist;
     }
@@ -144,62 +121,34 @@ public class NameSayerModel {
     }
 
     /**
-     * This method will initialize all ratings data into ratings.txt.
+     * This method will update the good and bad names txt files
      */
-    public void writeAllRatingsData(){
-
-        BufferedWriter writer = null;
+    public void writeGoodBadNames(){
+        BufferedWriter goodWriter;
+        BufferedWriter badWriter;
         try{
-            FileCommands.deleteFile(new File("userdata/ratings.txt"));
-            File ratingsFile = new File("userdata/ratings.txt");
-            writer = new BufferedWriter(new FileWriter(ratingsFile, true));
-
+            FileCommands.deleteFile(new File("userdata/goodNames.txt"));
+            FileCommands.deleteFile(new File("userdata/badNames.txt"));
+            File goodFile = new File("userdata/goodNames.txt");
+            File badFile = new File("userdata/badNames.txt");
+            goodWriter = new BufferedWriter(new FileWriter(goodFile, true));
+            badWriter = new BufferedWriter(new FileWriter(badFile, true));
             for(Name n: _database){
                 for(File f: n.getFiles()){
-                    writer.write(f.getPath()+" "+n.getRating(f)+"\n");
+                    //writing all good files to text file
+                    if (n.getRating(f) == 2) {
+                        goodWriter.write(f.getPath()+"\n");
+                    }
+                    //writing all bad files to text file
+                    if (n.getRating(f) == 1) {
+                        badWriter.write(f.getPath()+"\n");
+                    }
                 }
             }
-
-            writer.close();
+            badWriter.close();
+            goodWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-    /**
-     * This method will update the ratings data of the database.
-     */
-    public void readAllRatingsData(){
-        BufferedReader reader = null;
-        try{
-            File ratingsFile = new File("userdata/ratings.txt");
-            reader = new BufferedReader(new FileReader(ratingsFile));
-
-            String line;
-            while((line = reader.readLine())!= null){
-                String[] splitLine = line.split(" ");
-                updateDatabaseRating(splitLine[0], Integer.parseInt(splitLine[1]));
-            }
-        } catch(IOException e){
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * This method will update the rating of a specific name in the database.
-     * @param path
-     * @param rating
-     */
-    public void updateDatabaseRating(String path, int rating){
-        for(Name n:_database){
-            for(File f: n.getFiles()){
-                if(f.getPath().equals(path)){
-                    n.updateRatingOfFile(f, rating);
-                    n.setRating(rating);
-                }
-            }
-        }
-    }
-
-
 }
