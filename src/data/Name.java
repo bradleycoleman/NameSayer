@@ -94,6 +94,25 @@ public class Name implements Comparable<Object> {
     public List<File> getFiles() { return _files; }
 
     /**
+     * Finds the first good file it can. If no good files then the first unrated file.
+     * If all files are badly rated returns the first file.
+     * @return an audio file.
+     */
+    public File getDefault() {
+        for (File file: _files) {
+            if (_filesToRatings.get(file) == 2) {
+                return file;
+            }
+        }
+        for (File file : _files) {
+            if (_filesToRatings.get(file) == 0) {
+                return file;
+            }
+        }
+        return _files.get(0);
+    }
+
+    /**
      * This updates the filesToRatings hashmap.
      */
     public void updateRatingOfFile(File file, int rating){

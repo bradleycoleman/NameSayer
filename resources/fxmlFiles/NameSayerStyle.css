@@ -8,6 +8,10 @@
     -fx-text-fill: white;
 }
 
+.titled-pane {
+    -fx-text-fill: white;
+}
+
 .button:pressed {
     -fx-translate-y: 1;
 }

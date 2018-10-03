@@ -1,34 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.Double?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Polyline?>
 <?import javafx.scene.text.Font?>
 
 <GridPane prefHeight="450.0" prefWidth="800.0" stylesheets="@NameSayerStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CurateScreenController">
       <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="241.0" minWidth="10.0" prefWidth="228.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="332.0" minWidth="10.0" prefWidth="239.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="324.0" minWidth="10.0" prefWidth="301.0" />
+          <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="228.0" />
+          <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="239.0" />
+          <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="301.0" />
       </columnConstraints>
       <rowConstraints>
           <RowConstraints maxHeight="54.0" minHeight="0.0" prefHeight="27.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="367.0" minHeight="10.0" prefHeight="343.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="343.0" vgrow="ALWAYS" />
           <RowConstraints maxHeight="90.0" minHeight="0.0" prefHeight="29.0" vgrow="SOMETIMES" />
       </rowConstraints>
       <children>
-          <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="452.0" prefWidth="180.0" text="Current Playlist" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="1">
+          <TitledPane fx:id="_playlistBox" alignment="CENTER" animated="false" collapsible="false" prefHeight="9999.0" prefWidth="9999.0" text="Current Playlist" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="1">
               <font>
-                  <Font size="15.0" />
+                  <Font size="16.0" />
               </font>
               <content>
                   <ListView fx:id="_playlistView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
               </content>
+         <GridPane.margin>
+            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+         </GridPane.margin>
           </TitledPane>
             <Button fx:id="_shuffle" mnemonicParsing="false" onAction="#shuffle" text="Shuffle!" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
       <Label fx:id="_name" text="Playlist Name">
@@ -39,8 +46,117 @@
             <Insets left="2.0" />
          </GridPane.margin>
       </Label>
-      <Button mnemonicParsing="false" text="Rename" GridPane.halignment="RIGHT" />
+      <Button mnemonicParsing="false" onAction="#rename" text="Rename" GridPane.halignment="RIGHT" />
       <Button mnemonicParsing="false" onAction="#exit" text="Save &amp; Return to Main" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
             <Button fx:id="_sortButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#sort" text="Sort!" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
+      <TitledPane fx:id="_currentName" animated="false" collapsible="false" prefHeight="9999.0" prefWidth="9999.0" text="Current Name" textFill="WHITE" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <GridPane gridLinesVisible="true" layoutX="8.8" layoutY="3.8000000000000007" prefHeight="334.0" prefWidth="492.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="158.0" minHeight="0.0" prefHeight="29.0" vgrow="NEVER" />
+                      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="303.0" vgrow="ALWAYS" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="Sub Names">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                           </GridPane.margin></Label>
+                        <Label text="Options" GridPane.columnIndex="1">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                           </GridPane.margin></Label>
+                        <ListView prefHeight="228.0" prefWidth="207.0" GridPane.rowIndex="1" />
+                        <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="166.0" />
+                            <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="77.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Rate recording:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.0" left="2.0" right="23.0" top="5.0" />
+                                 </GridPane.margin>
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <ChoiceBox fx:id="_fileChooser" prefWidth="150.0" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.valignment="BOTTOM">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                 </GridPane.margin>
+                              </ChoiceBox>
+                              <Button mnemonicParsing="false" onAction="#play" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                 </GridPane.margin>
+                                 <graphic>
+                                     <Polyline fill="CHARTREUSE" rotate="-90.0" strokeType="INSIDE">
+                                         <points>
+                                             <Double fx:value="-7.5" />
+                                             <Double fx:value="-6.0" />
+                                             <Double fx:value="7.5" />
+                                             <Double fx:value="-6.0" />
+                                             <Double fx:value="0.0" />
+                                             <Double fx:value="9.0" />
+                                             <Double fx:value="-7.5" />
+                                             <Double fx:value="-6.0" />
+                                         </points>
+                                     </Polyline>
+                                 </graphic>
+                              </Button>
+                              <Button mnemonicParsing="false" onAction="#rateGood" text="✓" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                 </GridPane.margin>
+                                 <font>
+                                    <Font size="27.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="-1.0" left="-1.0" right="-1.0" top="-1.0" />
+                                 </padding>
+                              </Button>
+                              <Button mnemonicParsing="false" onAction="#rateBad" text="✕" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                 </GridPane.margin>
+                                 <font>
+                                    <Font size="27.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="-1.0" left="-1.0" right="-1.0" top="-1.0" />
+                                 </padding>
+                              </Button>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </GridPane>
+               </children>
+               <padding>
+                  <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+               </padding></AnchorPane>
+        </content>
+         <font>
+            <Font size="16.0" />
+         </font>
+         <GridPane.margin>
+            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+         </GridPane.margin>
+      </TitledPane>
       </children>
   </GridPane>
