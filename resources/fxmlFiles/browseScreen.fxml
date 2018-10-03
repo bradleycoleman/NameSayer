@@ -27,12 +27,15 @@
    <children>
       <TitledPane collapsible="false" prefHeight="9999.0" prefWidth="380.0" text="Your Playlists" textFill="WHITE" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
          <font>
-            <Font size="18.0" />
+            <Font name="Berlin Sans FB" size="18.0" />
          </font>
          <content>
             <VBox spacing="2.0">
                <children>
-                  <TextField fx:id="_searchBar" promptText="Search for a playlist" />
+                  <TextField fx:id="_searchBar" promptText="Search for a playlist">
+                     <font>
+                        <Font name="Berlin Sans FB" size="13.0" />
+                     </font></TextField>
                   <ListView fx:id="_playlists" prefHeight="163.0" prefWidth="423.0" VBox.vgrow="ALWAYS" />
                </children>
                <padding>
@@ -46,7 +49,7 @@
       </TitledPane>
       <TitledPane animated="false" collapsible="false" prefHeight="9999.0" prefWidth="220.0" text="Current Playlist" textFill="WHITE" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
          <font>
-            <Font size="18.0" />
+            <Font name="Berlin Sans FB" size="18.0" />
          </font>
          <opaqueInsets>
             <Insets />
@@ -62,19 +65,19 @@
                      <left>
                         <Button fx:id="_edit" mnemonicParsing="false" text="Edit" BorderPane.alignment="CENTER">
                            <font>
-                              <Font size="16.0" />
+                              <Font name="Berlin Sans FB" size="17.0" />
                            </font></Button>
                      </left>
                      <right>
                         <Button fx:id="_practice" mnemonicParsing="false" text="Practice" BorderPane.alignment="CENTER">
                            <font>
-                              <Font size="16.0" />
+                              <Font name="Berlin Sans FB" size="17.0" />
                            </font></Button>
                      </right>
                      <center>
                         <Button fx:id="_delete" mnemonicParsing="false" text="Delete" BorderPane.alignment="CENTER">
                            <font>
-                              <Font size="16.0" />
+                              <Font name="Berlin Sans FB" size="17.0" />
                            </font></Button>
                      </center>
                   </BorderPane>
@@ -90,18 +93,18 @@
             <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
          </GridPane.margin>
          <font>
-            <Font size="16.0" />
+            <Font name="Berlin Sans FB" size="19.0" />
          </font>
       </Button>
-      <Label text="Current Mic Level:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+      <Label text="Current Mic Level: " GridPane.halignment="RIGHT" GridPane.rowIndex="2">
          <font>
-            <Font size="16.0" />
+            <Font name="Berlin Sans FB" size="15.0" />
          </font>
       </Label>
       <ProgressBar fx:id="_micLevel" prefWidth="200.0" progress="0.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <Button mnemonicParsing="false" onAction="#createNew" text="Create New Playlist" GridPane.rowIndex="2">
          <font>
-            <Font size="16.0" />
+            <Font name="Berlin Sans FB" size="16.0" />
          </font>
          <GridPane.margin>
             <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

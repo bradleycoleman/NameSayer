@@ -34,9 +34,9 @@
             <RowConstraints maxHeight="131.0" minHeight="10.0" prefHeight="106.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="_exit" mnemonicParsing="false" onAction="#returnToStartScreen" text="Exit Practice" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
+            <Button fx:id="_exit" mnemonicParsing="false" onAction="#returnToStartScreen" stylesheets="@NameSayerStyle.css" text="Exit Practice" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
                <font>
-                  <Font size="17.0" />
+                  <Font name="Berlin Sans FB" size="18.0" />
                </font>
                <GridPane.margin>
                   <Insets left="2.0" />
@@ -45,10 +45,13 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Label fx:id="_nameNumber" text="Name 1 of x" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+            <Label fx:id="_nameNumber" text="Name 1 of x" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+               <font>
+                  <Font name="Berlin Sans FB" size="15.0" />
+               </font></Label>
             <Label fx:id="_currentName" text="Current Name" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                <font>
-                  <Font size="32.0" />
+                  <Font name="Berlin Sans FB" size="32.0" />
                </font>
             </Label>
             <GridPane GridPane.columnIndex="1" GridPane.rowIndex="2">
@@ -75,36 +78,51 @@
                         </Circle>
                      </graphic>
                   </Button>
-                  <Label fx:id="_recordPrompt" text="Record Attempt:" GridPane.halignment="CENTER" />
+                  <Label fx:id="_recordPrompt" text="Record Attempt:" GridPane.halignment="CENTER">
+                     <font>
+                        <Font name="Berlin Sans FB" size="16.0" />
+                     </font></Label>
                   <Label fx:id="_timer" text="0s" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
                </children>
             </GridPane>
             <ProgressBar fx:id="_progressIndicator" prefWidth="200.0" progress="0.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Button fx:id="_delete" mnemonicParsing="false" onAction="#deleteRecording" text="Delete Attempt" GridPane.columnIndex="2" GridPane.rowIndex="3">
+            <Button fx:id="_delete" mnemonicParsing="false" onAction="#deleteRecording" stylesheets="@NameSayerStyle.css" text="Delete Attempt" GridPane.columnIndex="2" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets left="3.0" />
                </GridPane.margin>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <font>
+                  <Font name="Berlin Sans FB" size="15.0" />
+               </font>
             </Button>
-            <Button fx:id="_previous" mnemonicParsing="false" onAction="#prevName" text="Previous Name" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+            <Button fx:id="_previous" mnemonicParsing="false" onAction="#prevName" prefHeight="31.0" prefWidth="116.0" stylesheets="@NameSayerStyle.css" text="Previous Name" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" />
                </GridPane.margin>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <font>
+                  <Font name="Berlin Sans FB" size="15.0" />
+               </font>
             </Button>
-            <Button fx:id="_next" mnemonicParsing="false" onAction="#nextName" text="Next Name" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+            <Button fx:id="_next" mnemonicParsing="false" onAction="#nextName" prefHeight="30.0" prefWidth="96.0" stylesheets="@NameSayerStyle.css" text="Next Name" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
                <GridPane.margin>
                   <Insets bottom="5.0" right="5.0" />
                </GridPane.margin>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <font>
+                  <Font name="Berlin Sans FB" size="15.0" />
+               </font>
             </Button>
-            <Label fx:id="_ratingPrompt" text="Rate Quality of Recording:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
+            <Label fx:id="_ratingPrompt" stylesheets="@NameSayerStyle.css" text="Rate Quality of Recording:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font name="Berlin Sans FB" size="13.0" />
+               </font></Label>
             <Slider fx:id="_rating" blockIncrement="1.0" majorTickUnit="1.0" max="5.0" min="1.0" minorTickCount="0" onMouseReleased="#updateRating" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="5.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets bottom="-0.0" />
@@ -130,12 +148,15 @@
                           </points>
                         </Polyline>
                      </graphic></Button>
-                  <ChoiceBox fx:id="_chooser" layoutX="7.0" layoutY="33.0" prefHeight="25.0" prefWidth="143.0">
+                  <ChoiceBox fx:id="_chooser" layoutX="7.0" layoutY="33.0" prefHeight="25.0" prefWidth="143.0" stylesheets="@NameSayerStyle.css">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </ChoiceBox>
-                  <Label layoutX="7.0" layoutY="6.0" prefHeight="30.0" prefWidth="143.0" text="Select a Recording:" />
+                  <Label layoutX="7.0" layoutY="6.0" prefHeight="30.0" prefWidth="143.0" stylesheets="@NameSayerStyle.css" text="Select a Recording:">
+                     <font>
+                        <Font name="Berlin Sans FB" size="12.0" />
+                     </font></Label>
                </children>
             </Pane>
          </children>

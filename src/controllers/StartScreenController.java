@@ -20,6 +20,21 @@ public class StartScreenController {
     }
 
     @FXML
+    private void changePath(){
+
+    }
+
+    @FXML
+    private void badRecordings(){
+
+    }
+
+    @FXML
+    private void practice(){
+
+    }
+
+    @FXML
     private void browse() {
         _main.setSceneToBrowse();
     }
