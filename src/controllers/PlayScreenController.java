@@ -1,6 +1,7 @@
 package controllers;
 
 import data.FileCommands;
+import data.FullName;
 import data.Name;
 import data.NameSayerModel;
 import javafx.application.Platform;
@@ -49,7 +50,7 @@ public class PlayScreenController {
     private int _index;
     private NameSayerModel _nameSayerModel;
     private Main _main;
-    private Name _name;
+    private FullName _name;
     private enum State {IDLE, PLAYING, RECORDING}
     private Timer _timeWorker;
     private AudioStream _clip;
@@ -65,9 +66,6 @@ public class PlayScreenController {
                 if (file.toString().contains("userdata/attempts")) {
                     // If it is an attempt, it is specified
                     return ("Practice Attempt: " + file.getName());
-                } else if (_name.getFiles().size() > 1) {
-                    // If there is more than one database recording, the filename is specified
-                    return ("Database Recording: " + file.getName());
                 }
                 // There is only one database recording, so the user doesn't need to know the file name
                 return ("Database Recording");
@@ -93,7 +91,7 @@ public class PlayScreenController {
                         _delete.setDisable(true);
                         _rating.setDisable(false);
                         _rating.setVisible(true);
-                        _rating.setValue(_name.getRating(newValue));
+                        _rating.setValue(2);
                         _ratingPrompt.setVisible(true);
                     }
                 }
@@ -116,14 +114,13 @@ public class PlayScreenController {
     private void setIndex(int index) {
         _index = index;
         setState(State.IDLE);
-        _name = _playlist.get(_index);
         _progressIndicator.setProgress(0);
         _timer.setText("0s");
         _items = FXCollections.observableArrayList();
-        _items.addAll(_name.getFiles());
-        _items.addAll(_name.getAttempt());
+        _items.addAll(_name.getAudioFiles());
+        _items.addAll(_name.getAttempts());
         _chooser.setItems(_items);
-        _chooser.setValue(_name.getFiles().get(0));
+        _chooser.setValue(_name.getAudioFiles().get(0));
         _nameNumber.setText("Name " + (_index + 1) +" of " + _playlist.size());
         _currentName.setText(_playlist.get(_index).toString());
     }
@@ -207,7 +204,7 @@ public class PlayScreenController {
 
             protected void done() {
                 // Add the attempt which was just recorded.
-                _items.add(_name.getAttempt());
+                _items.add(_name.getAttempts().get(_name.getAttempts().size()-1));
             }
         };
         TimerTask timerTask = new TimerTask() {
@@ -305,7 +302,7 @@ public class PlayScreenController {
             if (alert.getResult() == ButtonType.YES) {
                 _name.deleteAttempt(toDelete);
                 // Setting the selection to a database recording
-                _chooser.setValue(_name.getFiles().get(0));
+                _chooser.setValue(_name.getAudioFiles().get(0));
                 // Removing deleted item as option
                 _chooser.getItems().remove(toDelete);
             }
@@ -317,8 +314,7 @@ public class PlayScreenController {
      */
     @FXML
     private void updateRating(){
-        _name.updateRatingOfFile(_chooser.getValue(),(int)_rating.getValue());
-        _nameSayerModel.writeGoodBadNames();
+        System.out.println("p");
     }
 
     /**

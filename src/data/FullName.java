@@ -1,7 +1,10 @@
 package data;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,6 +32,22 @@ public class FullName {
             _audioFiles.add(subName.getDefault());
         }
     }
+    /**
+     * Starts a recording process in bash which will save a audio file whose name is Name + time
+     * @throws InterruptedException FileCommands.record throws this, being a processbuilder
+     */
+    public void addAttempt() throws InterruptedException {
+        DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy_HH:mm:ss");
+        String attemptName = (_name.replaceAll(" ","_") + "_" + dateFormat.format(new Date()));
+        FileCommands.record(attemptName);
+        // After the recording is completed, the file is added to this Name's attempts
+        _attempts.add(new File("userdata/attempts/" + attemptName + ".wav"));
+    }
+
+    public void deleteAttempt(File attempt) {
+        _attempts.remove(attempt);
+        FileCommands.deleteFile(attempt);
+    }
 
     /**
      * Changes the preferred file at the specified index of the Name. If the file is not one from the Name at that index
@@ -43,6 +62,7 @@ public class FullName {
     public List<File> getAudioFiles() {
         return _audioFiles;
     }
+    public List<File> getAttempts() { return _attempts; }
     public List<Name> getSubNames() {
         return _subNames;
     }

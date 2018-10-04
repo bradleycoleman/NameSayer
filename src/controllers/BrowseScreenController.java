@@ -1,11 +1,14 @@
 package controllers;
 
+import data.FileCommands;
 import data.FullName;
 import data.NameSayerModel;
 import data.Playlist;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog;
 import main.Main;
@@ -27,15 +30,14 @@ public class BrowseScreenController {
             @Override
             public void onChanged(Change<? extends Playlist> c) {
                 if (c.next() && c.wasAdded()) {
-                    _playlist.setItems(FXCollections.observableArrayList(_playlists.getSelectionModel().getSelectedItem()
-                            .getFullNames()));
+                    _currentPlaylist = _playlists.getSelectionModel().getSelectedItem();
+                    _playlist.setItems(FXCollections.observableArrayList(_currentPlaylist.getFullNames()));
                 }
             }
         });
     }
 
     public void update() {
-        System.out.println(_namesModel.getPlaylists().size());
         _playlists.setItems(FXCollections.observableArrayList(_namesModel.getPlaylists()));
         _playlists.getSelectionModel().selectFirst();
     }
@@ -60,7 +62,19 @@ public class BrowseScreenController {
     }
 
     @FXML
+    private void delete() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete: " + _currentPlaylist +"?");
+        alert.setHeaderText(null);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            FileCommands.deleteFile(_currentPlaylist.getFile());
+            _namesModel.getPlaylists().remove(_currentPlaylist);
+            update();
+        }
+    }
+
+    @FXML
     private void edit() {
-        _main.setSceneToCurateEdit(_playlists.getSelectionModel().getSelectedItem());
+        _main.setSceneToCurateEdit(_currentPlaylist);
     }
 }

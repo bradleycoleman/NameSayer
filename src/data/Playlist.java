@@ -91,7 +91,9 @@ public class Playlist {
     public List<File> getAudioFiles(FullName fullName) {
         return fullName.getAudioFiles();
     }
-
+    public File getFile() {
+        return _file;
+    }
     public List<FullName> getFullNames() {
         return _fullNames;
     }

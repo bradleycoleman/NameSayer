@@ -60,23 +60,6 @@ public class Name implements Comparable<Object> {
     }
 
     /**
-     * Starts a recording process in bash which will save a audio file whose name is Name + time
-     * @throws InterruptedException FileCommands.record throws this, being a processbuilder
-     */
-    public void addAttempt() throws InterruptedException {
-        DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy_HH:mm:ss");
-        String attemptName = (_name + "_" + dateFormat.format(new Date()));
-        FileCommands.record(attemptName);
-        // After the recording is completed, the file is added to this Name's attempts
-        _attempt = new File("userdata/attempts/" + attemptName + ".wav");
-    }
-
-    public void deleteAttempt(File attempt) {
-        _attempt = null;
-        FileCommands.deleteFile(attempt);
-    }
-
-    /**
      * Names are sorted alphabetically regardless of case
      */
     @Override
@@ -90,7 +73,6 @@ public class Name implements Comparable<Object> {
     public String toString() {
         return _name;
     }
-    public File getAttempt() {return _attempt;}
     public List<File> getFiles() { return _files; }
 
     /**

@@ -75,7 +75,7 @@
                            </font></Button>
                      </right>
                      <center>
-                        <Button fx:id="_delete" mnemonicParsing="false" text="Delete" BorderPane.alignment="CENTER">
+                        <Button fx:id="_delete" mnemonicParsing="false" onAction="#delete" text="Delete" BorderPane.alignment="CENTER">
                            <font>
                               <Font name="Berlin Sans FB" size="17.0" />
                            </font></Button>

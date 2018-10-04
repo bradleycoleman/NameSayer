@@ -4,6 +4,8 @@ import data.FullName;
 import data.Name;
 import data.NameSayerModel;
 import data.Playlist;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -28,6 +30,7 @@ public class CurateScreenController {
     private Main _main;
     private ObservableList _fullNameList;
     private FullName _currentFullName;
+    private Name _currentSubname;
     private Playlist _playlist;
     private NameSayerModel _nameSayerModel = null;
 
@@ -52,23 +55,29 @@ public class CurateScreenController {
             @Override
             public void onChanged(Change<? extends Name> c) {
                 if (c.next() && c.wasAdded()) {
-                    Name subname = _subnames.getSelectionModel().getSelectedItem();
-                    _fileChooser.setItems(FXCollections.observableArrayList(subname.getFiles()));
-                    int i = _currentFullName.getSubNames().indexOf(subname);
+                    _currentSubname = _subnames.getSelectionModel().getSelectedItem();
+                    _fileChooser.setItems(FXCollections.observableArrayList(_currentSubname.getFiles()));
+                    int i = _currentFullName.getSubNames().indexOf(_currentSubname);
                     // setting the file as the last selected one.
                     _fileChooser.getSelectionModel().select(_currentFullName.getAudioFiles().get(i));
                 }
             }
         });
-
-        // Setting file chooser to display ratings of files from subname
+        // Making a File chooser selection change the preffered file for the current subname
+        _fileChooser.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                _currentFullName.setFileAtIndex((File) newValue, _currentFullName.getSubNames().indexOf(_currentSubname));
+            }
+        });
+        // Setting file chooser to display ratings of files from subname files
         _fileChooser.setConverter(new StringConverter() {
             @Override
             public String toString(Object object) {
                 File file = (File) object;
-                if (_subnames.getSelectionModel().getSelectedItem().getRating(file) == 2) {
+                if (_currentSubname.getRating(file) == 2) {
                     return "✓ " + ((File) object).getName();
-                } else if (_subnames.getSelectionModel().getSelectedItem().getRating(file) == 1) {
+                } else if (_currentSubname.getRating(file) == 1) {
                     return "✕ " + ((File) object).getName();
                 } else {
                     return "(unrated) " + ((File) object).getName();
@@ -159,12 +168,12 @@ public class CurateScreenController {
 
     @FXML
     private void rateGood() {
-        System.out.println("nice");
+        _currentSubname.updateRatingOfFile((File) _fileChooser.getValue(), 2);
     }
 
     @FXML
     private void rateBad() {
-        System.out.println("yuck");
+        _currentSubname.updateRatingOfFile((File) _fileChooser.getValue(),1);
     }
 
     @FXML
@@ -212,6 +221,7 @@ public class CurateScreenController {
         _playlist.setNames(_fullNameList);
         _playlist.updateFile();
         _nameSayerModel.getPlaylists().add(_playlist);
+        _nameSayerModel.writeGoodBadNames();
         _main.setSceneToStart();
     }
 
