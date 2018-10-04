@@ -16,13 +16,17 @@ public class NameSayerModel {
     private List<Name> _database = new ArrayList<Name>();
     private List<Name> _nameslist = new ArrayList<Name>();
     private List<Name> _filteredNameslist = new ArrayList<Name>();
-    private List<Name> _playlist = new ArrayList<Name>();
+    private Playlist _playlist;
     private List<Playlist> _playlists = new ArrayList<>();
 
 
     public NameSayerModel(){
+
         File goodNames = new File("userdata/goodNames.txt");
         File badNames = new File("userdata/badNames.txt");
+        // making  the directories for userdata if they don't exist
+        File playlistDir = new File("userdata/playlists");
+        playlistDir.mkdirs();
 
         // load the database from the folder
         File namesData = new File("names");
@@ -71,7 +75,7 @@ public class NameSayerModel {
             }
         });
 
-        File playlistDir = new File("userdata/playlists");
+
         if (playlistDir.isDirectory()) {
             for (File playlist: playlistDir.listFiles()) {
                 _playlists.add(new Playlist(playlist,this));
@@ -87,14 +91,21 @@ public class NameSayerModel {
     public List<Name> getNameslist(){
         return _nameslist;
     }
-    public List<Name> getPlaylist(){
+    public Playlist getPlaylist(){
         return _playlist;
     }
-    public List<Playlist> getPlatlists() { return _playlists; }
+    public List<Playlist> getPlaylists() { return _playlists; }
     public List<Name> getFilteredNamesList(){
         return _filteredNameslist;
     }
 
+    /**
+     * Set the playlist to be referenced by the play screen and edit screen.
+     * @param playlist
+     */
+    public void setPlaylist(Playlist playlist) {
+        _playlist = playlist;
+    }
     /**
      * This method will place all the names that contain the string filter in the _filteredNameslist;
      * @param filter

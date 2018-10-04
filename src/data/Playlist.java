@@ -6,11 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Playlist {
-    private List<List<Name>> _fullNames;
+    private List<FullName> _fullNames;
     private int _completion;
     private String _name;
     private File _file;
-    private HashMap<List<Name>,List<File>> _preferredFiles;
 
     /**
      * Constructor to be used at startup by NameSayerModel
@@ -20,7 +19,7 @@ public class Playlist {
     public Playlist(File playlist, NameSayerModel model) {
         _file = playlist;
         BufferedReader reader;
-        _preferredFiles = new HashMap<>();
+        _fullNames = new ArrayList<>();
         try{
             reader = new BufferedReader(new FileReader(playlist));
             // first line is name of playlist
@@ -32,21 +31,26 @@ public class Playlist {
             List<Name> names = new ArrayList<>();
             // The list of preffered files for each name in the full name
             List<File> files = new ArrayList<>();
+            // How the user wants the name to be seen
+            String name = reader.readLine();
             while((line = reader.readLine())!= null){
                 if (line.equals("~")) {
-                    // ~ signifies the end of a full name, so the lists are added then reset
-                    _fullNames.add(names);
-                    _preferredFiles.put(names,files);
-                    names = new ArrayList<>();
-                    files = new ArrayList<>();
+                    // ~ signifies the end of a full name, so the details are added then reset
+                    _fullNames.add(new FullName(name, names, files));
+                    // the first line after the ~ is how the user wants the name to read.
+                    if ((line = reader.readLine())!= null) {
+                        name = line;
+                        names = new ArrayList<>();
+                        files = new ArrayList<>();
+                    }
                 } else {
                     // if the line is not null and not a ~, then it is a part of a full name
                     // the line will be of the format "[name] [preffered file filepath]"
                     String[] splitLine = line.split(" ");
-                    for (Name name: model.getDatabase()) {
-                        if (name.toString().equals(splitLine[0])) {
+                    for (Name subname: model.getDatabase()) {
+                        if (subname.toString().equals(splitLine[0])) {
                             // Adding this name to the latest full name
-                            names.add(name);
+                            names.add(subname);
                             // Allocating the preffered file.
                             files.add(new File(splitLine[1]));
                         }
@@ -66,21 +70,13 @@ public class Playlist {
     public Playlist(String name) {
         _name = name;
         _completion = 0;
-        _preferredFiles = new HashMap<>();
+        _fullNames = new ArrayList<>();
         // The file is named as the playlist name without spaces
         _file = new File("userdata/playlists/" + _name.replaceAll(" ","_") + ".txt");
     }
 
-    /**
-     * method to add a new full name to the playlist. each name has its own list of preffered files to allow for different
-     * pronunciations of the same name in the same playlist (e.g. if there are two recordings of the same name available,
-     * with two different pronunciations, and the user wants to practice both in the same playlist).
-     * @param fullName a list of names that make up a full name
-     * @param prefFiles a list of files that correspond to each name
-     */
-    public void addName(List<Name> fullName, List<File> prefFiles) {
-        _preferredFiles.put(fullName,prefFiles);
-        _fullNames.add(fullName);
+    public void setNames(List<FullName> names) {
+        _fullNames = names;
     }
 
     @Override
@@ -92,10 +88,13 @@ public class Playlist {
         _name = newName;
     }
 
-    public List<File> getPrefs(List<Name> fullName) {
-        return _preferredFiles.get(fullName);
+    public List<File> getAudioFiles(FullName fullName) {
+        return fullName.getAudioFiles();
     }
 
+    public List<FullName> getFullNames() {
+        return _fullNames;
+    }
 
     /**
      * Saves the .txt file with all the information about this playlist to be used later.
@@ -107,10 +106,12 @@ public class Playlist {
             writer = new BufferedWriter(new FileWriter(_file, true));
             writer.write(_name + "\n" + _completion + "\n");
             // a full name is a list of Name
-            for(List<Name> fullName: _fullNames){
-                // write each word of the full name
-                for(int i = 0; i < fullName.size(); i++) {
-                    writer.write(fullName.get(i) + " " + _preferredFiles.get(fullName).get(i) + "\n");
+            for(FullName fullName: _fullNames){
+                // The first line is the way the name is written (to allow for custom '-' and capitalization)
+                writer.write(fullName.toString() + "\n");
+                // write each line for the fullName: each is a Name, and the corresponded audio file
+                for(int i = 0; i < fullName.getAudioFiles().size(); i++) {
+                    writer.write(fullName.getSubNames().get(i) + " " + fullName.getAudioFiles().get(i) + "\n");
                 }
                 // end of this full name with the '~' character
                 writer.write("~\n");

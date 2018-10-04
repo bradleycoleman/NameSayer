@@ -2,6 +2,7 @@ package main;
 
 import controllers.*;
 import data.NameSayerModel;
+import data.Playlist;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -64,8 +65,7 @@ public class Main extends Application {
         _playScreenController = playPaneLoader.getController();
         _testScreenController = testPaneLoader.getController();
         _browseScreenController = browsePaneLoader.getController();
-
-        _browseScreenController.initializeData(_nameSayerModel,this);
+        _browseScreenController.initializeData(_nameSayerModel, this);
         _startScreenController.initializeData(this);
         _curateScreenController.initializeData(_nameSayerModel, this);
         _playScreenController.initializeData(_nameSayerModel, this);
@@ -81,13 +81,22 @@ public class Main extends Application {
         return _window;
     }
 
-    public void setSceneToCurate(){
+    public void setSceneToCurateNew(String playlistName){
+        _curateScreenController.newPlaylist(playlistName);
+        _window.setScene(curateScene);
+    }
+
+    public void setSceneToCurateEdit(Playlist playlist) {
+        _curateScreenController.editPlaylist(playlist);
         _window.setScene(curateScene);
     }
 
     public void setSceneToStart() {_window.setScene(startScene);}
 
-    public void setSceneToBrowse() {_window.setScene(browseScene);}
+    public void setSceneToBrowse() {
+        _browseScreenController.update();
+        _window.setScene(browseScene);
+    }
 
     public void setSceneToPlay(){
         _window.setScene(playScene);

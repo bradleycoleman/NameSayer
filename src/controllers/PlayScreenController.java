@@ -105,7 +105,7 @@ public class PlayScreenController {
      * Initializes the practice menu.
      */
     public void startPractice() {
-        _playlist = _nameSayerModel.getPlaylist();
+        //_playlist = _nameSayerModel.getPlaylist();
         setIndex(0);
     }
 
@@ -338,7 +338,7 @@ public class PlayScreenController {
             _timeWorker.cancel();
         }
         // commands the referenced Main to set the scene to the start
-        _main.setSceneToCurate();
+        _main.setSceneToStart();
     }
 
 }

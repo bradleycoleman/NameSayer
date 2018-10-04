@@ -63,7 +63,7 @@
                   <ListView fx:id="_playlist" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                   <BorderPane prefHeight="0.0" prefWidth="183.0" VBox.vgrow="NEVER">
                      <left>
-                        <Button fx:id="_edit" mnemonicParsing="false" text="Edit" BorderPane.alignment="CENTER">
+                        <Button fx:id="_edit" mnemonicParsing="false" onAction="#edit" text="Edit" BorderPane.alignment="CENTER">
                            <font>
                               <Font name="Berlin Sans FB" size="17.0" />
                            </font></Button>

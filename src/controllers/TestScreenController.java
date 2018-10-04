@@ -117,7 +117,7 @@ public class TestScreenController {
         if (_timeWorker != null) {
             _timeWorker.cancel();
         }
-        _main.setSceneToCurate();
+        _main.setSceneToStart();
     }
 
     private class ProgessTask extends TimerTask {
