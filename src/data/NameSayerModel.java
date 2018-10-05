@@ -106,6 +106,7 @@ public class NameSayerModel {
     public void setPlaylist(Playlist playlist) {
         _playlist = playlist;
     }
+    
     /**
      * This method will place all the names that contain the string filter in the _filteredNameslist;
      * @param filter

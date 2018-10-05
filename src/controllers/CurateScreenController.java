@@ -19,7 +19,7 @@ import java.util.*;
 
 
 public class CurateScreenController {
-    @FXML private Button _shuffle, _add, _sortButton;
+    @FXML private Button _shuffle, _add, _sortButton, _viewDatabase;
     @FXML private TextField _fullNameText;
     @FXML private Label _name;
     @FXML private TitledPane _playlistBox, _nameOptions;
@@ -113,6 +113,11 @@ public class CurateScreenController {
         _nameOptions.setVisible(true);
         _subnames.setItems(FXCollections.observableArrayList(name.getSubNames()));
         _subnames.getSelectionModel().selectFirst();
+    }
+
+    @FXML
+    private void viewDatabase(){
+
     }
 
     @FXML
