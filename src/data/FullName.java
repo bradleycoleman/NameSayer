@@ -12,7 +12,7 @@ import java.util.List;
  * to begin with, but can be changed if the user wishes for a different file to be used. This allows for two different
  * pronunciations of the same Name in a single fullName.
  */
-public class FullName {
+public class FullName implements Comparable<Object>{
     private List<Name> _subNames;
     private List<File> _attempts;
     private List<File> _audioFiles;
@@ -66,7 +66,10 @@ public class FullName {
     public List<Name> getSubNames() {
         return _subNames;
     }
-    public String toString() {
-        return _name;
+    public String toString() { return _name; }
+
+
+    public int compareTo(Object n) {
+        return (toString().toLowerCase().compareTo(n.toString().toLowerCase()));
     }
 }

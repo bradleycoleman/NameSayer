@@ -188,11 +188,11 @@ public class CurateScreenController {
 
     @FXML
     private void shuffle() {
-
+        Collections.shuffle(_playlistView.getItems());
     }
     @FXML
     private void sort() {
-
+        Collections.sort(_playlistView.getItems());
     }
 
     @FXML
