@@ -106,8 +106,12 @@ public class TestScreenController {
     @FXML
     private void returnToStartScreen(){
         // If the last playback is still playing, end it
-        if (au.getClip().isActive()) {
-            au.getClip().close();
+        if (au.getClip() != null) {
+            try {
+                au.getClip().close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         if (_timeWorker != null) {
             _timeWorker.cancel();

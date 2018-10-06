@@ -94,7 +94,6 @@ public class PlayScreenController {
         } else if (state == State.IDLE) {
             _recordPrompt.setText("Record Attempt:");
             _play.setDisable(false);
-            _playAttempt.setDisable(false);
             _record.setDisable(false);
             _record.setVisible(true);
             _stop.setVisible(false);
@@ -102,7 +101,9 @@ public class PlayScreenController {
             if (_recentAttempt == null) {
                 // if no attempt has been made, then the user cannot move ahead
                 _next.setDisable(true);
+                _playAttempt.setDisable(true);
             } else {
+                _playAttempt.setDisable(false);
                 _next.setDisable(false);
             }
             _previous.setDisable(false);
@@ -235,15 +236,15 @@ public class PlayScreenController {
     @FXML
     private void returnToStartScreen(){
         // Ending any threads for playback/timing
-        if (au.getClip().isActive()) {
-            au.getClip().close();
+        if (au.getClip() != null) {
+            try{
+                au.getClip().close();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
         }
         if (_timeWorker != null) {
             _timeWorker.cancel();
-        }
-        if (_nameSayerModel.getPlaylists().contains(_playlist)) {
-            System.out.println(_playlist);
-            System.out.println("sweety");
         }
         // commands the referenced Main to set the scene to the start
         _main.setSceneToStart();

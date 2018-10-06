@@ -1,15 +1,20 @@
 package data;
 
 
+import javafx.concurrent.Task;
+
 import javax.sound.sampled.*;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 public class AudioUtils {
 
     private Thread _soundThread;
-    private Clip _clip;
+    private AudioStream _clip;
 
     public AudioUtils() {
         // Don't need to initialize anything. (Yet).
@@ -33,28 +38,10 @@ public class AudioUtils {
      * @param file
      */
     public void playFile(File file) {
-        _soundThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    _clip = AudioSystem.getClip();
-                    AudioInputStream inputStream = AudioSystem.getAudioInputStream(file);
-                    _clip.open(inputStream);
-                    _clip.start();
-                    while(_clip.getMicrosecondLength() != _clip.getMicrosecondPosition())
-                    {
-                        // Wait until the clip finishes to finish the thread.
-                    }
-                } catch (IOException | LineUnavailableException | UnsupportedAudioFileException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
         try {
-            _soundThread.start();
-            _soundThread.join();
-        } catch (Exception e) {
+            _clip = new AudioStream(new FileInputStream(file));
+            AudioPlayer.player.start(_clip);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -65,9 +52,22 @@ public class AudioUtils {
      * @param files
      */
     public void playFiles(List<File> files) {
-        for(File f: files){
-            playFile(f);
-        }
+        Task audio = new Task() {
+            @Override
+            protected Object call() {
+                for(File f: files){
+                    playFile(f);
+                    System.out.println(_clip.getLength());
+                    try {
+                        Thread.sleep(_clip.getLength()/100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+        };
+        new Thread(audio).start();
     }
 
     public int getClipLength(File file) {
@@ -82,7 +82,7 @@ public class AudioUtils {
         return 0;
     }
 
-    public Clip getClip(){
+    public AudioStream getClip(){
         return _clip;
     }
 }
