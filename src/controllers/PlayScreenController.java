@@ -29,7 +29,7 @@ public class PlayScreenController {
     @FXML private Label _recordPrompt;
     @FXML private Button _stop;
     @FXML private Label _timer;
-    @FXML private Button _play;
+    @FXML private Button _play, _playAttempt;
     @FXML private ProgressBar _databaseIndicator, _attemptIndicator;
     private ProgressBar _progressIndicator;
     @FXML private Button _previous;
@@ -80,6 +80,7 @@ public class PlayScreenController {
      */
     private void setState(State state) {
         if (state == State.PLAYING) {
+            _playAttempt.setDisable(true);
             _play.setDisable(true);
             _record.setDisable(true);
             _next.setDisable(true);
@@ -95,6 +96,7 @@ public class PlayScreenController {
         } else if (state == State.IDLE) {
             _recordPrompt.setText("Record Attempt:");
             _play.setDisable(false);
+            _playAttempt.setDisable(false);
             _record.setDisable(false);
             _record.setVisible(true);
             _stop.setVisible(false);
@@ -214,7 +216,7 @@ public class PlayScreenController {
         List<AudioStream> nameRecs = new ArrayList<>();
         for (File file: _name.getAudioFiles()) {
             try {
-                nameRecs.add(new AudioStream(new FileInputStream(file)));
+                nameRecs.add(new AudioStream(new FileInputStream(new File("userdata/fixed/fix"+file.getName()))));
                 length += nameRecs.get(nameRecs.size()-1).getLength();
             } catch (IOException e) {
                 e.printStackTrace();

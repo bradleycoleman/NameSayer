@@ -12,7 +12,23 @@ import java.nio.file.Paths;
 public class FileCommands {
     private static Process _recordingProcess;
 
-
+    /**
+     * removes the silence in a name recording
+     * @param audioFile this file will used to make a version without silence named [filename].wav
+     */
+    public static void removeSilence(File audioFile) {
+        new File("userdata/fixed").mkdirs();
+        try {
+            System.out.println("Shortening " + audioFile.getName());
+            ProcessBuilder silenceProcessBuilder = new ProcessBuilder("bash", "-c", "ffmpeg -i names/" +
+                    audioFile.getName() + " -af silenceremove=1:0:-60dB userdata/fixed/fix" + audioFile.getName());
+            Process process = silenceProcessBuilder.start();
+            process.waitFor();
+            process.destroy();
+        } catch (IOException | InterruptedException ioe) {
+            ioe.printStackTrace();
+        }
+    }
 
     /**
      * Using bash, this records audio until it is cancelled, saving the result to a file of the name given

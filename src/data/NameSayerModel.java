@@ -44,6 +44,9 @@ public class NameSayerModel {
             List<File> database = new ArrayList<>();
             // adding the first database audio file
             database.add(file1);
+            if (!new File("userdata/fixed/fix" + file1.getName()).exists()) {
+                FileCommands.removeSilence(file1);
+            }
             String name;
             // files end in "_[name].wav"
             Pattern p = Pattern.compile("_([a-zA-Z]*)\\.wav");
