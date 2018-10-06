@@ -6,8 +6,10 @@ import data.Playlist;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -24,27 +26,28 @@ public class Main extends Application {
 
     @Override
     public void start(Stage window) throws Exception{
+        Rectangle2D screenSize = Screen.getPrimary().getBounds();
         _window = window;
         // Load all the scenes
         FXMLLoader startPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/startScreen.fxml"));
         Parent startPane = startPaneLoader.load();
-        startScene = new Scene(startPane, 800, 450);
+        startScene = new Scene(startPane, screenSize.getWidth()-75, screenSize.getHeight() -50);
 
         FXMLLoader browsePaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/browseScreen.fxml"));
         Parent browsePane = browsePaneLoader.load();
-        browseScene = new Scene(browsePane,800,450);
+        browseScene = new Scene(browsePane,screenSize.getWidth()-75, screenSize.getHeight()-50);
 
         FXMLLoader curatePaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/curateScreen.fxml"));
         Parent curatePane = curatePaneLoader.load();
-        curateScene = new Scene(curatePane, 800, 450);
+        curateScene = new Scene(curatePane, screenSize.getWidth()-75, screenSize.getHeight()-50);
 
         FXMLLoader playPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/playScreen.fxml"));
         Parent playPane = playPaneLoader.load();
-        playScene = new Scene(playPane, 800, 450);
+        playScene = new Scene(playPane, screenSize.getWidth()-75, screenSize.getHeight()-50);
 
         FXMLLoader testPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/testScreen.fxml"));
         Parent testPane = testPaneLoader.load();
-        testScene = new Scene(testPane, 800, 450);
+        testScene = new Scene(testPane, screenSize.getWidth()-75, screenSize.getHeight()-50);
 
         window.setTitle("Name Sayer");
 
@@ -73,7 +76,6 @@ public class Main extends Application {
         // The first scene will be the playlist editing scene
         window.setScene(startScene);
         window.setResizable(true);
-
         window.show();
     }
 
@@ -94,13 +96,13 @@ public class Main extends Application {
     public void setSceneToStart() {_window.setScene(startScene);}
 
     public void setSceneToBrowse() {
-        _browseScreenController.update();
         _window.setScene(browseScene);
+        _browseScreenController.update();
     }
 
-    public void setSceneToPlay(){
+    public void setSceneToPlay(Playlist playlist){
         _window.setScene(playScene);
-        _playScreenController.startPractice();
+        _playScreenController.startPractice(playlist);
     }
 
     public void setSceneToTest() {

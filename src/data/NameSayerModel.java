@@ -42,19 +42,21 @@ public class NameSayerModel {
         // get number of files, n. while i < n, read listofnamesdata(0)
         for (File file1 : listOfNamesData) {
             List<File> database = new ArrayList<>();
+            // adding the first database audio file
             database.add(file1);
             String name;
+            // files end in "_[name].wav"
             Pattern p = Pattern.compile("_([a-zA-Z]*)\\.wav");
             Matcher m1 = p.matcher(file1.getName());
             if (m1.find()) {
                 name = m1.group(1);
-                // checking if this name has already been done
-                if (!readNames.contains(name)) {
-                    readNames.add(name);
+                // checking if this name has already been done (case insensitive)
+                if (!readNames.contains(name.toLowerCase())) {
+                    readNames.add(name.toLowerCase());
                     for (File file2 : listOfNamesData) {
                         Matcher m2 = p.matcher(file2.getName());
                         if (m2.find() && !file2.equals(file1)) {
-                            if (m2.group(1).equals(name)) {
+                            if (m2.group(1).toLowerCase().equals(name.toLowerCase())) {
                                 database.add(file2);
                             }
                         }

@@ -69,7 +69,7 @@
                            </font></Button>
                      </left>
                      <right>
-                        <Button fx:id="_practice" mnemonicParsing="false" text="Practice" BorderPane.alignment="CENTER">
+                        <Button fx:id="_practice" mnemonicParsing="false" onAction="#practice" text="Practice" BorderPane.alignment="CENTER">
                            <font>
                               <Font name="Berlin Sans FB" size="17.0" />
                            </font></Button>

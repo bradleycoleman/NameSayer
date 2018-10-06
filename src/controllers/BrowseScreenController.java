@@ -74,6 +74,12 @@ public class BrowseScreenController {
     }
 
     @FXML
+    private void practice() {
+        _main.setSceneToPlay(_currentPlaylist);
+    }
+
+
+    @FXML
     private void edit() {
         _main.setSceneToCurateEdit(_currentPlaylist);
     }

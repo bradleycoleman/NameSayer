@@ -1,9 +1,6 @@
 package controllers;
 
-import data.FileCommands;
-import data.FullName;
-import data.Name;
-import data.NameSayerModel;
+import data.*;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -30,7 +27,6 @@ import java.util.TimerTask;
  * of the names. These ratings are saved to a text file, and displayed to future users when they select the name.
  */
 public class PlayScreenController {
-    @FXML private Button _delete;
     @FXML private Label _nameNumber;
     @FXML private Label _currentName;
     @FXML private Button _record;
@@ -41,12 +37,8 @@ public class PlayScreenController {
     @FXML private ProgressBar _progressIndicator;
     @FXML private Button _previous;
     @FXML private Button _next;
-    @FXML private Label _ratingPrompt;
-    @FXML private Slider _rating;
-    @FXML private ChoiceBox<File> _chooser;
 
-    private ObservableList _items;
-    private List<Name> _playlist;
+    private Playlist _playlist;
     private int _index;
     private NameSayerModel _nameSayerModel;
     private Main _main;
@@ -58,52 +50,13 @@ public class PlayScreenController {
     public void initializeData(NameSayerModel nameSayerModel, Main main){
         _nameSayerModel = nameSayerModel;
         _main = main;
-        // Making the drop down menu show a custom label for each file depending on whether the file is an attempt
-        // or a database recording
-        _chooser.setConverter(new StringConverter<File>() {
-            @Override
-            public String toString(File file) {
-                if (file.toString().contains("userdata/attempts")) {
-                    // If it is an attempt, it is specified
-                    return ("Practice Attempt: " + file.getName());
-                }
-                // There is only one database recording, so the user doesn't need to know the file name
-                return ("Database Recording");
-            }
-
-            @Override
-            public File fromString(String string) {
-                return null;
-            }
-        });
-        // Based on whther the user selects a database recording or an attempt, they will have access to different
-        // components.
-        _chooser.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<File>() {
-            @Override
-            public void changed(ObservableValue<? extends File> observable, File oldValue, File newValue) {
-                if (newValue != null) {
-                    if (newValue.toString().contains("userdata/attempts")) {
-                        _delete.setDisable(false);
-                        _rating.setVisible(false);
-                        _rating.setDisable(true);
-                        _ratingPrompt.setVisible(false);
-                    } else {
-                        _delete.setDisable(true);
-                        _rating.setDisable(false);
-                        _rating.setVisible(true);
-                        _rating.setValue(2);
-                        _ratingPrompt.setVisible(true);
-                    }
-                }
-            }
-        });
     }
 
     /**
      * Initializes the practice menu.
      */
-    public void startPractice() {
-        //_playlist = _nameSayerModel.getPlaylist();
+    public void startPractice(Playlist playlist) {
+        _playlist = playlist;
         setIndex(0);
     }
 
@@ -113,16 +66,12 @@ public class PlayScreenController {
      */
     private void setIndex(int index) {
         _index = index;
+        _name = _playlist.getFullNames().get(index);
         setState(State.IDLE);
         _progressIndicator.setProgress(0);
         _timer.setText("0s");
-        _items = FXCollections.observableArrayList();
-        _items.addAll(_name.getAudioFiles());
-        _items.addAll(_name.getAttempts());
-        _chooser.setItems(_items);
-        _chooser.setValue(_name.getAudioFiles().get(0));
-        _nameNumber.setText("Name " + (_index + 1) +" of " + _playlist.size());
-        _currentName.setText(_playlist.get(_index).toString());
+        _nameNumber.setText("Name " + (_index + 1) +" of " + _playlist.getFullNames().size());
+        _currentName.setText(_name.toString());
     }
 
     /**
@@ -131,31 +80,25 @@ public class PlayScreenController {
      */
     private void setState(State state) {
         if (state == State.PLAYING) {
-            _chooser.setDisable(true);
             _play.setDisable(true);
             _record.setDisable(true);
-            _delete.setDisable(true);
             _next.setDisable(true);
             _previous.setDisable(true);
         } else if (state == State.RECORDING){
             _recordPrompt.setText("Stop Recording:");
-            _chooser.setDisable(true);
             _record.setVisible(false);
             _stop.setVisible(true);
             _stop.setDisable(false);
-            _delete.setDisable(true);
             _play.setDisable(true);
             _next.setDisable(true);
             _previous.setDisable(true);
         } else {
             _recordPrompt.setText("Record Attempt:");
-            _chooser.setDisable(false);
             _play.setDisable(false);
             _record.setDisable(false);
             _record.setVisible(true);
             _stop.setVisible(false);
             _stop.setDisable(true);
-            _delete.setDisable(false);
             _next.setDisable(false);
             _previous.setDisable(false);
         }
@@ -166,7 +109,7 @@ public class PlayScreenController {
         } else {
             _previous.setDisable(false);
         }
-        if (_index >= _playlist.size() - 1) {
+        if (_index >= _playlist.getFullNames().size() - 1) {
             _next.setDisable(true);
         } else {
             _next.setDisable(false);
@@ -191,6 +134,7 @@ public class PlayScreenController {
      */
     @FXML
     private void recordAttempt() {
+
         Task<Void> recordTask = new Task<Void>() {
             @Override
             protected Void call() {
@@ -203,8 +147,6 @@ public class PlayScreenController {
             }
 
             protected void done() {
-                // Add the attempt which was just recorded.
-                _items.add(_name.getAttempts().get(_name.getAttempts().size()-1));
             }
         };
         TimerTask timerTask = new TimerTask() {
@@ -237,7 +179,7 @@ public class PlayScreenController {
      */
     @FXML
     private void playRecording(){
-
+        int length = 0;
         // If the last playback is still playing, end it
         if (_clip != null) {
             try{
@@ -246,20 +188,25 @@ public class PlayScreenController {
                 e.printStackTrace();
             }
         }
-
-        // If there is nothing selected, then tell the user to select something.
-        if(_chooser.getSelectionModel().getSelectedItem()==null){
-            System.out.println("It's empty fam, pick a recording");
-            return;
+        List<AudioStream> nameRecs = new ArrayList<>();
+        for (File file: _name.getAudioFiles()) {
+            try {
+                nameRecs.add(new AudioStream(new FileInputStream(file)));
+                length += nameRecs.get(nameRecs.size()-1).getLength();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        Task audioTask = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                for (AudioStream clip: nameRecs) {
+                    AudioPlayer.player.start(clip);
+                }
+                return null;
+            }
+        };
 
-        try {
-            InputStream in = new FileInputStream(_chooser.getValue());
-            _clip = new AudioStream(in);
-            AudioPlayer.player.start(_clip);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         TimerTask progessBar = new TimerTask() {
             private double progress = 0;
@@ -280,33 +227,8 @@ public class PlayScreenController {
 
         _timeWorker = new Timer();
         setState(State.PLAYING);
-        // Temp fix for bug that causes attempts to have double length
-        if (_ratingPrompt.isVisible()) {
-            // If it is a database recording, the rating prompt will be visible
-            _timeWorker.schedule(progessBar,_clip.getLength()/10000, _clip.getLength()/10000);
-        } else {
-            _timeWorker.schedule(progessBar,_clip.getLength()/20000, _clip.getLength()/20000);
-        }
-    }
-
-    /**
-     * Deletes selected attempt in the attempts folder.
-     */
-    @FXML
-    private void deleteRecording() {
-        File toDelete = _chooser.getValue();
-        if (toDelete.toString().contains("userdata/attempts")) {
-            // Asking the user to confirm the deletion
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete " + toDelete.getName() + " ?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
-            alert.showAndWait();
-            if (alert.getResult() == ButtonType.YES) {
-                _name.deleteAttempt(toDelete);
-                // Setting the selection to a database recording
-                _chooser.setValue(_name.getAudioFiles().get(0));
-                // Removing deleted item as option
-                _chooser.getItems().remove(toDelete);
-            }
-        }
+        audioTask.run();
+        _timeWorker.schedule(progessBar,length/10000, length/10000);
     }
 
     /**
