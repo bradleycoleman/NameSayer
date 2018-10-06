@@ -1,9 +1,6 @@
 package controllers;
 
-import data.FullName;
-import data.Name;
-import data.NameSayerModel;
-import data.Playlist;
+import data.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -196,7 +193,11 @@ public class CurateScreenController {
 
     @FXML
     private void play() {
-        System.out.println("play");
+        AudioUtils au = new AudioUtils();
+        if(_currentFullName == null){
+            return;
+        }
+        au.playFile((File)_fileChooser.getValue());
     }
 
     @FXML
@@ -238,9 +239,18 @@ public class CurateScreenController {
     private void exit() {
         _playlist.setNames(_fullNameList);
         _playlist.updateFile();
-        _nameSayerModel.getPlaylists().add(_playlist);
+
         _nameSayerModel.writeGoodBadNames();
         _main.setSceneToStart();
+
+        // Check if playlist already exists on the model
+        for(Playlist p: _nameSayerModel.getPlaylists()){
+            if(p == _playlist){
+                return;
+            }
+        }
+        _nameSayerModel.getPlaylists().add(_playlist);
+
     }
 
 }
