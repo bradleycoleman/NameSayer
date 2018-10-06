@@ -75,6 +75,11 @@ public class Playlist {
         _file = new File("userdata/playlists/" + _name.replaceAll(" ","_") + ".txt");
     }
 
+    public void setCompletion(int completion) {
+        _completion = completion;
+        updateFile();
+    }
+
     public void setNames(List<FullName> names) {
         _fullNames = names;
     }

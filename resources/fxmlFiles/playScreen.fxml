@@ -83,7 +83,7 @@
             <Label fx:id="_timer" text="0s" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
          </children>
       </GridPane>
-      <ProgressBar fx:id="_progressIndicator" prefWidth="9999.0" progress="0.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
+      <ProgressBar fx:id="_databaseIndicator" prefWidth="9999.0" progress="0.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
       <Button fx:id="_previous" mnemonicParsing="false" onAction="#prevName" prefHeight="31.0" prefWidth="145.0" stylesheets="@NameSayerStyle.css" text="Previous Name" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" />
@@ -137,14 +137,14 @@
             <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
          </padding>
       </HBox>
-      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="4">
+      <HBox fx:id="_attemptOption" alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="4">
          <children>
             <Label text="Play Attempt:">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <Button mnemonicParsing="false">
+            <Button mnemonicParsing="false" onAction="#playAttempt">
                <graphic>
                   <Polyline fill="CHARTREUSE" rotate="-90.0" strokeType="INSIDE">
                      <points>

@@ -2,14 +2,10 @@ package controllers;
 
 import data.*;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.util.StringConverter;
+import javafx.scene.layout.HBox;
 import main.Main;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
@@ -34,15 +30,18 @@ public class PlayScreenController {
     @FXML private Button _stop;
     @FXML private Label _timer;
     @FXML private Button _play;
-    @FXML private ProgressBar _progressIndicator;
+    @FXML private ProgressBar _databaseIndicator, _attemptIndicator;
+    private ProgressBar _progressIndicator;
     @FXML private Button _previous;
     @FXML private Button _next;
+    @FXML private HBox _attemptInfo;
 
     private Playlist _playlist;
     private int _index;
     private NameSayerModel _nameSayerModel;
     private Main _main;
     private FullName _name;
+    private File _recentAttempt;
     private enum State {IDLE, PLAYING, RECORDING}
     private Timer _timeWorker;
     private AudioStream _clip;
@@ -65,11 +64,13 @@ public class PlayScreenController {
      * @param index int which signifies the index of the name to be practiced.
      */
     private void setIndex(int index) {
+        _playlist.setCompletion(index + 1);
         _index = index;
         _name = _playlist.getFullNames().get(index);
         setState(State.IDLE);
-        _progressIndicator.setProgress(0);
         _timer.setText("0s");
+        _databaseIndicator.setProgress(0);
+        _attemptIndicator.setProgress(0);
         _nameNumber.setText("Name " + (_index + 1) +" of " + _playlist.getFullNames().size());
         _currentName.setText(_name.toString());
     }
@@ -99,7 +100,7 @@ public class PlayScreenController {
             _record.setVisible(true);
             _stop.setVisible(false);
             _stop.setDisable(true);
-            _next.setDisable(false);
+            _next.setDisable(true);
             _previous.setDisable(false);
         }
 
@@ -128,6 +129,7 @@ public class PlayScreenController {
         setIndex(_index);
     }
 
+
     /**
      * Starts a background task to record the name using ffmpeg, and another to count every second
      * and indicate to the user how long they've been recording for.
@@ -147,6 +149,7 @@ public class PlayScreenController {
             }
 
             protected void done() {
+                _recentAttempt = _name.getAttempts().get(_name.getAttempts().size()-1);
             }
         };
         TimerTask timerTask = new TimerTask() {
@@ -174,20 +177,29 @@ public class PlayScreenController {
         _timeWorker.cancel();
     }
 
+    @FXML
+    private void playAttempt() {
+        _progressIndicator = _attemptIndicator;
+        AudioStream clip = null;
+        try {
+            clip = new AudioStream(new FileInputStream(_recentAttempt));
+            AudioPlayer.player.start(clip);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        _timeWorker = new Timer();
+        setState(State.PLAYING);
+        _timeWorker.schedule(new ProgressBarTask(),clip.getLength()/20000, clip.getLength()/20000);
+    }
+
     /**
      * Plays the current file
      */
     @FXML
     private void playRecording(){
+        _progressIndicator = _databaseIndicator;
         int length = 0;
         // If the last playback is still playing, end it
-        if (_clip != null) {
-            try{
-                _clip.close();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
         List<AudioStream> nameRecs = new ArrayList<>();
         for (File file: _name.getAudioFiles()) {
             try {
@@ -201,42 +213,18 @@ public class PlayScreenController {
             @Override
             protected Object call() throws Exception {
                 for (AudioStream clip: nameRecs) {
+                    System.out.println(nameRecs.size());
                     AudioPlayer.player.start(clip);
+                    wait();
                 }
                 return null;
-            }
-        };
-
-
-        TimerTask progessBar = new TimerTask() {
-            private double progress = 0;
-            @Override
-            public void run() {
-                Platform.runLater(() -> {
-                    _progressIndicator.setProgress(progress/100.0);
-                });
-                if (progress>100) {
-                    Platform.runLater(() -> {
-                        setState(State.IDLE);
-                    });
-                    cancel();
-                }
-                progress++;
             }
         };
 
         _timeWorker = new Timer();
         setState(State.PLAYING);
         audioTask.run();
-        _timeWorker.schedule(progessBar,length/10000, length/10000);
-    }
-
-    /**
-     * This updates the rating of a chosen name.
-     */
-    @FXML
-    private void updateRating(){
-        System.out.println("p");
+        _timeWorker.schedule(new ProgressBarTask(),length/10000, length/10000);
     }
 
     /**
@@ -259,4 +247,20 @@ public class PlayScreenController {
         _main.setSceneToStart();
     }
 
+    private class ProgressBarTask extends TimerTask {
+        private double progress = 0;
+        @Override
+        public void run() {
+            Platform.runLater(() -> {
+                _progressIndicator.setProgress(progress/100.0);
+            });
+            if (progress>100) {
+                Platform.runLater(() -> {
+                    setState(State.IDLE);
+                });
+                cancel();
+            }
+            progress++;
+        }
+    }
 }

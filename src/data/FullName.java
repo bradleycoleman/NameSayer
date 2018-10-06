@@ -22,12 +22,14 @@ public class FullName implements Comparable<Object>{
         _subNames = subNames;
         _name = name;
         _audioFiles = audioFiles;
+        _attempts = new ArrayList<>();
     }
 
     public FullName(String name, List<Name> subNames) {
         _name = name;
         _subNames = subNames;
         _audioFiles = new ArrayList<>();
+        _attempts = new ArrayList<>();
         for (Name subName: _subNames) {
             _audioFiles.add(subName.getDefault());
         }
@@ -41,7 +43,9 @@ public class FullName implements Comparable<Object>{
         String attemptName = (_name.replaceAll(" ","_") + "_" + dateFormat.format(new Date()));
         FileCommands.record(attemptName);
         // After the recording is completed, the file is added to this Name's attempts
+
         _attempts.add(new File("userdata/attempts/" + attemptName + ".wav"));
+        System.out.println("done");
     }
 
     public void deleteAttempt(File attempt) {
