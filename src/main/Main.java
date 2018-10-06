@@ -69,7 +69,7 @@ public class Main extends Application {
         _testScreenController = testPaneLoader.getController();
         _browseScreenController = browsePaneLoader.getController();
         _browseScreenController.initializeData(_nameSayerModel, this);
-        _startScreenController.initializeData(this);
+        _startScreenController.initializeData(_nameSayerModel, this);
         _curateScreenController.initializeData(_nameSayerModel, this);
         _playScreenController.initializeData(_nameSayerModel, this);
 
