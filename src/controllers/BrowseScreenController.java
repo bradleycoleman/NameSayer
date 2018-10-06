@@ -7,10 +7,7 @@ import data.Playlist;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import main.Main;
 
 import java.util.Optional;
@@ -18,6 +15,7 @@ import java.util.Optional;
 public class BrowseScreenController {
     @FXML private ListView<Playlist> _playlists;
     @FXML private ListView<FullName> _playlist;
+    @FXML private TitledPane _playlistBox;
     private Main _main;
     private NameSayerModel _namesModel;
     private Playlist _currentPlaylist;
@@ -25,20 +23,34 @@ public class BrowseScreenController {
     public void initializeData(NameSayerModel namesModel, Main main) {
         _main = main;
         _namesModel = namesModel;
-        _playlists.setItems(FXCollections.observableArrayList(namesModel.getPlaylists()));
         _playlists.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<Playlist>() {
             @Override
             public void onChanged(Change<? extends Playlist> c) {
                 if (c.next() && c.wasAdded()) {
                     _currentPlaylist = _playlists.getSelectionModel().getSelectedItem();
                     _playlist.setItems(FXCollections.observableArrayList(_currentPlaylist.getFullNames()));
+                    _playlistBox.setText(_currentPlaylist.toString());
                 }
             }
         });
+        _playlists.setCellFactory(param -> new ListCell<Playlist>() {
+            @Override
+            protected void updateItem(Playlist item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null || item.toString() == null) {
+                    setText(null);
+                } else {
+                    setText(item.toString() + "\t (Completed " + item.getCompletion() + "/" + item.getFullNames().size() + ")");
+                }
+            }
+        });
+        update();
     }
 
     public void update() {
         _playlists.setItems(FXCollections.observableArrayList(_namesModel.getPlaylists()));
+        _playlists.refresh();
         _playlists.getSelectionModel().selectFirst();
     }
     @FXML

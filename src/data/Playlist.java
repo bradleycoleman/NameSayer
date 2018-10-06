@@ -86,7 +86,10 @@ public class Playlist {
 
     @Override
     public String toString() {
-        return _name + " (Completed " + _completion + "/" + _fullNames.size() + ")";
+        return _name;
+    }
+    public int getCompletion() {
+        return _completion;
     }
 
     public void rename(String newName) {

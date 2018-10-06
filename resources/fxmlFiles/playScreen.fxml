@@ -41,7 +41,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Label fx:id="_nameNumber" text="Name 1 of x" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+      <Label fx:id="_nameNumber" alignment="CENTER" prefHeight="19.0" prefWidth="575.0" text="Name 1 of x" GridPane.columnIndex="1" GridPane.halignment="CENTER">
          <font>
             <Font name="Berlin Sans FB" size="15.0" />
          </font>

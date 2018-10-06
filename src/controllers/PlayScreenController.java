@@ -64,14 +64,13 @@ public class PlayScreenController {
      * @param index int which signifies the index of the name to be practiced.
      */
     private void setIndex(int index) {
-        _playlist.setCompletion(index + 1);
         _index = index;
         _name = _playlist.getFullNames().get(index);
         setState(State.IDLE);
         _timer.setText("0s");
         _databaseIndicator.setProgress(0);
         _attemptIndicator.setProgress(0);
-        _nameNumber.setText("Name " + (_index + 1) +" of " + _playlist.getFullNames().size());
+        _nameNumber.setText("Name " + (_index + 1) +" of " + _playlist.getFullNames().size() + " from " + _playlist);
         _currentName.setText(_name.toString());
     }
 
@@ -93,14 +92,19 @@ public class PlayScreenController {
             _play.setDisable(true);
             _next.setDisable(true);
             _previous.setDisable(true);
-        } else {
+        } else if (state == State.IDLE) {
             _recordPrompt.setText("Record Attempt:");
             _play.setDisable(false);
             _record.setDisable(false);
             _record.setVisible(true);
             _stop.setVisible(false);
             _stop.setDisable(true);
-            _next.setDisable(true);
+            if (_recentAttempt == null) {
+                // if no attempt has been made, then the user cannot move ahead
+                _next.setDisable(true);
+            } else {
+                _next.setDisable(false);
+            }
             _previous.setDisable(false);
         }
 
@@ -111,14 +115,20 @@ public class PlayScreenController {
             _previous.setDisable(false);
         }
         if (_index >= _playlist.getFullNames().size() - 1) {
-            _next.setDisable(true);
-        } else {
-            _next.setDisable(false);
+            _next.setText("Finished!");
         }
     }
 
     @FXML
     private void nextName() {
+        if (_index == _playlist.getFullNames().size() - 1) {
+            Alert congrats = new Alert(Alert.AlertType.INFORMATION);
+            congrats.setTitle("Congratulations!");
+            congrats.setHeaderText("You finished " + _playlist + "!");
+            congrats.setContentText(null);
+            congrats.showAndWait();
+            returnToStartScreen();
+        }
         _index++;
         setIndex(_index);
     }
@@ -150,6 +160,7 @@ public class PlayScreenController {
 
             protected void done() {
                 _recentAttempt = _name.getAttempts().get(_name.getAttempts().size()-1);
+                _playlist.setCompletion(_index + 1);
             }
         };
         TimerTask timerTask = new TimerTask() {
@@ -213,9 +224,8 @@ public class PlayScreenController {
             @Override
             protected Object call() throws Exception {
                 for (AudioStream clip: nameRecs) {
-                    System.out.println(nameRecs.size());
                     AudioPlayer.player.start(clip);
-                    wait();
+                    Thread.sleep(clip.getLength()/100);
                 }
                 return null;
             }
@@ -223,8 +233,8 @@ public class PlayScreenController {
 
         _timeWorker = new Timer();
         setState(State.PLAYING);
-        audioTask.run();
         _timeWorker.schedule(new ProgressBarTask(),length/10000, length/10000);
+        new Thread(audioTask).start();
     }
 
     /**
@@ -242,6 +252,10 @@ public class PlayScreenController {
         }
         if (_timeWorker != null) {
             _timeWorker.cancel();
+        }
+        if (_nameSayerModel.getPlaylists().contains(_playlist)) {
+            System.out.println(_playlist);
+            System.out.println("sweety");
         }
         // commands the referenced Main to set the scene to the start
         _main.setSceneToStart();

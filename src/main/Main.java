@@ -31,23 +31,23 @@ public class Main extends Application {
         // Load all the scenes
         FXMLLoader startPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/startScreen.fxml"));
         Parent startPane = startPaneLoader.load();
-        startScene = new Scene(startPane, screenSize.getWidth()-75, screenSize.getHeight() -50);
+        startScene = new Scene(startPane, screenSize.getWidth()-75, screenSize.getHeight() -75);
 
         FXMLLoader browsePaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/browseScreen.fxml"));
         Parent browsePane = browsePaneLoader.load();
-        browseScene = new Scene(browsePane,screenSize.getWidth()-75, screenSize.getHeight()-50);
+        browseScene = new Scene(browsePane,screenSize.getWidth()-75, screenSize.getHeight()-75);
 
         FXMLLoader curatePaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/curateScreen.fxml"));
         Parent curatePane = curatePaneLoader.load();
-        curateScene = new Scene(curatePane, screenSize.getWidth()-75, screenSize.getHeight()-50);
+        curateScene = new Scene(curatePane, screenSize.getWidth()-75, screenSize.getHeight()-75);
 
         FXMLLoader playPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/playScreen.fxml"));
         Parent playPane = playPaneLoader.load();
-        playScene = new Scene(playPane, screenSize.getWidth()-75, screenSize.getHeight()-50);
+        playScene = new Scene(playPane, screenSize.getWidth()-75, screenSize.getHeight()-75);
 
         FXMLLoader testPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/testScreen.fxml"));
         Parent testPane = testPaneLoader.load();
-        testScene = new Scene(testPane, screenSize.getWidth()-75, screenSize.getHeight()-50);
+        testScene = new Scene(testPane, screenSize.getWidth()-75, screenSize.getHeight()-75);
 
         window.setTitle("Name Sayer");
 
@@ -76,6 +76,7 @@ public class Main extends Application {
         // The first scene will be the playlist editing scene
         window.setScene(startScene);
         window.setResizable(true);
+        window.setMaximized(true);
         window.show();
     }
 
@@ -96,8 +97,8 @@ public class Main extends Application {
     public void setSceneToStart() {_window.setScene(startScene);}
 
     public void setSceneToBrowse() {
-        _window.setScene(browseScene);
         _browseScreenController.update();
+        _window.setScene(browseScene);
     }
 
     public void setSceneToPlay(Playlist playlist){

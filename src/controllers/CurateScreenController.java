@@ -124,7 +124,8 @@ public class CurateScreenController {
     private void addName() {
         List<Name> names = new ArrayList<>();
         String fullNameText = _fullNameText.getText();
-        String[] splitLine = fullNameText.split(" |-");
+        _fullNameText.clear();
+        String[] splitLine = fullNameText.split("[ -]");
         List<String> unfoundNames = new ArrayList<>(Arrays.asList(splitLine));
         for (String word: splitLine) {
             for (Name name: _nameSayerModel.getDatabase()) {
@@ -145,7 +146,8 @@ public class CurateScreenController {
         fullNameText.replaceAll("[ |-]*"," ");
         // if names is empty then the name will not be added to the playlist, user is warned
         if (names.isEmpty()) {
-            Alert noNameAlert = new Alert(Alert.AlertType.ERROR,"None of the inputted names are in the database, please try again",ButtonType.OK);
+            Alert noNameAlert = new Alert(Alert.AlertType.ERROR,"None of the inputted names are in the database,\nplease try again",ButtonType.OK);
+            noNameAlert.setHeaderText("Cannot Add Name");
             noNameAlert.showAndWait();
             return;
         }
@@ -173,12 +175,23 @@ public class CurateScreenController {
 
     @FXML
     private void rateGood() {
-        _currentSubname.updateRatingOfFile((File) _fileChooser.getValue(), 2);
+        updateRatingCurrentFile(2);
     }
 
     @FXML
     private void rateBad() {
-        _currentSubname.updateRatingOfFile((File) _fileChooser.getValue(),1);
+        updateRatingCurrentFile(1);
+    }
+
+    /**
+     * updates rating for name, then refreshes choices by removing and replacing.
+     */
+    private void updateRatingCurrentFile(int rating) {
+        File selected = (File)_fileChooser.getValue();
+        _currentSubname.updateRatingOfFile((File) _fileChooser.getValue(),rating);
+        _fileChooser.getItems().clear();
+        _fileChooser.setItems(FXCollections.observableArrayList(_currentSubname.getFiles()));
+        _fileChooser.getSelectionModel().select(selected);
     }
 
     @FXML
