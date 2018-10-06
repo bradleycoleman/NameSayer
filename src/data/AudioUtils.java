@@ -8,7 +8,8 @@ import java.util.List;
 
 public class AudioUtils {
 
-    private Thread soundThread;
+    private Thread _soundThread;
+    private Clip _clip;
 
     public AudioUtils() {
         // Don't need to initialize anything. (Yet).
@@ -32,15 +33,15 @@ public class AudioUtils {
      * @param file
      */
     public void playFile(File file) {
-        soundThread = new Thread(new Runnable() {
+        _soundThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Clip clip = AudioSystem.getClip();
+                    _clip = AudioSystem.getClip();
                     AudioInputStream inputStream = AudioSystem.getAudioInputStream(file);
-                    clip.open(inputStream);
-                    clip.start();
-                    while(clip.getMicrosecondLength() != clip.getMicrosecondPosition())
+                    _clip.open(inputStream);
+                    _clip.start();
+                    while(_clip.getMicrosecondLength() != _clip.getMicrosecondPosition())
                     {
                         // Wait until the clip finishes to finish the thread.
                     }
@@ -51,8 +52,8 @@ public class AudioUtils {
         });
 
         try {
-            soundThread.start();
-            soundThread.join();
+            _soundThread.start();
+            _soundThread.join();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -79,5 +80,9 @@ public class AudioUtils {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public Clip getClip(){
+        return _clip;
     }
 }

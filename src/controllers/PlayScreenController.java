@@ -7,8 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import main.Main;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -44,7 +42,7 @@ public class PlayScreenController {
     private File _recentAttempt;
     private enum State {IDLE, PLAYING, RECORDING}
     private Timer _timeWorker;
-    private AudioStream _clip;
+    private AudioUtils au = new AudioUtils();
 
     public void initializeData(NameSayerModel nameSayerModel, Main main){
         _nameSayerModel = nameSayerModel;
@@ -196,7 +194,7 @@ public class PlayScreenController {
             return;
         }
         _progressIndicator = _attemptIndicator;
-        AudioUtils au = new AudioUtils();
+
         au.playFile(_recentAttempt);
         int clipLength = au.getClipLength(_recentAttempt);
 
@@ -210,7 +208,6 @@ public class PlayScreenController {
      */
     @FXML
     private void playRecording(){
-        AudioUtils au = new AudioUtils();
         _progressIndicator = _databaseIndicator;
         int totalLength = 0;
         // If the last playback is still playing, end it
@@ -238,12 +235,8 @@ public class PlayScreenController {
     @FXML
     private void returnToStartScreen(){
         // Ending any threads for playback/timing
-        if (_clip != null) {
-            try{
-                _clip.close();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
+        if (au.getClip().isActive()) {
+            au.getClip().close();
         }
         if (_timeWorker != null) {
             _timeWorker.cancel();

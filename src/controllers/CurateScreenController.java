@@ -113,11 +113,6 @@ public class CurateScreenController {
     }
 
     @FXML
-    private void viewDatabase(){
-
-    }
-
-    @FXML
     private void addName() {
         List<Name> names = new ArrayList<>();
         String fullNameText = _fullNameText.getText();

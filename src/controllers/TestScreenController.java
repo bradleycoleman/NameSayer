@@ -1,5 +1,6 @@
 package controllers;
 
+import data.AudioUtils;
 import data.FileCommands;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -32,10 +33,10 @@ public class TestScreenController {
     private TimerTask _timerTask;
     private Timer _timeWorker;
     private AudioInputStream _audio;
-    private Clip _clip;
     private Main _main;
     private Task<Void> _recordTask;
     private final File AUDIOFILE = new File("userdata/test.wav");
+    private AudioUtils au = new AudioUtils();
 
     public void startTest(Main main) {
         _main = main;
@@ -93,14 +94,8 @@ public class TestScreenController {
     @FXML
     private void playTest(){
         setState(State.PLAYING);
-        try {
-            _clip = AudioSystem.getClip();
-            _audio = AudioSystem.getAudioInputStream(AUDIOFILE);
-            _clip.open(_audio);
-            _clip.start();
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
+        au.playFile(AUDIOFILE);
+
         _timerTask = new ProgessTask();
         _timeWorker.schedule(_timerTask,50,50);
     }
@@ -111,8 +106,8 @@ public class TestScreenController {
     @FXML
     private void returnToStartScreen(){
         // If the last playback is still playing, end it
-        if (_clip != null) {
-            _clip.stop();
+        if (au.getClip().isActive()) {
+            au.getClip().close();
         }
         if (_timeWorker != null) {
             _timeWorker.cancel();
