@@ -201,10 +201,6 @@
                <GridPane.margin>
                   <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                </GridPane.margin></Button>
-            <Button fx:id="_viewDatabase" mnemonicParsing="false" onAction="#viewDatabase" text="View the database" GridPane.columnIndex="1" GridPane.valignment="BOTTOM">
-               <GridPane.margin>
-                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-               </GridPane.margin></Button>
          </children>
       </GridPane>
       <Button fx:id="_fileAdd" mnemonicParsing="false" text="Add names from a file" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3">

@@ -16,6 +16,7 @@ public class BrowseScreenController {
     @FXML private ListView<Playlist> _playlists;
     @FXML private ListView<FullName> _playlist;
     @FXML private TitledPane _playlistBox;
+    @FXML private TextField _searchBar;
     private Main _main;
     private NameSayerModel _namesModel;
     private Playlist _currentPlaylist;
@@ -83,6 +84,12 @@ public class BrowseScreenController {
             _namesModel.getPlaylists().remove(_currentPlaylist);
             update();
         }
+    }
+
+    @FXML
+    private void searchPlaylist(){
+        _namesModel.filterPlaylistList(_searchBar.getText());
+        _playlists.setItems(FXCollections.observableArrayList(_namesModel.getFilteredPlaylistList()));
     }
 
     @FXML

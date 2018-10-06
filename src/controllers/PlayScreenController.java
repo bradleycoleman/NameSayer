@@ -192,17 +192,17 @@ public class PlayScreenController {
 
     @FXML
     private void playAttempt() {
-        _progressIndicator = _attemptIndicator;
-        AudioStream clip = null;
-        try {
-            clip = new AudioStream(new FileInputStream(_recentAttempt));
-            AudioPlayer.player.start(clip);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(_recentAttempt == null){
+            return;
         }
+        _progressIndicator = _attemptIndicator;
+        AudioUtils au = new AudioUtils();
+        au.playFile(_recentAttempt);
+        int clipLength = au.getClipLength(_recentAttempt);
+
         _timeWorker = new Timer();
         setState(State.PLAYING);
-        _timeWorker.schedule(new ProgressBarTask(),clip.getLength()/20000, clip.getLength()/20000);
+        _timeWorker.schedule(new ProgressBarTask(),clipLength/20000, clipLength/20000);
     }
 
     /**
@@ -210,33 +210,26 @@ public class PlayScreenController {
      */
     @FXML
     private void playRecording(){
+        AudioUtils au = new AudioUtils();
         _progressIndicator = _databaseIndicator;
-        int length = 0;
+        int totalLength = 0;
         // If the last playback is still playing, end it
-        List<AudioStream> nameRecs = new ArrayList<>();
-        for (File file: _name.getAudioFiles()) {
-            try {
-                nameRecs.add(new AudioStream(new FileInputStream(new File("userdata/fixed/fix"+file.getName()))));
-                length += nameRecs.get(nameRecs.size()-1).getLength();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        Task audioTask = new Task() {
-            @Override
-            protected Object call() throws Exception {
-                for (AudioStream clip: nameRecs) {
-                    AudioPlayer.player.start(clip);
-                    Thread.sleep(clip.getLength()/100);
-                }
-                return null;
-            }
-        };
 
-        _timeWorker = new Timer();
-        setState(State.PLAYING);
-        _timeWorker.schedule(new ProgressBarTask(),length/10000, length/10000);
-        new Thread(audioTask).start();
+        // Find all the fixed versions of the subnames, then play them all
+        List<File> nameRecs = new ArrayList<File>();
+        for (File file: _name.getAudioFiles()) {
+            File fixedFile = new File("userdata/fixed/fix"+file.getName());
+            nameRecs.add(fixedFile);
+            totalLength += au.getClipLength(fixedFile);
+        }
+
+        if(totalLength != 0){
+            _timeWorker = new Timer();
+            setState(State.PLAYING);
+            _timeWorker.schedule(new ProgressBarTask(),totalLength/10000, totalLength/10000);
+        }
+
+        au.playFiles(nameRecs);
     }
 
     /**

@@ -32,7 +32,7 @@
          <content>
             <VBox spacing="2.0">
                <children>
-                  <TextField fx:id="_searchBar" promptText="Search for a playlist">
+                  <TextField fx:id="_searchBar" onKeyReleased="#searchPlaylist" onKeyTyped="#searchPlaylist" promptText="Search for a playlist">
                      <font>
                         <Font name="Berlin Sans FB" size="13.0" />
                      </font></TextField>
