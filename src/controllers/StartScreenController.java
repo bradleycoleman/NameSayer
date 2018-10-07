@@ -33,16 +33,18 @@ public class StartScreenController {
 
         _randomizedPlaylist = new Playlist("Randomized Playlist");
         // Generate 5 random full names
-        for(int i = 0; i < 5; i++){
-            List<Name> subnames = new ArrayList<Name>();
-            subnames.add(_nameSayerModel.getDatabase().get(rnd.nextInt(_nameSayerModel.getDatabase().size())));
-            subnames.add(_nameSayerModel.getDatabase().get(rnd.nextInt(_nameSayerModel.getDatabase().size())));
+        if (_nameSayerModel.getDatabase().size() > 5) {
+            for(int i = 0; i < 5; i++){
+                List<Name> subnames = new ArrayList<Name>();
+                subnames.add(_nameSayerModel.getDatabase().get(rnd.nextInt(_nameSayerModel.getDatabase().size())));
+                subnames.add(_nameSayerModel.getDatabase().get(rnd.nextInt(_nameSayerModel.getDatabase().size())));
 
-            FullName fullName = new FullName(subnames.get(0).toString()+" "+subnames.get(1).toString(), subnames);
-            _randomizedPlaylist.getFullNames().add(fullName);
+                FullName fullName = new FullName(subnames.get(0).toString()+" "+subnames.get(1).toString(), subnames);
+                _randomizedPlaylist.getFullNames().add(fullName);
+            }
+
+            _defaultNames.setItems(FXCollections.observableArrayList(_randomizedPlaylist.getFullNames()));
         }
-
-        _defaultNames.setItems(FXCollections.observableArrayList(_randomizedPlaylist.getFullNames()));
 
     }
 
