@@ -54,10 +54,10 @@ public class CurateScreenController {
         _subnames.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<Name>() {
             @Override
             public void onChanged(Change<? extends Name> c) {
-                if (c.next() && c.wasAdded()) {
+                if (c.next() ) {
                     _currentSubname = _subnames.getSelectionModel().getSelectedItem();
                     _fileChooser.setItems(FXCollections.observableArrayList(_currentSubname.getFiles()));
-                    int i = _currentFullName.getSubNames().indexOf(_currentSubname);
+                    int i = _subnames.getSelectionModel().getSelectedIndex();
                     // setting the file as the last selected one.
                     _fileChooser.getSelectionModel().select(_currentFullName.getAudioFiles().get(i));
                 }
@@ -67,7 +67,7 @@ public class CurateScreenController {
         _fileChooser.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                _currentFullName.setFileAtIndex((File) newValue, _currentFullName.getSubNames().indexOf(_currentSubname));
+                _currentFullName.setFileAtIndex((File) newValue, _subnames.getSelectionModel().getSelectedIndex());
             }
         });
         // Setting file chooser to display ratings of files from subname files

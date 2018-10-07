@@ -63,6 +63,7 @@ public class PlayScreenController {
      */
     private void setIndex(int index) {
         _index = index;
+        _recentAttempt = null;
         _name = _playlist.getFullNames().get(index);
         setState(State.IDLE);
         _timer.setText("0s");
@@ -87,7 +88,7 @@ public class PlayScreenController {
             _recordPrompt.setText("Stop Recording:");
             _record.setVisible(false);
             _stop.setVisible(true);
-            _stop.setDisable(false);
+            _stop.setDisable(true);
             _play.setDisable(true);
             _next.setDisable(true);
             _previous.setDisable(true);
@@ -117,6 +118,8 @@ public class PlayScreenController {
         }
         if (_index >= _playlist.getFullNames().size() - 1) {
             _next.setText("Finished!");
+        } else {
+            _next.setText("Next Name");
         }
     }
 
@@ -158,6 +161,7 @@ public class PlayScreenController {
             protected void done() {
                 _recentAttempt = _name.getAttempts().get(_name.getAttempts().size()-1);
                 _playlist.setCompletion(_index + 1);
+                setState(PlayScreenController.State.IDLE);
             }
         };
         TimerTask timerTask = new TimerTask() {
@@ -181,7 +185,6 @@ public class PlayScreenController {
     @FXML
     private void stopAttempt() {
         FileCommands.cancelRecording();
-        setState(State.IDLE);
         _timeWorker.cancel();
     }
 
@@ -197,7 +200,7 @@ public class PlayScreenController {
 
         _timeWorker = new Timer();
         setState(State.PLAYING);
-        _timeWorker.schedule(new ProgressBarTask(),clipLength/20000, clipLength/20000);
+        _timeWorker.schedule(new ProgressBarTask(),clipLength/5000, clipLength/5000);
     }
 
     /**
@@ -215,14 +218,14 @@ public class PlayScreenController {
             File fixedFile = new File("names/"+file.getName());
             nameRecs.add(fixedFile);
             totalLength += au.getClipLength(fixedFile);
+            System.out.println(totalLength);
         }
 
         if(totalLength != 0){
             _timeWorker = new Timer();
             setState(State.PLAYING);
-            _timeWorker.schedule(new ProgressBarTask(),totalLength/10000, totalLength/10000);
+            _timeWorker.schedule(new ProgressBarTask(),totalLength/5000, totalLength/5000);
         }
-        System.out.println(nameRecs);
         au.playFiles(nameRecs);
     }
 
