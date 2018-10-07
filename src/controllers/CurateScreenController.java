@@ -32,6 +32,7 @@ public class CurateScreenController {
     private Playlist _playlist;
     private NameSayerModel _nameSayerModel = null;
     private FileChooser _fileDialog = new FileChooser();
+    private AudioUtils _au;
 
 
     /**
@@ -197,11 +198,11 @@ public class CurateScreenController {
 
     @FXML
     private void play() {
-        AudioUtils au = new AudioUtils();
+        _au = new AudioUtils();
         if(_currentFullName == null){
             return;
         }
-        au.playFile((File)_fileChooser.getValue());
+        _au.playFile((File)_fileChooser.getValue());
     }
 
     @FXML
@@ -285,7 +286,13 @@ public class CurateScreenController {
 
         _nameSayerModel.writeGoodBadNames();
         _main.setSceneToStart();
-
+        if (_au != null && _au.getClip() != null) {
+            try {
+                _au.getClip().close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         // Check if playlist already exists on the model
         for(Playlist p: _nameSayerModel.getPlaylists()){
             if(p == _playlist){

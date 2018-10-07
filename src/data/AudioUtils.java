@@ -59,7 +59,6 @@ public class AudioUtils {
             protected Object call() {
                 for(File f: files){
                     playFile(f);
-                    System.out.println(_clip.getLength());
                     try {
                         Thread.sleep(_clip.getLength()/100);
                     } catch (InterruptedException e) {

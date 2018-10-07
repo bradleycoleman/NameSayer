@@ -212,7 +212,7 @@ public class PlayScreenController {
         // Find all the fixed versions of the subnames, then play them all
         List<File> nameRecs = new ArrayList<File>();
         for (File file: _name.getAudioFiles()) {
-            File fixedFile = new File("userdata/fixed/fix"+file.getName());
+            File fixedFile = new File("names/"+file.getName());
             nameRecs.add(fixedFile);
             totalLength += au.getClipLength(fixedFile);
         }
