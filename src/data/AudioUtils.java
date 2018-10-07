@@ -3,7 +3,6 @@ package data;
 
 import javafx.concurrent.Task;
 
-import javax.sound.sampled.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -73,11 +72,10 @@ public class AudioUtils {
 
     public int getClipLength(File file) {
         try {
-            Clip clip = AudioSystem.getClip();
-            AudioInputStream inputStream = AudioSystem.getAudioInputStream(file);
-            clip.open(inputStream);
-            return clip.getFrameLength();
-        } catch (IOException | LineUnavailableException | UnsupportedAudioFileException e) {
+        	InputStream inputStream = new FileInputStream(file);
+            _clip = new AudioStream(inputStream);
+            return _clip.getLength();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return 0;
