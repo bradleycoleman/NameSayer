@@ -114,4 +114,8 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+    
+    public BrowseScreenController getBrowseScreenController() {
+    	return _browseScreenController;
+    }
 }

@@ -1,5 +1,6 @@
 package controllers;
 
+import data.AudioLevelListener;
 import data.FileCommands;
 import data.FullName;
 import data.NameSayerModel;
@@ -17,10 +18,13 @@ public class BrowseScreenController {
     @FXML private ListView<FullName> _playlist;
     @FXML private TitledPane _playlistBox;
     @FXML private TextField _searchBar;
+    @FXML private ProgressBar _micLevel;
+    
     private Main _main;
     private NameSayerModel _namesModel;
     private Playlist _currentPlaylist;
-
+    private AudioLevelListener all;
+    
     public void initializeData(NameSayerModel namesModel, Main main) {
         _main = main;
         _namesModel = namesModel;
@@ -47,6 +51,16 @@ public class BrowseScreenController {
             }
         });
         update();
+        
+        Thread listenThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				all = new AudioLevelListener(_main);
+			}
+        });
+        
+        listenThread.start();
+        
     }
 
     public void update() {
@@ -54,6 +68,7 @@ public class BrowseScreenController {
         _playlists.refresh();
         _playlists.getSelectionModel().selectFirst();
     }
+    
     @FXML
     private void returnToStart() {
         _main.setSceneToStart();
@@ -101,5 +116,9 @@ public class BrowseScreenController {
     @FXML
     private void edit() {
         _main.setSceneToCurateEdit(_currentPlaylist);
+    }
+    
+    public ProgressBar getMicLevelBar() {
+    	return _micLevel;
     }
 }

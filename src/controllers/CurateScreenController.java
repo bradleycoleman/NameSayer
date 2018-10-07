@@ -25,6 +25,7 @@ public class CurateScreenController {
     @FXML private ListView<FullName> _playlistView;
     @FXML private ListView<Name> _subnames;
 
+
     private Main _main;
     private ObservableList _fullNameList;
     private FullName _currentFullName;
