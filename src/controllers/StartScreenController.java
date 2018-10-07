@@ -18,7 +18,6 @@ import java.util.Random;
 
 
 public class StartScreenController {
-    @FXML private MenuItem _changePath, _badRecordings;
     @FXML private Button _browse, _practice;
     @FXML private ListView _defaultNames;
     @FXML private GridPane _grid;
@@ -67,8 +66,4 @@ public class StartScreenController {
         _main.setSceneToBrowse();
     }
 
-    @FXML
-    private void testMic() {
-        _main.setSceneToTest();
-    }
 }

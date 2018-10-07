@@ -21,7 +21,6 @@ public class Main extends Application {
     private BrowseScreenController _browseScreenController;
     private CurateScreenController _curateScreenController;
     private PlayScreenController _playScreenController;
-    private TestScreenController _testScreenController;
     private NameSayerModel _nameSayerModel;
 
     @Override
@@ -45,10 +44,6 @@ public class Main extends Application {
         Parent playPane = playPaneLoader.load();
         playScene = new Scene(playPane, screenSize.getWidth()-75, screenSize.getHeight()-75);
 
-        FXMLLoader testPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/testScreen.fxml"));
-        Parent testPane = testPaneLoader.load();
-        testScene = new Scene(testPane, screenSize.getWidth()-75, screenSize.getHeight()-75);
-
         window.setTitle("Name Sayer");
 
         // Set the closing operation of the stage
@@ -66,7 +61,6 @@ public class Main extends Application {
         _startScreenController = startPaneLoader.getController();
         _curateScreenController = curatePaneLoader.getController();
         _playScreenController = playPaneLoader.getController();
-        _testScreenController = testPaneLoader.getController();
         _browseScreenController = browsePaneLoader.getController();
         _browseScreenController.initializeData(_nameSayerModel, this);
         _startScreenController.initializeData(_nameSayerModel, this);
@@ -108,7 +102,6 @@ public class Main extends Application {
 
     public void setSceneToTest() {
         _window.setScene(testScene);
-        _testScreenController.startTest(this);
     }
 
     public static void main(String[] args) {
