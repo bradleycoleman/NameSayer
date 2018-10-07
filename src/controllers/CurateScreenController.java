@@ -241,13 +241,13 @@ public class CurateScreenController {
 
     @FXML
     private void fileAdd() {
-        File file = _fileDialog.showOpenDialog(_main.getStage());
         _fileDialog.setTitle("Find a playlist .txt file");
         _fileDialog.setInitialDirectory(
                 new File(System.getProperty("user.home"))
         );
         _fileDialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("TEXT", "*.txt")
         );
+        File file = _fileDialog.showOpenDialog(_main.getStage());
         if (file != null) {
             BufferedReader reader;
             List<String> notFound = new ArrayList<>();
