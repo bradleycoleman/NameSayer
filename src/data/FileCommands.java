@@ -10,7 +10,7 @@ import java.nio.file.Paths;
  * This class includes various static methods relating to file manipulation. Many of the methods use bash processes
  */
 public class FileCommands {
-    private static Process _recordingProcess;
+    private static Process _process;
 
     /**
      * removes the silence in a name recording
@@ -18,55 +18,44 @@ public class FileCommands {
      */
     public static void removeSilence(File audioFile) {
         new File("userdata/fixed").mkdirs();
-        try {
-            System.out.println("Shortening " + audioFile.getName());
-            ProcessBuilder silenceProcessBuilder = new ProcessBuilder("bash", "-c", "ffmpeg -i names/" +
-                    audioFile.getName() + " -af silenceremove=1:0:-60dB userdata/fixed/fix" + audioFile.getName());
-            Process process = silenceProcessBuilder.start();
-            process.waitFor();
-            process.destroy();
-        } catch (IOException | InterruptedException ioe) {
-            ioe.printStackTrace();
-        }
+        bashProcess("ffmpeg -i names/" + audioFile.getName() +" -filter:a loudnorm userdata/fixed/loud" + audioFile.getName(),
+                null);
+        System.out.println("created" +audioFile.getName() + "loud");
+        bashProcess("ffmpeg -i userdata/fixed/loud" + audioFile.getName() + " -af silenceremove=1:0:-60dB userdata/fixed/fix" + audioFile.getName(),
+                null);
     }
+
 
     /**
      * Using bash, this records audio until it is cancelled, saving the result to a file of the name given
      * @param name The name of the file
      */
-    public static void record(String name) throws InterruptedException {
+    public static void record(String name) {
         // Making a directory for the attempts, will not make directory if it already exists.
         new File("userdata/attempts").mkdirs();
-
         // Recording until the process is cancelled
-        try {
-            ProcessBuilder recordingProcessBuilder = new ProcessBuilder("bash", "-c", "ffmpeg -f alsa -i default $\""+name+"\".wav");
-            recordingProcessBuilder.directory(new File("userdata/attempts"));
-            _recordingProcess = recordingProcessBuilder.start();
-            _recordingProcess.waitFor();
-            _recordingProcess.destroy();
-        }
-        catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
+        bashProcess("ffmpeg -f alsa -i default $\""+name+"\".wav", new File("userdata/attempts"));
     }
 
     /**
      * Using bash, this records five seconds of audio, saving the result to a file to userdata/test.wav
      */
-    public static void recordTest() throws InterruptedException {
+    public static void recordTest() {
         // Making a directory for the test, will not make directory if it already exists.
         new File("userdata").mkdirs();
+        // recording for 5s
+        bashProcess("ffmpeg -f alsa -i default -t 5 test.wav", new File("userdata"));
+    }
 
-        // Recording until the process is cancelled
+    private static void bashProcess(String command, File directory) {
         try {
-            ProcessBuilder recordingProcessBuilder = new ProcessBuilder("bash", "-c", "ffmpeg -f alsa -i default -t 5 test.wav");
-            recordingProcessBuilder.directory(new File("userdata"));
-            _recordingProcess = recordingProcessBuilder.start();
-            _recordingProcess.waitFor();
-            _recordingProcess.destroy();
+            ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", command);
+            processBuilder.directory(directory);
+            _process = processBuilder.start();
+            _process.waitFor();
+            _process.destroy();
         }
-        catch (IOException ioe) {
+        catch (IOException | InterruptedException ioe) {
             ioe.printStackTrace();
         }
     }
@@ -75,7 +64,7 @@ public class FileCommands {
      * This method ends the recording process in bash
      */
     public static void cancelRecording() {
-        _recordingProcess.destroy();
+        _process.destroy();
     }
 
     /**

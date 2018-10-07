@@ -38,7 +38,7 @@ public class FullName implements Comparable<Object>{
      * Starts a recording process in bash which will save a audio file whose name is Name + time
      * @throws InterruptedException FileCommands.record throws this, being a processbuilder
      */
-    public void addAttempt() throws InterruptedException {
+    public void addAttempt() {
         DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy_HH:mm:ss");
         String attemptName = (_name.replaceAll(" ","_") + "_" + dateFormat.format(new Date()));
         FileCommands.record(attemptName);

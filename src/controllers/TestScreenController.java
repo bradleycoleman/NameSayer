@@ -75,11 +75,7 @@ public class TestScreenController {
         _recordTask = new Task<Void>() {
             @Override
             protected Void call() {
-                try {
-                    FileCommands.recordTest();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                FileCommands.recordTest();
                 return null;
             }
         };

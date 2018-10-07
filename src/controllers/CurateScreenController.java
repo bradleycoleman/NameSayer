@@ -8,10 +8,11 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 import main.Main;
 
-import java.io.File;
+import java.io.*;
 import java.util.*;
 
 
@@ -30,6 +31,7 @@ public class CurateScreenController {
     private Name _currentSubname;
     private Playlist _playlist;
     private NameSayerModel _nameSayerModel = null;
+    private FileChooser _fileDialog = new FileChooser();
 
 
     /**
@@ -117,41 +119,22 @@ public class CurateScreenController {
         List<Name> names = new ArrayList<>();
         String fullNameText = _fullNameText.getText();
         _fullNameText.clear();
-        String[] splitLine = fullNameText.split("[ -]");
-        List<String> unfoundNames = new ArrayList<>(Arrays.asList(splitLine));
-        for (String word: splitLine) {
-            for (Name name: _nameSayerModel.getDatabase()) {
-                if (word.toLowerCase().equals(name.toString().toLowerCase())) {
-                    // once a matching name is found for the word, it is added to the list of names and the word is
-                    // removed from the unfounded words
-                    names.add(name);
-                    unfoundNames.remove(word);
-                    break;
-                }
-            }
-        }
-        // removing unfound names from full name
-        for (String unfound : unfoundNames) {
-            fullNameText = fullNameText.replace(unfound, "");
-        }
-        // removing excess whitespace
-        fullNameText.replaceAll("[ |-]*"," ");
+        FullName fullName = addNameFromString(fullNameText);
         // if names is empty then the name will not be added to the playlist, user is warned
-        if (names.isEmpty()) {
+        if (fullName == null) {
             Alert noNameAlert = new Alert(Alert.AlertType.ERROR,"None of the inputted names are in the database,\nplease try again",ButtonType.OK);
             noNameAlert.setHeaderText("Cannot Add Name");
             noNameAlert.showAndWait();
             return;
         }
-        FullName fullName = new FullName(fullNameText, names);
+        for (Name subName: fullName.getSubNames()) {
+            fullNameText = fullNameText.replaceAll(subName.toString(),"\n");
+        }
         // If any of the names were left unfound, then alert the user before asking if they still want to add the name
-        if (!unfoundNames.isEmpty()) {
+        if (!fullName.toString().equals(fullNameText)) {
             StringBuilder sb = new StringBuilder();
             sb.append("The following names are not in the database:\n");
-            for (String unfound: unfoundNames) {
-                sb.append(unfound);
-                sb.append("\n");
-            }
+            sb.append(fullNameText);
             sb.append("The full name will be added as: ");
             sb.append(fullName);
             Alert noNameAlert = new Alert(Alert.AlertType.CONFIRMATION, sb.toString(), ButtonType.YES, ButtonType.NO);
@@ -163,6 +146,32 @@ public class CurateScreenController {
             }
         }
         _fullNameList.add(fullName);
+    }
+
+    private FullName addNameFromString(String nameText) {
+        List<Name> names = new ArrayList<>();
+        String[] splitLine = nameText.split("[ -]");
+        List<String> unfoundNames = new ArrayList<>(Arrays.asList(splitLine));
+        for (String word: splitLine) {
+            for (Name name : _nameSayerModel.getDatabase()) {
+                if (word.toLowerCase().equals(name.toString().toLowerCase())) {
+                    // once a matching name is found for the word, it is added to the list of names and the word is
+                    // removed from the unfounded words
+                    names.add(name);
+                    unfoundNames.remove(word);
+                    break;
+                }
+            }
+        }
+        // removing unfound names from full name
+        for (String unfound : unfoundNames) {
+            nameText = nameText.replace(unfound, "");
+        }
+        nameText = nameText.replaceAll("[ -]*2"," ");
+        if (!names.isEmpty()) {
+            return new FullName(nameText,names);
+        }
+        return null;
     }
 
     @FXML
@@ -228,6 +237,45 @@ public class CurateScreenController {
     private void refreshName() {
         _playlistBox.setText(_playlist.toString());
         _name.setText(_playlist.toString());
+    }
+
+    @FXML
+    private void fileAdd() {
+        File file = _fileDialog.showOpenDialog(_main.getStage());
+        _fileDialog.setTitle("Find a playlist .txt file");
+        _fileDialog.setInitialDirectory(
+                new File(System.getProperty("user.home"))
+        );
+        _fileDialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("TEXT", "*.txt")
+        );
+        if (file != null) {
+            BufferedReader reader;
+            List<String> notFound = new ArrayList<>();
+            try {
+                reader = new BufferedReader(new FileReader(file));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    FullName newName = addNameFromString(line);
+                    if (newName == null || !line.equals(newName.toString())) {
+                        notFound.add(line);
+                    }
+                    if (newName != null) {
+                        _fullNameList.add(newName);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (!notFound.isEmpty()) {
+                StringBuilder sb = new StringBuilder();
+                for (String line: notFound) {
+                    sb.append(line + "\n");
+                }
+                Alert unfoundAlert = new Alert(Alert.AlertType.CONFIRMATION,sb.toString(), ButtonType.OK);
+                unfoundAlert.setHeaderText("The following names included words not in the database:");
+                unfoundAlert.showAndWait();
+            }
+        }
     }
 
     @FXML

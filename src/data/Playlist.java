@@ -9,6 +9,7 @@ public class Playlist {
     private List<FullName> _fullNames;
     private int _completion;
     private String _name;
+    private NameSayerModel _nameSayerModel;
     private File _file;
 
     /**
@@ -18,8 +19,9 @@ public class Playlist {
      */
     public Playlist(File playlist, NameSayerModel model) {
         _file = playlist;
-        BufferedReader reader;
+        _nameSayerModel = model;
         _fullNames = new ArrayList<>();
+        BufferedReader reader;
         try{
             reader = new BufferedReader(new FileReader(playlist));
             // first line is name of playlist

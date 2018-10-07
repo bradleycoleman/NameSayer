@@ -7,6 +7,7 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
@@ -39,7 +40,8 @@ public class AudioUtils {
      */
     public void playFile(File file) {
         try {
-            _clip = new AudioStream(new FileInputStream(file));
+            InputStream inputStream = new FileInputStream(file);
+            _clip = new AudioStream(inputStream);
             AudioPlayer.player.start(_clip);
         } catch (IOException e) {
             e.printStackTrace();

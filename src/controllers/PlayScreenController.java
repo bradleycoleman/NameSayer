@@ -151,11 +151,7 @@ public class PlayScreenController {
         Task<Void> recordTask = new Task<Void>() {
             @Override
             protected Void call() {
-                try {
-                    _name.addAttempt();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                _name.addAttempt();
                 return null;
             }
 
@@ -226,7 +222,7 @@ public class PlayScreenController {
             setState(State.PLAYING);
             _timeWorker.schedule(new ProgressBarTask(),totalLength/10000, totalLength/10000);
         }
-
+        System.out.println(nameRecs);
         au.playFiles(nameRecs);
     }
 
