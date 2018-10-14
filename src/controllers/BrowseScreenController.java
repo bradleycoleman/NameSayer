@@ -7,8 +7,13 @@ import data.NameSayerModel;
 import data.Playlist;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import main.Main;
 
 import java.util.Optional;
@@ -19,6 +24,8 @@ public class BrowseScreenController {
     @FXML private TitledPane _playlistBox;
     @FXML private TextField _searchBar;
     @FXML private ProgressBar _micLevel;
+    @FXML private Button _practice;
+    @FXML private GridPane _grid;
     
     private Main _main;
     private NameSayerModel _namesModel;
@@ -28,13 +35,22 @@ public class BrowseScreenController {
     public void initializeData(NameSayerModel namesModel, Main main) {
         _main = main;
         _namesModel = namesModel;
+        // When a playlist is selected, the names on the right will change to be the names from the playlist
         _playlists.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<Playlist>() {
             @Override
             public void onChanged(Change<? extends Playlist> c) {
-                if (c.next() && c.wasAdded()) {
-                    _currentPlaylist = _playlists.getSelectionModel().getSelectedItem();
-                    _playlist.setItems(FXCollections.observableArrayList(_currentPlaylist.getFullNames()));
-                    _playlistBox.setText(_currentPlaylist.toString());
+                if (c.next()) {
+                    if (c.wasAdded()) {
+                        _currentPlaylist = _playlists.getSelectionModel().getSelectedItem();
+                        _playlist.setItems(FXCollections.observableArrayList(_currentPlaylist.getFullNames()));
+                        _playlistBox.setText(_currentPlaylist.toString());
+                        _practice.setDisable(false);
+                    } else {
+                        _currentPlaylist = null;
+                        _playlistBox.setText("Current Playlist");
+                        _playlist.getItems().clear();
+                        _practice.setDisable(true);
+                    }
                 }
             }
         });
@@ -51,16 +67,15 @@ public class BrowseScreenController {
             }
         });
         update();
-        
+
         Thread listenThread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				all = new AudioLevelListener(_main);
-			}
+            @Override
+            public void run() {
+                all = new AudioLevelListener(_main);
+            }
         });
-        
+        _practice.setDisable(true);
         listenThread.start();
-        
     }
 
     public void update() {

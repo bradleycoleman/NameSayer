@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 
 public class Main extends Application {
@@ -30,26 +31,25 @@ public class Main extends Application {
         // Load all the scenes
         FXMLLoader startPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/startScreen.fxml"));
         Parent startPane = startPaneLoader.load();
-        startScene = new Scene(startPane, screenSize.getWidth()-75, screenSize.getHeight() -75);
+        startScene = new Scene(startPane, 800, 500);
 
         FXMLLoader browsePaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/browseScreen.fxml"));
         Parent browsePane = browsePaneLoader.load();
-        browseScene = new Scene(browsePane,screenSize.getWidth()-75, screenSize.getHeight()-75);
+        browseScene = new Scene(browsePane,800, 500);
 
         FXMLLoader curatePaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/curateScreen.fxml"));
         Parent curatePane = curatePaneLoader.load();
-        curateScene = new Scene(curatePane, screenSize.getWidth()-75, screenSize.getHeight()-75);
+        curateScene = new Scene(curatePane, 800, 500);
 
         FXMLLoader playPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/playScreen.fxml"));
         Parent playPane = playPaneLoader.load();
-        playScene = new Scene(playPane, screenSize.getWidth()-75, screenSize.getHeight()-75);
+        playScene = new Scene(playPane, 800, 500);
 
         window.setTitle("Name Sayer");
 
         // Set the closing operation of the stage
         window.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
-                System.out.println("Stage is closing");
                 System.exit(0);
             }
         });
@@ -70,7 +70,8 @@ public class Main extends Application {
         // The first scene will be the playlist editing scene
         window.setScene(startScene);
         window.setResizable(true);
-        window.setMaximized(true);
+        window.setMinHeight(500);
+        window.setMinWidth(800);
         window.show();
     }
 
@@ -80,28 +81,45 @@ public class Main extends Application {
 
     public void setSceneToCurateNew(String playlistName){
         _curateScreenController.newPlaylist(playlistName);
-        _window.setScene(curateScene);
+        changeAndResize(curateScene);
     }
 
     public void setSceneToCurateEdit(Playlist playlist) {
         _curateScreenController.editPlaylist(playlist);
-        _window.setScene(curateScene);
+        changeAndResize(curateScene);
     }
 
     public void setSceneToStart() {_window.setScene(startScene);}
 
     public void setSceneToBrowse() {
         _browseScreenController.update();
-        _window.setScene(browseScene);
+        changeAndResize(browseScene);
     }
 
     public void setSceneToPlay(Playlist playlist){
-        _window.setScene(playScene);
+        changeAndResize(playScene);
         _playScreenController.startPractice(playlist);
     }
 
+    /**
+     * This method will change the displayed scene while keeping the window size the same as it was before, and in the
+     * same position it was before.
+     * @param changeTo the Scene to be changed to.
+     */
+    private void changeAndResize(Scene changeTo) {
+        double h = _window.getHeight();
+        double w = _window.getWidth();
+        double x = _window.getX();
+        double y = _window.getY();
+        _window.setScene(changeTo);
+        _window.setHeight(h);
+        _window.setWidth(w);
+        _window.setX(x);
+        _window.setY(y);
+    }
+
     public void setSceneToTest() {
-        _window.setScene(testScene);
+        changeAndResize(testScene);
     }
 
     public static void main(String[] args) {
