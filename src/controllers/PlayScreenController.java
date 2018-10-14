@@ -2,6 +2,8 @@ package controllers;
 
 import data.*;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -33,6 +35,8 @@ public class PlayScreenController {
     @FXML private Button _previous;
     @FXML private Button _next;
     @FXML private HBox _attemptInfo;
+    @FXML private TextField _loopNo;
+    @FXML private Button _playLoop;
 
     private Playlist _playlist;
     private int _index;
@@ -47,6 +51,18 @@ public class PlayScreenController {
     public void initializeData(NameSayerModel nameSayerModel, Main main){
         _nameSayerModel = nameSayerModel;
         _main = main;
+        // making sure only numbers are entered into the loop
+        _loopNo.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                // if string isn't exclusively numbers
+                if (!newValue.matches("\\d*")) {
+                    // remove all non number characters
+                    _loopNo.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
     }
 
     /**
@@ -81,6 +97,8 @@ public class PlayScreenController {
         if (state == State.PLAYING) {
             _playAttempt.setDisable(true);
             _play.setDisable(true);
+            _loopNo.setDisable(true);
+            _playLoop.setDisable(true);
             _record.setDisable(true);
             _next.setDisable(true);
             _previous.setDisable(true);
@@ -90,6 +108,8 @@ public class PlayScreenController {
             _stop.setVisible(true);
             _stop.setDisable(true);
             _play.setDisable(true);
+            _loopNo.setDisable(true);
+            _playLoop.setDisable(true);
             _next.setDisable(true);
             _previous.setDisable(true);
         } else if (state == State.IDLE) {
@@ -103,8 +123,12 @@ public class PlayScreenController {
                 // if no attempt has been made, then the user cannot move ahead
                 _next.setDisable(true);
                 _playAttempt.setDisable(true);
+                _loopNo.setDisable(true);
+                _playLoop.setDisable(true);
             } else {
                 _playAttempt.setDisable(false);
+                _loopNo.setDisable(false);
+                _playLoop.setDisable(false);
                 _next.setDisable(false);
             }
             _previous.setDisable(false);
@@ -138,6 +162,15 @@ public class PlayScreenController {
     }
 
     @FXML
+    private void playLoop() {
+        int n = Integer.parseInt(_loopNo.getText());
+        for (int i = 0; i < n; i++) {
+            playRecording();
+            playAttempt();
+        }
+    }
+
+    @FXML
     private void prevName() {
         _index--;
         setIndex(_index);
@@ -161,7 +194,9 @@ public class PlayScreenController {
             protected void done() {
                 _recentAttempt = _name.getAttempts().get(_name.getAttempts().size()-1);
                 _playlist.setCompletion(_index + 1);
-                setState(PlayScreenController.State.IDLE);
+                Platform.runLater(() -> {
+                    setState(PlayScreenController.State.IDLE);
+                });
             }
         };
         TimerTask timerTask = new TimerTask() {
@@ -218,7 +253,6 @@ public class PlayScreenController {
             File fixedFile = new File("names/"+file.getName());
             nameRecs.add(fixedFile);
             totalLength += au.getClipLength(fixedFile);
-            System.out.println(totalLength);
         }
 
         if(totalLength != 0){
