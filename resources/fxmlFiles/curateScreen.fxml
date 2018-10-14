@@ -193,7 +193,7 @@
                   <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="_fullNameText" prefHeight="26.0" prefWidth="309.0" promptText="Enter a new full name" GridPane.rowIndex="1" GridPane.valignment="TOP">
+            <TextField fx:id="_fullNameText" onAction="#addName" prefHeight="26.0" prefWidth="309.0" promptText="Enter a new full name" GridPane.rowIndex="1" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                </GridPane.margin></TextField>

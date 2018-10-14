@@ -57,10 +57,12 @@ public class CurateScreenController {
             public void onChanged(Change<? extends Name> c) {
                 if (c.next() ) {
                     _currentSubname = _subnames.getSelectionModel().getSelectedItem();
-                    _fileChooser.setItems(FXCollections.observableArrayList(_currentSubname.getFiles()));
-                    int i = _subnames.getSelectionModel().getSelectedIndex();
-                    // setting the file as the last selected one.
-                    _fileChooser.getSelectionModel().select(_currentFullName.getAudioFiles().get(i));
+                    if (_currentSubname != null) {
+                        _fileChooser.setItems(FXCollections.observableArrayList(_currentSubname.getFiles()));
+                        int i = _subnames.getSelectionModel().getSelectedIndex();
+                        // setting the file as the last selected one.
+                        _fileChooser.getSelectionModel().select(_currentFullName.getAudioFiles().get(i));
+                    }
                 }
             }
         });
@@ -129,14 +131,18 @@ public class CurateScreenController {
             noNameAlert.showAndWait();
             return;
         }
-        for (Name subName: fullName.getSubNames()) {
-            fullNameText = fullNameText.replaceAll(subName.toString(),"\n");
-        }
         // If any of the names were left unfound, then alert the user before asking if they still want to add the name
-        if (!fullName.toString().equals(fullNameText)) {
+        if (!fullName.toString().replaceAll("[ -]","").equals(fullNameText.replaceAll("[ -]",""))) {
             StringBuilder sb = new StringBuilder();
-            sb.append("The following names are not in the database:\n");
+            sb.append("The following names from" + fullNameText + " are not in the database:\n");
+            // removing all found subnames from the original fullnametext so the user knows what wasn't added
+            for (Name subName: fullName.getSubNames()) {
+                fullNameText = fullNameText.replaceAll("(?i)(" + subName.toString() + "[ -]*)","");
+            }
+            // adding line breaks so that the missing names are displayed as a list.
+            fullNameText = fullNameText.replaceAll("[ -]+","\n");
             sb.append(fullNameText);
+            sb.append("\n");
             sb.append("The full name will be added as: ");
             sb.append(fullName);
             Alert noNameAlert = new Alert(Alert.AlertType.CONFIRMATION, sb.toString(), ButtonType.YES, ButtonType.NO);
@@ -150,9 +156,17 @@ public class CurateScreenController {
         _fullNameList.add(fullName);
     }
 
+    /**
+     * Method to add a name to this playlist based on an inputted string. The name added will keep the formatting of
+     * the string where possible to preserve space characters used.
+     * @param nameText A string where subnames are seperated by ' ' or '-' characters
+     * @return a FullName object, or null if the name cannot be made
+     */
     private FullName addNameFromString(String nameText) {
         List<Name> names = new ArrayList<>();
-        String[] splitLine = nameText.split("[ -]");
+        // subnames are split by one or more spaces or dashes
+        String[] splitLine = nameText.split("[ -]+");
+        // all subnames are marked as unfound initially
         List<String> unfoundNames = new ArrayList<>(Arrays.asList(splitLine));
         for (String word: splitLine) {
             for (Name name : _nameSayerModel.getDatabase()) {
@@ -169,10 +183,12 @@ public class CurateScreenController {
         for (String unfound : unfoundNames) {
             nameText = nameText.replace(unfound, "");
         }
-        nameText = nameText.replaceAll("[ -]*2"," ");
+        // if two or more spaces exist in a row, replace with 1 space
+        nameText = nameText.replaceAll("[ -]{2,}"," ");
         if (!names.isEmpty()) {
             return new FullName(nameText,names);
         }
+        // if no names were found, return null
         return null;
     }
 

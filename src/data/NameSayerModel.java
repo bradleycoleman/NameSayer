@@ -34,9 +34,7 @@ public class NameSayerModel {
         if(!namesData.exists()){
             namesData.mkdirs();
         }
-        List<File> listOfNamesData = new ArrayList<>();
-        listOfNamesData = Arrays.asList(namesData.listFiles());
-
+        List<File> listOfNamesData = Arrays.asList(namesData.listFiles());
         List<String> readNames = new ArrayList<>();
 
         // For every name this finds all names that match it to make a list of files for the Name constructor
@@ -45,6 +43,7 @@ public class NameSayerModel {
             List<File> database = new ArrayList<>();
             // adding the first database audio file
             database.add(file1);
+            // making a fixed version if it doesn't already exist
             if (!new File("userdata/fixed/fix" + file1.getName()).exists()) {
                 FileCommands.removeSilence(file1);
             }
