@@ -56,10 +56,11 @@ public class PlayScreenController {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
-                // if string isn't exclusively numbers
-                if (!newValue.matches("\\d*")) {
-                    // remove all non number characters
-                    _loopNo.setText(newValue.replaceAll("[^\\d]", ""));
+                // if string isn't a single number
+                if (!newValue.matches("\\d")) {
+                    // remove all non number characters and make only last number the current value
+                    String onlyNums = newValue.replaceAll("[^\\d]", "");
+                    _loopNo.setText(String.valueOf(onlyNums.charAt(onlyNums.length()-1)));
                 }
             }
         });
@@ -164,10 +165,27 @@ public class PlayScreenController {
     @FXML
     private void playLoop() {
         int n = Integer.parseInt(_loopNo.getText());
-        for (int i = 0; i < n; i++) {
-            playRecording();
-            playAttempt();
-        }
+        // Will run playRecording, and playAttempt in a background thread so that the thread can sleep while it waits
+        // for the previous method to complete
+        Thread bThread = new Thread(new Task<Void>() {
+            @Override
+            protected Void call() {
+                for (int i = 0; i < n; i++) {
+                    try {
+                        // the playX methods return the length of playback
+                        int r = playRecording();
+                        Thread.sleep(r / 100);
+                        System.out.println("done");
+                        int a = playAttempt();
+                        Thread.sleep(a / 200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+        });
+        bThread.start();
     }
 
     @FXML
@@ -224,9 +242,9 @@ public class PlayScreenController {
     }
 
     @FXML
-    private void playAttempt() {
+    private int playAttempt() {
         if(_recentAttempt == null){
-            return;
+            return 0;
         }
         _progressIndicator = _attemptIndicator;
 
@@ -235,14 +253,15 @@ public class PlayScreenController {
 
         _timeWorker = new Timer();
         setState(State.PLAYING);
-        _timeWorker.schedule(new ProgressBarTask(),clipLength/5000, clipLength/5000);
+        _timeWorker.schedule(new ProgressBarTask(),clipLength/20000, clipLength/20000);
+        return clipLength;
     }
 
     /**
      * Plays the current file
      */
     @FXML
-    private void playRecording(){
+    private int playRecording(){
         _progressIndicator = _databaseIndicator;
         int totalLength = 0;
         // If the last playback is still playing, end it
@@ -258,9 +277,10 @@ public class PlayScreenController {
         if(totalLength != 0){
             _timeWorker = new Timer();
             setState(State.PLAYING);
-            _timeWorker.schedule(new ProgressBarTask(),totalLength/5000, totalLength/5000);
+            _timeWorker.schedule(new ProgressBarTask(),totalLength/10000, totalLength/10000);
         }
         au.playFiles(nameRecs);
+        return totalLength;
     }
 
     /**
