@@ -107,7 +107,7 @@ public class BrowseScreenController {
     @FXML
     private void delete() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete: " + _currentPlaylist +"?");
-        alert.setHeaderText(null);
+        alert.setHeaderText("Delete Playlist");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK){
             FileCommands.deleteFile(_currentPlaylist.getFile());
@@ -124,7 +124,20 @@ public class BrowseScreenController {
 
     @FXML
     private void practice() {
-        _main.setSceneToPlay(_currentPlaylist);
+        // If the selected playlist is empty, then the user will be told they cannot practice it and will be given the
+        // option to edit it instead.
+        if (_currentPlaylist.getFullNames().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Cannot practice " + _currentPlaylist +" as the playlist is empty.\n" +
+                    "Do you want to edit this playlist instead?", ButtonType.YES, ButtonType.NO);
+            alert.setHeaderText(null);
+            alert.setTitle("ERROR: Cannot practice empty playlist");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.YES) {
+                edit();
+            }
+        } else {
+            _main.setSceneToPlay(_currentPlaylist);
+        }
     }
 
 

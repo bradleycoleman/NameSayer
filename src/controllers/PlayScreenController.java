@@ -60,7 +60,13 @@ public class PlayScreenController {
                 if (!newValue.matches("\\d")) {
                     // remove all non number characters and make only last number the current value
                     String onlyNums = newValue.replaceAll("[^\\d]", "");
-                    _loopNo.setText(String.valueOf(onlyNums.charAt(onlyNums.length()-1)));
+                    // checking in case user backspaced
+                    if (!onlyNums.isEmpty()) {
+                        _loopNo.setText(String.valueOf(onlyNums.charAt(onlyNums.length()-1)));
+                    } else {
+                        // if user backspaced then the field is set to the old value as it can't be empty
+                        _loopNo.setText(oldValue);
+                    }
                 }
             }
         });

@@ -259,6 +259,7 @@ public class CurateScreenController {
 
     @FXML
     private void fileAdd() {
+        // Showing a file chooser for the user to pick a .txt file
         _fileDialog.setTitle("Find a playlist .txt file");
         _fileDialog.setInitialDirectory(
                 new File(System.getProperty("user.home"))
@@ -266,6 +267,8 @@ public class CurateScreenController {
         _fileDialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("TEXT", "*.txt")
         );
         File file = _fileDialog.showOpenDialog(_main.getStage());
+        int namesAdded = 0;
+        // if a non-null file is chosen, the names will be added
         if (file != null) {
             BufferedReader reader;
             List<String> notFound = new ArrayList<>();
@@ -273,26 +276,39 @@ public class CurateScreenController {
                 reader = new BufferedReader(new FileReader(file));
                 String line;
                 while ((line = reader.readLine()) != null) {
+                    // for each line, attempt to add a new full name
                     FullName newName = addNameFromString(line);
+                    // if the add fails, or the name cannot add completely, mark the name as notFound
                     if (newName == null || !line.equals(newName.toString())) {
                         notFound.add(line);
                     }
                     if (newName != null) {
+                        namesAdded++;
                         _fullNameList.add(newName);
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            // if any of the names weren't found, then tell the user
             if (!notFound.isEmpty()) {
                 StringBuilder sb = new StringBuilder();
+                // each unfound line is listed
                 for (String line: notFound) {
                     sb.append(line + "\n");
                 }
-                Alert unfoundAlert = new Alert(Alert.AlertType.CONFIRMATION,sb.toString(), ButtonType.OK);
+                sb.append("The parts of these names that the database does not include were not added");
+                Alert unfoundAlert = new Alert(Alert.AlertType.WARNING,sb.toString(), ButtonType.OK);
                 unfoundAlert.setHeaderText("The following names included words not in the database:");
+                unfoundAlert.setTitle("Some names could not be added");
                 unfoundAlert.showAndWait();
             }
+            // tell the user the results of the fileAdd.
+            Alert confirmAdd = new Alert(Alert.AlertType.CONFIRMATION, "Successfully added " + namesAdded +
+                    " full names to the playlist", ButtonType.OK);
+            confirmAdd.setHeaderText(null);
+            confirmAdd.setTitle("Results of File Add");
+            confirmAdd.showAndWait();
         }
     }
 
