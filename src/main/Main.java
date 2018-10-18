@@ -48,7 +48,7 @@ public class Main extends Application {
 
         FXMLLoader playPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/playScreen.fxml"));
         Parent playPane = playPaneLoader.load();
-        playScene = new Scene(playPane, 800, 500);
+        playScene = new Scene(playPane, 800, 450);
 
         window.setTitle("Name Sayer");
 

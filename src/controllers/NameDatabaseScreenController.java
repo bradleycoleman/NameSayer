@@ -8,6 +8,7 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.util.StringConverter;
 import main.Main;
@@ -19,6 +20,7 @@ public class NameDatabaseScreenController {
     @FXML private ListView<Name> _names;
     @FXML private ChoiceBox _fileChooser;
     @FXML private TitledPane _nameOptions;
+    @FXML private TextField _searchBar;
 
 
     private Main _main;
@@ -96,7 +98,8 @@ public class NameDatabaseScreenController {
 
     @FXML
     private void searchNames() {
-
+        _namesModel.filterNamesList(_searchBar.getText());
+        _names.setItems(FXCollections.observableArrayList(_namesModel.getFilteredNamesList()));
     }
 
     @FXML

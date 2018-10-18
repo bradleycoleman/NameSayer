@@ -93,9 +93,6 @@ public class NameSayerModel {
     public List<Name> getDatabase(){
         return _database;
     }
-    public List<Name> getNameslist(){
-        return _nameslist;
-    }
     public Playlist getPlaylist(){
         return _playlist;
     }
