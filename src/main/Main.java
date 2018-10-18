@@ -17,9 +17,10 @@ import javafx.stage.WindowEvent;
 public class Main extends Application {
 
     private Stage _window;
-    private Scene curateScene, playScene, testScene, startScene, browseScene;
+    private Scene curateScene, playScene, testScene, startScene, browseScene, nameDatabaseScene;
     private StartScreenController _startScreenController;
     private BrowseScreenController _browseScreenController;
+    private NameDatabaseScreenController _nameDatabaseScreenController;
     private CurateScreenController _curateScreenController;
     private PlayScreenController _playScreenController;
     private NameSayerModel _nameSayerModel;
@@ -31,15 +32,19 @@ public class Main extends Application {
         // Load all the scenes
         FXMLLoader startPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/startScreen.fxml"));
         Parent startPane = startPaneLoader.load();
-        startScene = new Scene(startPane, 800, 500);
+        startScene = new Scene(startPane, 800, 450);
 
         FXMLLoader browsePaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/browseScreen.fxml"));
         Parent browsePane = browsePaneLoader.load();
-        browseScene = new Scene(browsePane,800, 500);
+        browseScene = new Scene(browsePane,800, 450);
+
+        FXMLLoader nameDatabasePaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/nameDatabaseScreen.fxml"));
+        Parent nameDatabasePane = nameDatabasePaneLoader.load();
+        nameDatabaseScene = new Scene(nameDatabasePane,800, 450);
 
         FXMLLoader curatePaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/curateScreen.fxml"));
         Parent curatePane = curatePaneLoader.load();
-        curateScene = new Scene(curatePane, 800, 500);
+        curateScene = new Scene(curatePane, 800, 450);
 
         FXMLLoader playPaneLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxmlFiles/playScreen.fxml"));
         Parent playPane = playPaneLoader.load();
@@ -62,15 +67,17 @@ public class Main extends Application {
         _curateScreenController = curatePaneLoader.getController();
         _playScreenController = playPaneLoader.getController();
         _browseScreenController = browsePaneLoader.getController();
+        _nameDatabaseScreenController = nameDatabasePaneLoader.getController();
         _browseScreenController.initializeData(_nameSayerModel, this);
         _startScreenController.initializeData(_nameSayerModel, this);
         _curateScreenController.initializeData(_nameSayerModel, this);
         _playScreenController.initializeData(_nameSayerModel, this);
+        _nameDatabaseScreenController.initializeData(_nameSayerModel, this);
 
         // The first scene will be the playlist editing scene
         window.setScene(startScene);
         window.setResizable(true);
-        window.setMinHeight(500);
+        window.setMinHeight(450);
         window.setMinWidth(800);
         window.show();
     }
@@ -89,11 +96,15 @@ public class Main extends Application {
         changeAndResize(curateScene);
     }
 
-    public void setSceneToStart() {_window.setScene(startScene);}
+    public void setSceneToStart() {changeAndResize(startScene);}
 
     public void setSceneToBrowse() {
         _browseScreenController.update();
         changeAndResize(browseScene);
+    }
+
+    public void setSceneToNameDatabase() {
+        changeAndResize(nameDatabaseScene);
     }
 
     public void setSceneToPlay(Playlist playlist){

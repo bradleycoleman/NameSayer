@@ -27,10 +27,13 @@
             <Font name="Berlin Sans FB" size="56.0" />
          </font>
       </Label>
-      <Button fx:id="_browse" mnemonicParsing="false" onAction="#browse" prefHeight="73.0" prefWidth="275.0" text="Browse Playlists" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+      <Button fx:id="_browse" mnemonicParsing="false" onAction="#browse" prefHeight="73.0" prefWidth="275.0" text="Browse Playlists" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
          <font>
             <Font name="Berlin Sans FB" size="29.0" />
          </font>
+         <GridPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </GridPane.margin>
       </Button>
       <TitledPane alignment="CENTER" animated="false" collapsible="false" maxHeight="1.7976931348623157E308" prefWidth="314.0" text="Try These Names:" textAlignment="CENTER" textFill="WHITE" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.rowSpan="2" GridPane.vgrow="ALWAYS">
          <content>
@@ -57,5 +60,13 @@
             <Font name="Berlin Sans FB" size="19.0" />
          </font>
       </TitledPane>
+      <Button mnemonicParsing="false" onAction="#browseNames" prefHeight="73.0" prefWidth="275.0" text="Browse Names" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+         <GridPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </GridPane.margin>
+         <font>
+            <Font size="29.0" />
+         </font>
+      </Button>
    </children>
 </GridPane>

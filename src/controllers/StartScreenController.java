@@ -49,13 +49,8 @@ public class StartScreenController {
     }
 
     @FXML
-    private void changePath(){
-
-    }
-
-    @FXML
-    private void badRecordings(){
-
+    private void browseNames() {
+        _main.setSceneToNameDatabase();
     }
 
     @FXML

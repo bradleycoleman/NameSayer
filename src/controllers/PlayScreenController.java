@@ -37,6 +37,8 @@ public class PlayScreenController {
     @FXML private HBox _attemptInfo;
     @FXML private TextField _loopNo;
     @FXML private Button _playLoop;
+    @FXML private Button _rateGood, _rateBad;
+    @FXML private Label _ratingPrompt;
 
     private Playlist _playlist;
     private int _index;
@@ -200,6 +202,10 @@ public class PlayScreenController {
         setIndex(_index);
     }
 
+    @FXML
+    private void rateBad() {
+        System.out.println("bye");
+    }
 
     /**
      * Starts a background task to record the name using ffmpeg, and another to count every second
