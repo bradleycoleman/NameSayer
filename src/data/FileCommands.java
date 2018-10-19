@@ -1,10 +1,14 @@
 package data;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class includes various static methods relating to file manipulation. Many of the methods use bash processes
@@ -17,11 +21,29 @@ public class FileCommands {
      * @param audioFile this file will used to make a version without silence named [filename].wav
      */
     public static void removeSilence(File audioFile) {
+        int targetVol = -24;
+        int change = 0;
         new File("userdata/fixed").mkdirs();
-        bashProcess("ffmpeg -i names/" + audioFile.getName() +" -filter:a loudnorm userdata/fixed/loud" + audioFile.getName(),
+        // this pattern will find the mean volume on the line that is outputted
+        Pattern p = Pattern.compile("-([\\d]*)\\.");
+        bashProcess("ffmpeg -i names/"+ audioFile.getName() + " -filter:a volumedetect -f null /dev/null 2>&1 | grep mean_volume",
                 null);
+        // getting the input stream of the process
+        BufferedReader br = new BufferedReader(new InputStreamReader(_process.getInputStream()));
+        try {
+            Matcher m = p.matcher(br.readLine());
+            // The change to be used on the file is the difference from the mean to the target volume
+            if (m.find()) {
+                change = targetVol + Integer.parseInt(m.group(1));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        bashProcess("ffmpeg -y -i names/"+ audioFile.getName() + " -filter:a \"volume=" + change + "dB\" " +
+                        "userdata/fixed/loud" + audioFile.getName(), null);
         System.out.println("created" +audioFile.getName() + "loud");
-        bashProcess("ffmpeg -i userdata/fixed/loud" + audioFile.getName() + " -af silenceremove=1:0:-60dB userdata/fixed/fix" + audioFile.getName(),
+        bashProcess("ffmpeg -i userdata/fixed/loud" + audioFile.getName() + " -af silenceremove=1:0:-30dB userdata/fixed/fix" + audioFile.getName(),
                 null);
     }
 
@@ -37,23 +59,12 @@ public class FileCommands {
         bashProcess("ffmpeg -f alsa -i default $\""+name+"\".wav", new File("userdata/attempts"));
     }
 
-    /**
-     * Using bash, this records five seconds of audio, saving the result to a file to userdata/test.wav
-     */
-    public static void recordTest() {
-        // Making a directory for the test, will not make directory if it already exists.
-        new File("userdata").mkdirs();
-        // recording for 5s
-        bashProcess("ffmpeg -f alsa -i default -t 5 test.wav", new File("userdata"));
-    }
-
     private static void bashProcess(String command, File directory) {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", command);
             processBuilder.directory(directory);
             _process = processBuilder.start();
             _process.waitFor();
-            _process.destroy();
         }
         catch (IOException | InterruptedException ioe) {
             ioe.printStackTrace();

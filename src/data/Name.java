@@ -25,10 +25,13 @@ public class Name implements Comparable<Object> {
 
     public Name(String name, List<File> database, File goodFiles, File badFiles) {
         _name = name;
-        _files = database;
+        _files = new ArrayList<>();
+        for (File original: database) {
+            _files.add(new File("userdata/fixed/fix" + original.getName()));
+        }
         _rating = 0;
         // All database entries are given a default rating of 0/2, to be changed by the text files if they exist
-        for (File file : database) {
+        for (File file : _files) {
             _filesToRatings.put(file,_rating);
         }
         if (goodFiles.exists()) {
