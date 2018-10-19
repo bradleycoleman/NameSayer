@@ -42,8 +42,8 @@ public class FileCommands {
 
         bashProcess("ffmpeg -y -i names/"+ audioFile.getName() + " -filter:a \"volume=" + change + "dB\" " +
                         "userdata/fixed/loud" + audioFile.getName(), null);
-        System.out.println("created" +audioFile.getName() + "loud");
-        bashProcess("ffmpeg -i userdata/fixed/loud" + audioFile.getName() + " -af silenceremove=1:0:-30dB userdata/fixed/fix" + audioFile.getName(),
+        System.out.println("Performing intial fix on " + audioFile.getName());
+        bashProcess("ffmpeg -i userdata/fixed/loud" + audioFile.getName() + " -af silenceremove=1:0:-40dB userdata/fixed/fix" + audioFile.getName(),
                 null);
     }
 
