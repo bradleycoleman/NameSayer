@@ -18,7 +18,7 @@ import java.io.File;
 
 public class NameDatabaseScreenController {
     @FXML private ListView<Name> _names;
-    @FXML private ChoiceBox _fileChooser;
+    @FXML private ChoiceBox<File> _fileChooser;
     @FXML private TitledPane _nameOptions;
     @FXML private TextField _searchBar;
 
@@ -45,20 +45,19 @@ public class NameDatabaseScreenController {
             }
         });
         // The file chooser displays files with ratings
-        _fileChooser.setConverter(new StringConverter() {
+        _fileChooser.setConverter(new StringConverter<File>() {
             @Override
-            public String toString(Object object) {
-                File file = (File) object;
+            public String toString(File file) {
                 if (_currentName.getRating(file) == 2) {
-                    return "✓ " + ((File) object).getName();
+                    return "✓ " + file.getName();
                 } else if (_currentName.getRating(file) == 1) {
-                    return "✕ " + ((File) object).getName();
+                    return "✕ " + file.getName();
                 } else {
-                    return "(unrated) " + ((File) object).getName();
+                    return "(unrated) " + file.getName();
                 }
             }
             @Override
-            public Object fromString(String string) {
+            public File fromString(String string) {
                 return null;
             }
         });
@@ -81,7 +80,11 @@ public class NameDatabaseScreenController {
      */
     private void updateRatingCurrentFile(int rating) {
         File selected = (File)_fileChooser.getValue();
+        // updating the name object's rating
         _currentName.updateRatingOfFile((File) _fileChooser.getValue(),rating);
+        // writing it to the file
+        _namesModel.writeGoodBadNames();
+        // resetting filechooser
         _fileChooser.getItems().clear();
         _fileChooser.setItems(FXCollections.observableArrayList(_currentName.getFiles()));
         _fileChooser.getSelectionModel().select(selected);

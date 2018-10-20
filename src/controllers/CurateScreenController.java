@@ -21,13 +21,13 @@ public class CurateScreenController {
     @FXML private TextField _fullNameText;
     @FXML private Label _name;
     @FXML private TitledPane _playlistBox, _nameOptions;
-    @FXML private ChoiceBox _fileChooser;
+    @FXML private ChoiceBox<File> _fileChooser;
     @FXML private ListView<FullName> _playlistView;
     @FXML private ListView<Name> _subnames;
 
 
     private Main _main;
-    private ObservableList _fullNameList;
+    private ObservableList<FullName> _fullNameList;
     private FullName _currentFullName;
     private Name _currentSubname;
     private Playlist _playlist;
@@ -67,27 +67,26 @@ public class CurateScreenController {
             }
         });
         // Making a File chooser selection change the preffered file for the current subname
-        _fileChooser.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+        _fileChooser.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<File>() {
             @Override
-            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                _currentFullName.setFileAtIndex((File) newValue, _subnames.getSelectionModel().getSelectedIndex());
+            public void changed(ObservableValue observable, File oldFile, File newFile) {
+                _currentFullName.setFileAtIndex(newFile, _subnames.getSelectionModel().getSelectedIndex());
             }
         });
         // Setting file chooser to display ratings of files from subname files
-        _fileChooser.setConverter(new StringConverter() {
+        _fileChooser.setConverter(new StringConverter<File>() {
             @Override
-            public String toString(Object object) {
-                File file = (File) object;
+            public String toString(File file) {
                 if (_currentSubname.getRating(file) == 2) {
-                    return "✓ " + ((File) object).getName();
+                    return "✓ " + file.getName();
                 } else if (_currentSubname.getRating(file) == 1) {
-                    return "✕ " + ((File) object).getName();
+                    return "✕ " + file.getName();
                 } else {
-                    return "(unrated) " + ((File) object).getName();
+                    return "(unrated) " + file.getName();
                 }
             }
             @Override
-            public Object fromString(String string) {
+            public File fromString(String string) {
                 return null;
             }
         });
@@ -134,7 +133,9 @@ public class CurateScreenController {
         // If any of the names were left unfound, then alert the user before asking if they still want to add the name
         if (!fullName.toString().replaceAll("[ -]","").equals(fullNameText.replaceAll("[ -]",""))) {
             StringBuilder sb = new StringBuilder();
-            sb.append("The following names from" + fullNameText + " are not in the database:\n");
+            sb.append("The following names from");
+            sb.append(fullNameText);
+            sb.append(" are not in the database:\n");
             // removing all found subnames from the original fullnametext so the user knows what wasn't added
             for (Name subName: fullName.getSubNames()) {
                 fullNameText = fullNameText.replaceAll("(?i)(" + subName.toString() + "[ -]*)","");
@@ -149,7 +150,7 @@ public class CurateScreenController {
             noNameAlert.setTitle("Name Incomplete");
             noNameAlert.setHeaderText("Do you still want to add this incomplete name?");
             Optional<ButtonType> result = noNameAlert.showAndWait();
-            if (result.get() == ButtonType.NO){
+            if (result.isPresent() && result.get() == ButtonType.NO){
                 return;
             }
         }
@@ -295,7 +296,8 @@ public class CurateScreenController {
                 StringBuilder sb = new StringBuilder();
                 // each unfound line is listed
                 for (String line: notFound) {
-                    sb.append(line + "\n");
+                    sb.append(line);
+                    sb.append("\n");
                 }
                 sb.append("The parts of these names that the database does not include were not added");
                 Alert unfoundAlert = new Alert(Alert.AlertType.WARNING,sb.toString(), ButtonType.OK);
