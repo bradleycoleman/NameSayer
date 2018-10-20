@@ -15,3 +15,8 @@
 .button:pressed {
     -fx-translate-y: 1;
 }
+
+.tab {
+    -fx-background-color: silver;
+    -fx-text-fill: darkblue;
+}

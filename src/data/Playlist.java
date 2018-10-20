@@ -47,7 +47,7 @@ public class Playlist {
                     }
                 } else {
                     // if the line is not null and not a ~, then it is a part of a full name
-                    // the line will be of the format "[name] [preffered file filepath]"
+                    // the line will be of the format "[subname] [preffered file filepath]"
                     String[] splitLine = line.split(" ");
                     for (Name subname: model.getDatabase()) {
                         if (subname.toString().equals(splitLine[0])) {

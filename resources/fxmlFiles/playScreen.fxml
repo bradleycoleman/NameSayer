@@ -5,30 +5,31 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Polyline?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<GridPane prefHeight="450.0" prefWidth="800.0" stylesheets="@NameSayerStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.PlayScreenController">
+<GridPane prefHeight="451.0" prefWidth="776.0" stylesheets="@NameSayerStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.PlayScreenController">
   <columnConstraints>
-    <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" percentWidth="33.0" prefWidth="300.0" />
-    <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" percentWidth="33.0" prefWidth="291.0" />
-      <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" percentWidth="34.0" prefWidth="242.0" />
+    <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" percentWidth="100.0" prefWidth="300.0" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints maxHeight="94.0" minHeight="0.0" percentHeight="10.0" prefHeight="40.0" vgrow="NEVER" />
-    <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" percentHeight="35.0" prefHeight="113.0" vgrow="ALWAYS" />
-    <RowConstraints maxHeight="218.0" minHeight="10.0" percentHeight="10.0" prefHeight="52.0" vgrow="NEVER" />
-      <RowConstraints maxHeight="171.0" minHeight="10.0" percentHeight="10.0" prefHeight="59.0" vgrow="NEVER" />
-      <RowConstraints maxHeight="171.0" minHeight="10.0" percentHeight="10.0" prefHeight="59.0" vgrow="NEVER" />
-      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" percentHeight="35.0" prefHeight="138.0" vgrow="ALWAYS" />
+    <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" percentHeight="80.0" prefHeight="113.0" vgrow="ALWAYS" />
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
       <Button fx:id="_exit" mnemonicParsing="false" onAction="#returnToStartScreen" stylesheets="@NameSayerStyle.css" text="Exit Practice" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
@@ -42,50 +43,12 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Label fx:id="_nameNumber" alignment="CENTER" prefHeight="19.0" prefWidth="575.0" text="Name 1 of x" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+      <Label fx:id="_nameNumber" alignment="CENTER" prefHeight="19.0" prefWidth="575.0" text="Name 1 of x" GridPane.halignment="CENTER">
          <font>
             <Font name="Berlin Sans FB" size="15.0" />
          </font>
       </Label>
-      <Label fx:id="_currentName" text="Current Name" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
-         <font>
-            <Font name="Berlin Sans FB" size="32.0" />
-         </font>
-      </Label>
-      <GridPane GridPane.columnIndex="1" GridPane.rowIndex="2">
-         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="178.0" minWidth="10.0" prefWidth="177.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="90.0" minWidth="4.0" prefWidth="42.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="76.0" minWidth="10.0" prefWidth="45.0" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-         </rowConstraints>
-         <children>
-            <Button fx:id="_stop" disable="true" mnemonicParsing="false" onAction="#stopAttempt" visible="false" GridPane.columnIndex="1">
-               <graphic>
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="16.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0" width="16.0" />
-               </graphic>
-            </Button>
-            <Button fx:id="_record" mnemonicParsing="false" onAction="#recordAttempt" GridPane.columnIndex="1" GridPane.halignment="CENTER">
-               <graphic>
-                  <Circle fill="#ff1f1f" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Circle>
-               </graphic>
-            </Button>
-            <Label fx:id="_recordPrompt" prefHeight="20.0" prefWidth="137.0" text="Record Attempt:" GridPane.halignment="CENTER">
-               <font>
-                  <Font name="Berlin Sans FB" size="16.0" />
-               </font>
-            </Label>
-            <Label fx:id="_timer" text="0s" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
-         </children>
-      </GridPane>
-      <ProgressBar fx:id="_databaseIndicator" prefWidth="9999.0" progress="0.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
-      <Button fx:id="_previous" mnemonicParsing="false" onAction="#prevName" prefHeight="31.0" prefWidth="145.0" stylesheets="@NameSayerStyle.css" text="Previous Name" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
+      <Button fx:id="_previous" mnemonicParsing="false" onAction="#prevName" prefHeight="31.0" prefWidth="145.0" stylesheets="@NameSayerStyle.css" text="Previous Name" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" />
          </GridPane.margin>
@@ -96,7 +59,7 @@
             <Font name="Berlin Sans FB" size="15.0" />
          </font>
       </Button>
-      <Button fx:id="_next" mnemonicParsing="false" onAction="#nextName" prefHeight="30.0" prefWidth="126.0" stylesheets="@NameSayerStyle.css" text="Next Name" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
+      <Button fx:id="_next" mnemonicParsing="false" onAction="#nextName" prefHeight="30.0" prefWidth="126.0" stylesheets="@NameSayerStyle.css" text="Next Name" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
          <GridPane.margin>
             <Insets bottom="5.0" right="5.0" />
          </GridPane.margin>
@@ -107,108 +70,319 @@
             <Font name="Berlin Sans FB" size="15.0" />
          </font>
       </Button>
-      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="3">
-         <children>
-            <Label text="Play Name:">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
-            <Button fx:id="_play" mnemonicParsing="false" onAction="#playRecording">
+      <TabPane prefHeight="9999.0" prefWidth="9999.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+        <tabs>
+          <Tab>
+               <content>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="77.0" minHeight="10.0" prefHeight="77.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="91.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="89.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="93.0" minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="111.0" minHeight="10.0" prefHeight="54.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label fx:id="_currentName" text="Current Name" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+                           <font>
+                              <Font name="Berlin Sans FB" size="32.0" />
+                           </font>
+                        </Label>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
+                           <children>
+                              <Label text="Play Name:">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="_play" mnemonicParsing="false" onAction="#playRecording">
+                                 <graphic>
+                                    <Polyline fill="CHARTREUSE" rotate="-90.0" strokeType="INSIDE">
+                                      <points>
+                                        <Double fx:value="-7.5" />
+                                        <Double fx:value="-6.0" />
+                                        <Double fx:value="7.5" />
+                                        <Double fx:value="-6.0" />
+                                        <Double fx:value="0.0" />
+                                          <Double fx:value="9.0" />
+                                        <Double fx:value="-7.5" />
+                                        <Double fx:value="-6.0" />
+                                      </points>
+                                    </Polyline>
+                                 </graphic>
+                                 <HBox.margin>
+                                    <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                           <padding>
+                              <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                           </padding>
+                        </HBox>
+                        <HBox fx:id="_attemptOption" alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="3">
+                           <children>
+                              <Label text="Play Attempt:">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="_playAttempt" mnemonicParsing="false" onAction="#playAttempt">
+                                 <graphic>
+                                    <Polyline fill="CHARTREUSE" rotate="-90.0" strokeType="INSIDE">
+                                       <points>
+                                          <Double fx:value="-7.5" />
+                                          <Double fx:value="-6.0" />
+                                          <Double fx:value="7.5" />
+                                          <Double fx:value="-6.0" />
+                                          <Double fx:value="0.0" />
+                                          <Double fx:value="9.0" />
+                                          <Double fx:value="-7.5" />
+                                          <Double fx:value="-6.0" />
+                                       </points>
+                                    </Polyline>
+                                 </graphic>
+                                 <HBox.margin>
+                                    <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                           <padding>
+                              <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                           </padding>
+                        </HBox>
+                        <ProgressBar fx:id="_databaseIndicator" prefWidth="9999.0" progress="0.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
+                        <ProgressBar fx:id="_attemptIndicator" prefWidth="9999.0" progress="0.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="178.0" minWidth="10.0" prefWidth="177.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="90.0" minWidth="4.0" prefWidth="42.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="76.0" minWidth="10.0" prefWidth="45.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <Button fx:id="_stop" disable="true" mnemonicParsing="false" onAction="#stopAttempt" visible="false" GridPane.columnIndex="1">
+                                 <graphic>
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="16.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0" width="16.0" />
+                                 </graphic>
+                              </Button>
+                              <Button fx:id="_record" mnemonicParsing="false" onAction="#recordAttempt" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+                                 <graphic>
+                                    <Circle fill="#ff1f1f" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Circle>
+                                 </graphic>
+                              </Button>
+                              <Label fx:id="_recordPrompt" prefHeight="20.0" prefWidth="137.0" text="Record Attempt:" GridPane.halignment="CENTER">
+                                 <font>
+                                    <Font name="Berlin Sans FB" size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="_timer" text="0s" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
+                           </children>
+                        </GridPane>
+                        <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="146.0" />
+                            <ColumnConstraints hgrow="NEVER" maxWidth="82.0" minWidth="10.0" prefWidth="28.0" />
+                              <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="47.0" />
+                              <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="45.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Play Back to Back" GridPane.halignment="RIGHT">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label text="times" GridPane.columnIndex="2">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="_loopNo" onAction="#playLoop" text="1" GridPane.columnIndex="1" GridPane.hgrow="NEVER" />
+                              <Button fx:id="_playLoop" mnemonicParsing="false" onAction="#playLoop" GridPane.columnIndex="3">
+                                 <graphic>
+                                    <Polyline fill="CHARTREUSE" rotate="-90.0" strokeType="INSIDE">
+                                       <points>
+                                          <Double fx:value="-7.5" />
+                                          <Double fx:value="-6.0" />
+                                          <Double fx:value="7.5" />
+                                          <Double fx:value="-6.0" />
+                                          <Double fx:value="0.0" />
+                                          <Double fx:value="9.0" />
+                                          <Double fx:value="-7.5" />
+                                          <Double fx:value="-6.0" />
+                                       </points>
+                                    </Polyline>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </GridPane>
+               </content>
                <graphic>
-                  <Polyline fill="CHARTREUSE" rotate="-90.0" strokeType="INSIDE">
-                    <points>
-                      <Double fx:value="-7.5" />
-                      <Double fx:value="-6.0" />
-                      <Double fx:value="7.5" />
-                      <Double fx:value="-6.0" />
-                      <Double fx:value="0.0" />
-                        <Double fx:value="9.0" />
-                      <Double fx:value="-7.5" />
-                      <Double fx:value="-6.0" />
-                    </points>
-                  </Polyline>
+                  <Button disable="true" mnemonicParsing="false" opacity="0.99" text="Practice" />
                </graphic>
-               <HBox.margin>
-                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-               </HBox.margin>
-            </Button>
-         </children>
-         <padding>
-            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-         </padding>
-      </HBox>
-      <HBox fx:id="_attemptOption" alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="4">
-         <children>
-            <Label text="Play Attempt:">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
-            <Button fx:id="_playAttempt" mnemonicParsing="false" onAction="#playAttempt">
+          </Tab>
+          <Tab>
+               <content>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="275.0" minHeight="10.0" percentHeight="100.0" prefHeight="215.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <TitledPane fx:id="_subnamePane" collapsible="false" text="subnames" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                           <content>
+                              <ListView fx:id="_subnameListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="9999.0" prefWidth="9999.0" />
+                           </content>
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                           </GridPane.margin>
+                        </TitledPane>
+                        <VBox alignment="CENTER" GridPane.columnIndex="1">
+                           <children>
+                              <FlowPane alignment="CENTER">
+                                 <children>
+                                    <Label fx:id="_playPrompt" text="Play this Audio File: ">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font></Label>
+                                    <Button mnemonicParsing="false">
+                                       <graphic>
+                                          <Polyline fill="CHARTREUSE" rotate="-90.0" strokeType="INSIDE">
+                                             <points>
+                                                <Double fx:value="-7.5" />
+                                                <Double fx:value="-6.0" />
+                                                <Double fx:value="7.5" />
+                                                <Double fx:value="-6.0" />
+                                                <Double fx:value="0.0" />
+                                                <Double fx:value="9.0" />
+                                                <Double fx:value="-7.5" />
+                                                <Double fx:value="-6.0" />
+                                             </points>
+                                          </Polyline>
+                                       </graphic>
+                                       <FlowPane.margin>
+                                          <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                                       </FlowPane.margin>
+                                    </Button>
+                                 </children>
+                              </FlowPane>
+                              <FlowPane alignment="CENTER" prefHeight="70.0" prefWidth="388.0">
+                                 <children>
+                                    <Label fx:id="_ratePrompt" text="Rate this Audio File:">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font></Label>
+                                    <Button mnemonicParsing="false" prefHeight="29.0" prefWidth="29.0" text="✓">
+                                       <font>
+                                          <Font size="27.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets bottom="-1.0" left="-1.0" right="-1.0" top="-1.0" />
+                                       </padding>
+                                       <FlowPane.margin>
+                                          <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                                       </FlowPane.margin>
+                                    </Button>
+                                    <Button mnemonicParsing="false" prefHeight="29.0" prefWidth="27.0" text="✕">
+                                       <font>
+                                          <Font size="27.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets bottom="-1.0" left="-1.0" right="-1.0" top="-1.0" />
+                                       </padding>
+                                       <FlowPane.margin>
+                                          <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                                       </FlowPane.margin>
+                                    </Button>
+                                 </children>
+                              </FlowPane>
+                           </children>
+                        </VBox>
+                     </children>
+                  </GridPane>
+               </content>
                <graphic>
-                  <Polyline fill="CHARTREUSE" rotate="-90.0" strokeType="INSIDE">
-                     <points>
-                        <Double fx:value="-7.5" />
-                        <Double fx:value="-6.0" />
-                        <Double fx:value="7.5" />
-                        <Double fx:value="-6.0" />
-                        <Double fx:value="0.0" />
-                        <Double fx:value="9.0" />
-                        <Double fx:value="-7.5" />
-                        <Double fx:value="-6.0" />
-                     </points>
-                  </Polyline>
-               </graphic>
-               <HBox.margin>
-                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-               </HBox.margin>
-            </Button>
-         </children>
-         <padding>
-            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-         </padding>
-      </HBox>
-      <ProgressBar fx:id="_attemptIndicator" prefWidth="9999.0" progress="0.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" GridPane.vgrow="ALWAYS">
-        <columnConstraints>
-          <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="146.0" />
-          <ColumnConstraints hgrow="NEVER" maxWidth="82.0" minWidth="10.0" prefWidth="28.0" />
-            <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="47.0" />
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="45.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
-        </rowConstraints>
-         <children>
-            <Label text="Play Back to Back" GridPane.halignment="RIGHT">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
-            <Label text="times" GridPane.columnIndex="2">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
-            <TextField fx:id="_loopNo" onAction="#playLoop" text="1" GridPane.columnIndex="1" GridPane.hgrow="NEVER" />
-            <Button fx:id="_playLoop" mnemonicParsing="false" onAction="#playLoop" GridPane.columnIndex="3">
+                  <Button disable="true" mnemonicParsing="false" opacity="0.99" text="Rate Files" />
+               </graphic></Tab>
+            <Tab>
+               <content>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="ALWAYS" maxWidth="537.0" minWidth="10.0" prefWidth="506.0" />
+                      <ColumnConstraints hgrow="ALWAYS" maxWidth="275.0" minWidth="10.0" percentWidth="35.0" prefWidth="270.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <TitledPane collapsible="false" text="Past Attempts">
+                           <content>
+                              <ListView fx:id="_attemptsListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="9999.0" prefWidth="9999.0" />
+                           </content>
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                           </GridPane.margin>
+                        </TitledPane>
+                        <FlowPane alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#playPastAttempt">
+                                 <graphic>
+                                    <Polyline fill="CHARTREUSE" rotate="-90.0" strokeType="INSIDE">
+                                       <points>
+                                          <Double fx:value="-7.5" />
+                                          <Double fx:value="-6.0" />
+                                          <Double fx:value="7.5" />
+                                          <Double fx:value="-6.0" />
+                                          <Double fx:value="0.0" />
+                                          <Double fx:value="9.0" />
+                                          <Double fx:value="-7.5" />
+                                          <Double fx:value="-6.0" />
+                                       </points>
+                                    </Polyline>
+                                 </graphic>
+                                 <FlowPane.margin>
+                                    <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                                 </FlowPane.margin>
+                              </Button>
+                              <Button fx:id="_delete" mnemonicParsing="false" onAction="#deleteAttempt" text="Delete">
+                                 <FlowPane.margin>
+                                    <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                                 </FlowPane.margin>
+                              </Button>
+                           </children>
+                        </FlowPane>
+                     </children>
+                  </GridPane>
+               </content>
                <graphic>
-                  <Polyline fill="CHARTREUSE" rotate="-90.0" strokeType="INSIDE">
-                     <points>
-                        <Double fx:value="-7.5" />
-                        <Double fx:value="-6.0" />
-                        <Double fx:value="7.5" />
-                        <Double fx:value="-6.0" />
-                        <Double fx:value="0.0" />
-                        <Double fx:value="9.0" />
-                        <Double fx:value="-7.5" />
-                        <Double fx:value="-6.0" />
-                     </points>
-                  </Polyline>
+                  <Button disable="true" mnemonicParsing="false" opacity="0.99" text="Past Attempts" />
                </graphic>
-            </Button>
-         </children>
-      </GridPane>
+            </Tab>
+        </tabs>
+      </TabPane>
    </children>
 </GridPane>

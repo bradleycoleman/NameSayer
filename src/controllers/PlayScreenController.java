@@ -4,17 +4,19 @@ import data.*;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
+import javafx.util.Callback;
 import main.Main;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.text.DateFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This controls the playback/practice screen of the app. Users can listen to recordings of each of the
@@ -25,8 +27,8 @@ import java.util.TimerTask;
 public class PlayScreenController {
     @FXML private Label _nameNumber;
     @FXML private Label _currentName;
-    @FXML private Button _record;
-    @FXML private Label _recordPrompt;
+    @FXML private Button _record, _delete;
+    @FXML private Label _recordPrompt, _playPrompt, _ratePrompt;
     @FXML private Button _stop;
     @FXML private Label _timer;
     @FXML private Button _play, _playAttempt;
@@ -34,18 +36,22 @@ public class PlayScreenController {
     private ProgressBar _progressIndicator;
     @FXML private Button _previous;
     @FXML private Button _next;
-    @FXML private HBox _attemptInfo;
     @FXML private TextField _loopNo;
     @FXML private Button _playLoop;
     @FXML private Button _rateGood, _rateBad;
     @FXML private Label _ratingPrompt;
+    @FXML private TitledPane _subnamePane;
+    @FXML private ListView<Name> _subnameListView;
+    @FXML private ListView<File> _attemptsListView;
 
     private Playlist _playlist;
     private int _index;
     private NameSayerModel _nameSayerModel;
     private Main _main;
-    private FullName _name;
+    private FullName _fullName;
     private File _recentAttempt;
+    private File _selectedAttempt;
+    private Name _currentSubname;
     private enum State {IDLE, PLAYING, RECORDING}
     private Timer _timeWorker;
     private AudioUtils au = new AudioUtils();
@@ -72,6 +78,71 @@ public class PlayScreenController {
                 }
             }
         });
+
+        _subnameListView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<Name>() {
+            @Override
+            public void onChanged(Change<? extends Name> c) {
+                if (c.next() && c.wasAdded()) {
+                    _currentSubname = _subnameListView.getSelectionModel().getSelectedItem();
+                    _playPrompt.setText("Play File for " + _currentSubname);
+                    _ratePrompt.setText("Rate File for " + _currentSubname);
+                }
+            }
+        });
+
+        _attemptsListView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<File>() {
+            @Override
+            public void onChanged(Change<? extends File> c) {
+                if (c.next() && c.wasAdded()) {
+                    _selectedAttempt = _attemptsListView.getSelectionModel().getSelectedItem();
+                }
+            }
+        });
+
+        _attemptsListView.getItems().addListener(new ListChangeListener<File>() {
+            @Override
+            public void onChanged(Change<? extends File> c) {
+                if (_attemptsListView.getItems().size() > 0) {
+                    _playAttempt.setDisable(false);
+                    _delete.setDisable(false);
+                    _attemptsListView.getSelectionModel().selectFirst();
+                } else {
+                    _playAttempt.setDisable(true);
+                    _delete.setDisable(true);
+                }
+            }
+        });
+        // Makes the attempts list show a more user-friendly output than the file name
+        _attemptsListView.setCellFactory(param -> new ListCell<File>() {
+            @Override
+            protected void updateItem(File file, boolean empty) {
+                super.updateItem(file, empty);
+                if (empty || file == null || file.toString() == null) {
+                    setText(null);
+                } else {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("Attempt from: ");
+                    int i = 0;
+                    Pattern num = Pattern.compile("\\d+");
+                    Matcher m = num.matcher(file.getName());
+                    while (m.find()) {
+                        i++;
+                        sb.append(file.getName().substring(m.start(), m.end()));
+                        if (i<3) {
+                            // The first three numbers are dates
+                            sb.append("/");
+                        } else if (i==3) {
+                            // break
+                            sb.append(" at ");
+                        } else if (i<6) {
+                            // The last three numbers are for time
+                            sb.append(":");
+                        }
+                    }
+                    setText(sb.toString());
+                }
+            }
+        });
     }
 
     /**
@@ -89,13 +160,16 @@ public class PlayScreenController {
     private void setIndex(int index) {
         _index = index;
         _recentAttempt = null;
-        _name = _playlist.getFullNames().get(index);
+        _fullName = _playlist.getFullNames().get(index);
+        _subnamePane.setText("Sub-names of " + _fullName.toString());
         setState(State.IDLE);
         _timer.setText("0s");
         _databaseIndicator.setProgress(0);
         _attemptIndicator.setProgress(0);
         _nameNumber.setText("Name " + (_index + 1) +" of " + _playlist.getFullNames().size() + " from " + _playlist);
-        _currentName.setText(_name.toString());
+        _currentName.setText(_fullName.toString());
+        _subnameListView.setItems(FXCollections.observableArrayList(_fullName.getSubNames()));
+        _attemptsListView.setItems(FXCollections.observableArrayList(_fullName.getAttempts()));
     }
 
     /**
@@ -165,9 +239,10 @@ public class PlayScreenController {
             congrats.setContentText(null);
             congrats.showAndWait();
             returnToStartScreen();
+        } else {
+            _index++;
+            setIndex(_index);
         }
-        _index++;
-        setIndex(_index);
     }
 
     @FXML
@@ -183,7 +258,6 @@ public class PlayScreenController {
                         // the playX methods return the length of playback
                         int r = playRecording();
                         Thread.sleep(r / 100);
-                        System.out.println("done");
                         int a = playAttempt();
                         Thread.sleep(a / 200);
                     } catch (InterruptedException e) {
@@ -202,10 +276,6 @@ public class PlayScreenController {
         setIndex(_index);
     }
 
-    @FXML
-    private void rateBad() {
-        System.out.println("bye");
-    }
 
     /**
      * Starts a background task to record the name using ffmpeg, and another to count every second
@@ -213,16 +283,19 @@ public class PlayScreenController {
      */
     @FXML
     private void recordAttempt() {
-
+        // If an attempt has been made, add it to the historic attempts so user can access it
+        if (_recentAttempt != null) {
+            _attemptsListView.getItems().add(_recentAttempt);
+        }
         Task<Void> recordTask = new Task<Void>() {
             @Override
             protected Void call() {
-                _name.addAttempt();
+                _fullName.addAttempt();
                 return null;
             }
 
             protected void done() {
-                _recentAttempt = _name.getAttempts().get(_name.getAttempts().size()-1);
+                _recentAttempt = _fullName.getAttempts().get(_fullName.getAttempts().size()-1);
                 _playlist.setCompletion(_index + 1);
                 Platform.runLater(() -> {
                     setState(PlayScreenController.State.IDLE);
@@ -258,29 +331,25 @@ public class PlayScreenController {
         if(_recentAttempt == null){
             return 0;
         }
+        // The progress worker will reference the attempt progress bar
         _progressIndicator = _attemptIndicator;
-
+        // playing the most recent attempt and scheduling progress bar
         au.playFile(_recentAttempt);
         int clipLength = au.getClipLength(_recentAttempt);
-
         _timeWorker = new Timer();
         setState(State.PLAYING);
         _timeWorker.schedule(new ProgressBarTask(),clipLength/20000, clipLength/20000);
         return clipLength;
     }
 
-    /**
-     * Plays the current file
-     */
     @FXML
     private int playRecording(){
         _progressIndicator = _databaseIndicator;
         int totalLength = 0;
-        // If the last playback is still playing, end it
 
-        // Find all the fixed versions of the subnames, then play them all
+        // Get all the files for the name then play
         List<File> nameRecs = new ArrayList<File>();
-        for (File file: _name.getAudioFiles()) {
+        for (File file: _fullName.getAudioFiles()) {
             nameRecs.add(file);
             totalLength += au.getClipLength(file);
         }
@@ -312,6 +381,28 @@ public class PlayScreenController {
         }
         // commands the referenced Main to set the scene to the start
         _main.setSceneToStart();
+    }
+
+    @FXML
+    private void playPastAttempt() {
+        if (_selectedAttempt != null) {
+            au.playFile(_selectedAttempt);
+        }
+    }
+
+    @FXML
+    private void deleteAttempt() {
+        if (_selectedAttempt != null) {
+            Alert deleteAlert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to delete " +
+                    _selectedAttempt.getName() + "?", ButtonType.NO, ButtonType.YES);
+            deleteAlert.setHeaderText(null);
+            deleteAlert.setTitle("Delete Past Attempt");
+            Optional<ButtonType> result = deleteAlert.showAndWait();
+            if (result.get() == ButtonType.YES){
+                _fullName.deleteAttempt(_selectedAttempt);
+                _attemptsListView.getItems().remove(_selectedAttempt);
+            }
+        }
     }
 
     private class ProgressBarTask extends TimerTask {

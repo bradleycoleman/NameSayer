@@ -1,11 +1,14 @@
 package data;
 
+import javax.swing.text.html.ListView;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Object representing a string of Names. The audio files used for each part of the name are set to a default value
@@ -23,6 +26,7 @@ public class FullName implements Comparable<Object>{
         _name = name;
         _audioFiles = audioFiles;
         _attempts = new ArrayList<>();
+        findAttempts();
     }
 
     public FullName(String name, List<Name> subNames) {
@@ -32,6 +36,22 @@ public class FullName implements Comparable<Object>{
         _attempts = new ArrayList<>();
         for (Name subName: _subNames) {
             _audioFiles.add(subName.getDefault());
+        }
+        findAttempts();
+    }
+
+    /**
+     * Gets all the attempts of this fullname from the attempts folder
+     */
+    private void findAttempts() {
+        List<File> attempts = Arrays.asList(new File("userdata/attempts").listFiles());
+        for (File attempt: attempts) {
+            // tries to find files that match the patter of the name seperated by underscores, ending in an underscore
+            // and the int start of the date
+            Pattern p = Pattern.compile(_name.replaceAll("[ -]", "_") + "_\\d");
+            if (p.matcher(attempt.getName()).find()) {
+                _attempts.add(attempt);
+            }
         }
     }
     /**
