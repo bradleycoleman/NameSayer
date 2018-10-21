@@ -44,7 +44,11 @@ public class FullName implements Comparable<Object>{
      * Gets all the attempts of this fullname from the attempts folder
      */
     private void findAttempts() {
-        List<File> attempts = Arrays.asList(new File("userdata/attempts").listFiles());
+        File attemptsLoc = new File("userdata/attempts");
+        if (!attemptsLoc.exists()) {
+            attemptsLoc.mkdirs();
+        }
+        List<File> attempts = Arrays.asList(attemptsLoc.listFiles());
         for (File attempt: attempts) {
             // tries to find files that match the patter of the name seperated by underscores, ending in an underscore
             // and the int start of the date
