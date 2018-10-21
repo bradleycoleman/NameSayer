@@ -336,7 +336,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TitledPane collapsible="false" text="Past Attempts">
+                        <TitledPane fx:id="_attemptsPane" collapsible="false" text="Past Attempts">
                            <content>
                               <ListView fx:id="_attemptsListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="9999.0" prefWidth="9999.0" />
                            </content>
@@ -349,7 +349,7 @@
                         </TitledPane>
                         <FlowPane alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1">
                            <children>
-                              <Button mnemonicParsing="false" onAction="#playPastAttempt">
+                              <Button fx:id="_playPastAttempt" mnemonicParsing="false" onAction="#playPastAttempt">
                                  <graphic>
                                     <Polyline fill="CHARTREUSE" rotate="-90.0" strokeType="INSIDE">
                                        <points>

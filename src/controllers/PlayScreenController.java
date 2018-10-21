@@ -29,7 +29,7 @@ public class PlayScreenController {
     @FXML private Label _recordPrompt, _playPrompt, _ratePrompt;
     @FXML private Button _stop;
     @FXML private Label _timer;
-    @FXML private Button _play, _playAttempt;
+    @FXML private Button _play, _playAttempt, _playPastAttempt;
     @FXML private ProgressBar _databaseIndicator, _attemptIndicator;
     private ProgressBar _progressIndicator;
     @FXML private Button _previous;
@@ -38,7 +38,7 @@ public class PlayScreenController {
     @FXML private Button _playLoop;
     @FXML private Button _rateGood, _rateBad;
     @FXML private Label _ratingPrompt;
-    @FXML private TitledPane _subnamePane;
+    @FXML private TitledPane _subnamePane, _attemptsPane;
     @FXML private ListView<File> _fileListView;
     @FXML private ListView<File> _attemptsListView;
 
@@ -48,7 +48,6 @@ public class PlayScreenController {
     private Main _main;
     private FullName _fullName;
     private File _recentAttempt;
-    private File _selectedAttempt;
     private Name _currentSubname;
     private enum State {IDLE, PLAYING, RECORDING}
     private Timer _timeWorker;
@@ -107,25 +106,20 @@ public class PlayScreenController {
                 }
             }
         });
-        _attemptsListView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<File>() {
-            @Override
-            public void onChanged(Change<? extends File> c) {
-                if (c.next() && c.wasAdded()) {
-                    _selectedAttempt = _attemptsListView.getSelectionModel().getSelectedItem();
-                }
-            }
-        });
-
+        // The delete and play buttons for past attempts will only be enabled if the past attempts list is >0
         _attemptsListView.getItems().addListener(new ListChangeListener<File>() {
             @Override
             public void onChanged(Change<? extends File> c) {
-                if (_attemptsListView.getItems().size() > 0) {
-                    _playAttempt.setDisable(false);
-                    _delete.setDisable(false);
-                    _attemptsListView.getSelectionModel().selectFirst();
-                } else {
-                    _playAttempt.setDisable(true);
-                    _delete.setDisable(true);
+                if (c.next()) {
+                    System.out.println("hi");
+                    if (_attemptsListView.getItems().size() > 0) {
+                        _playPastAttempt.setDisable(false);
+                        _delete.setDisable(false);
+                        _attemptsListView.getSelectionModel().selectFirst();
+                    } else {
+                        _playPastAttempt.setDisable(true);
+                        _delete.setDisable(true);
+                    }
                 }
             }
         });
@@ -179,14 +173,16 @@ public class PlayScreenController {
         _recentAttempt = null;
         _fullName = _playlist.getFullNames().get(index);
         _subnamePane.setText("Sub-names of " + _fullName.toString());
+        _attemptsPane.setText("Past Attempt of " + _fullName.toString());
         setState(State.IDLE);
         _timer.setText("0s");
         _databaseIndicator.setProgress(0);
         _attemptIndicator.setProgress(0);
         _nameNumber.setText("Name " + (_index + 1) +" of " + _playlist.getFullNames().size() + " from " + _playlist);
         _currentName.setText(_fullName.toString());
-        _fileListView.setItems(FXCollections.observableArrayList(_fullName.getAudioFiles()));
-        _attemptsListView.setItems(FXCollections.observableArrayList(_fullName.getAttempts()));
+        _fileListView.getItems().setAll(_fullName.getAudioFiles());
+        _fileListView.getSelectionModel().selectFirst();
+        _attemptsListView.getItems().setAll(_fullName.getAttempts());
     }
 
     /**
@@ -263,36 +259,10 @@ public class PlayScreenController {
     }
 
     @FXML
-    private void playLoop() {
-        int n = Integer.parseInt(_loopNo.getText());
-        // Will run playRecording, and playAttempt in a background thread so that the thread can sleep while it waits
-        // for the previous method to complete
-        Thread bThread = new Thread(new Task<Void>() {
-            @Override
-            protected Void call() {
-                for (int i = 0; i < n; i++) {
-                    try {
-                        // the playX methods return the length of playback
-                        int r = playRecording();
-                        Thread.sleep(r / 100);
-                        int a = playAttempt();
-                        Thread.sleep(a / 200);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                return null;
-            }
-        });
-        bThread.start();
-    }
-
-    @FXML
     private void prevName() {
         _index--;
         setIndex(_index);
     }
-
 
     /**
      * Starts a background task to record the name using ffmpeg, and another to count every second
@@ -380,6 +350,54 @@ public class PlayScreenController {
         return totalLength;
     }
 
+    @FXML
+    private void playLoop() {
+        int n = Integer.parseInt(_loopNo.getText());
+        // Will run playRecording, and playAttempt in a background thread so that the thread can sleep while it waits
+        // for the previous method to complete
+        Thread bThread = new Thread(new Task<Void>() {
+            @Override
+            protected Void call() {
+                for (int i = 0; i < n; i++) {
+                    try {
+                        // the playX methods return the length of playback
+                        int r = playRecording();
+                        Thread.sleep(r / 100);
+                        int a = playAttempt();
+                        Thread.sleep(a / 200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+        });
+        bThread.start();
+    }
+
+    @FXML
+    private void playPastAttempt() {
+        File selectedAttempt = _attemptsListView.getSelectionModel().getSelectedItem();
+        if (selectedAttempt != null) {
+            if (au.getClip() != null) {
+                try{
+                    au.getClip().close();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+            au.playFile(selectedAttempt);
+        }
+    }
+
+    @FXML
+    private void playFile() {
+        // playing the audio file at the corresponding index for the currently selected subname
+        if (_currentSubname != null) {
+            au.playFile(_fullName.getAudioFiles().get(_fullName.getSubNames().indexOf(_currentSubname)));
+        }
+    }
+
     /**
      * Button method for returning to the start screen.
      */
@@ -401,23 +419,17 @@ public class PlayScreenController {
     }
 
     @FXML
-    private void playPastAttempt() {
-        if (_selectedAttempt != null) {
-            au.playFile(_selectedAttempt);
-        }
-    }
-
-    @FXML
     private void deleteAttempt() {
-        if (_selectedAttempt != null) {
+        File selectedAttempt = _attemptsListView.getSelectionModel().getSelectedItem();
+        if (selectedAttempt != null) {
             Alert deleteAlert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to delete " +
-                    _selectedAttempt.getName() + "?", ButtonType.NO, ButtonType.YES);
+                    selectedAttempt.getName() + "?", ButtonType.NO, ButtonType.YES);
             deleteAlert.setHeaderText(null);
             deleteAlert.setTitle("Delete Past Attempt");
             Optional<ButtonType> result = deleteAlert.showAndWait();
-            if (result.get() == ButtonType.YES){
-                _fullName.deleteAttempt(_selectedAttempt);
-                _attemptsListView.getItems().remove(_selectedAttempt);
+            if (result.isPresent() && result.get() == ButtonType.YES){
+                _fullName.deleteAttempt(selectedAttempt);
+                _attemptsListView.getItems().remove(selectedAttempt);
             }
         }
     }
@@ -428,6 +440,7 @@ public class PlayScreenController {
             _currentSubname.updateRatingOfFile(_fileListView.getSelectionModel().getSelectedItem(), 2);
         }
         _fileListView.refresh();
+        _nameSayerModel.writeGoodBadNames();
     }
 
     @FXML
@@ -436,14 +449,7 @@ public class PlayScreenController {
             _currentSubname.updateRatingOfFile(_fileListView.getSelectionModel().getSelectedItem(), 1);
         }
         _fileListView.refresh();
-    }
-
-    @FXML
-    private void playFile() {
-        // playing the audio file at the corresponding index for the currently selected subname
-        if (_currentSubname != null) {
-            au.playFile(_fullName.getAudioFiles().get(_fullName.getSubNames().indexOf(_currentSubname)));
-        }
+        _nameSayerModel.writeGoodBadNames();
     }
 
     private class ProgressBarTask extends TimerTask {
