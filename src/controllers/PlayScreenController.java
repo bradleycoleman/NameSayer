@@ -277,10 +277,10 @@ public class PlayScreenController {
             }
 
             protected void done() {
-                // adding the most recent attempt to the attempts list
-                _attemptsListView.getItems().add(_fullName.getAttempts().get(_fullName.getAttempts().size() -1));
                 _playlist.setCompletion(_index + 1);
                 Platform.runLater(() -> {
+                    // adding the most recent attempt to the attempts list
+                    _attemptsListView.getItems().add(_fullName.getAttempts().get(_fullName.getAttempts().size() -1));
                     setState(PlayScreenController.State.IDLE);
                 });
             }
