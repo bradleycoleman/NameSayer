@@ -9,11 +9,9 @@ import javafx.collections.ListChangeListener;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.util.Callback;
 import main.Main;
 
 import java.io.*;
-import java.text.DateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,7 +39,7 @@ public class PlayScreenController {
     @FXML private Button _rateGood, _rateBad;
     @FXML private Label _ratingPrompt;
     @FXML private TitledPane _subnamePane;
-    @FXML private ListView<Name> _subnameListView;
+    @FXML private ListView<File> _fileListView;
     @FXML private ListView<File> _attemptsListView;
 
     private Playlist _playlist;
@@ -79,29 +77,29 @@ public class PlayScreenController {
             }
         });
         // upon selecting a subname, the user is prompted to rate or play it
-        _subnameListView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<Name>() {
+        _fileListView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<File>() {
             @Override
-            public void onChanged(Change<? extends Name> c) {
+            public void onChanged(Change<? extends File> c) {
                 if (c.next() && c.wasAdded()) {
-                    _currentSubname = _subnameListView.getSelectionModel().getSelectedItem();
+                    _currentSubname = _fullName.getSubNames().get(_fullName.getAudioFiles().indexOf(_fileListView.getSelectionModel().getSelectedItem()));
                     _playPrompt.setText("Play File for " + _currentSubname);
                     _ratePrompt.setText("Rate File for " + _currentSubname);
                 }
             }
         });
-        // The subnames are displayed with their rating
-        _subnameListView.setCellFactory(param -> new ListCell<Name>() {
+        // The files are displayed as their subnames with their rating
+        _fileListView.setCellFactory(param -> new ListCell<File>() {
             @Override
-            protected void updateItem(Name subname, boolean empty) {
-                super.updateItem(subname, empty);
-                if (empty || subname == null || subname.toString() == null) {
+            protected void updateItem(File file, boolean empty) {
+                super.updateItem(file, empty);
+                if (empty || file == null || file.toString() == null) {
                     setText(null);
                 } else {
-                    // the valid audio file is the file at the index matching this names' index in the fullname
-                    File audioFile = _fullName.getAudioFiles().get(_subnameListView.getItems().indexOf(subname));
-                    if (subname.getRating(audioFile) == 2) {
+                    // getting the respective subname for this file in the fullname
+                    Name subname = _fullName.getSubNames().get(_fullName.getAudioFiles().indexOf(file));
+                    if (subname.getRating(file) == 2) {
                         setText("✓ " + subname.toString());
-                    } else if (subname.getRating(audioFile) == 1) {
+                    } else if (subname.getRating(file) == 1) {
                         setText("✕ " + subname.toString());
                     } else {
                         setText("(unrated) " + subname.toString());
@@ -187,7 +185,7 @@ public class PlayScreenController {
         _attemptIndicator.setProgress(0);
         _nameNumber.setText("Name " + (_index + 1) +" of " + _playlist.getFullNames().size() + " from " + _playlist);
         _currentName.setText(_fullName.toString());
-        _subnameListView.setItems(FXCollections.observableArrayList(_fullName.getSubNames()));
+        _fileListView.setItems(FXCollections.observableArrayList(_fullName.getAudioFiles()));
         _attemptsListView.setItems(FXCollections.observableArrayList(_fullName.getAttempts()));
     }
 
@@ -427,17 +425,17 @@ public class PlayScreenController {
     @FXML
     private void rateGood() {
         if (_currentSubname != null) {
-            _currentSubname.updateRatingOfFile(_fullName.getAudioFiles().get(_subnameListView.getSelectionModel().getSelectedIndex()), 2);
+            _currentSubname.updateRatingOfFile(_fileListView.getSelectionModel().getSelectedItem(), 2);
         }
-        _subnameListView.refresh();
+        _fileListView.refresh();
     }
 
     @FXML
     private void rateBad() {
         if (_currentSubname != null) {
-            _currentSubname.updateRatingOfFile(_fullName.getAudioFiles().get(_subnameListView.getSelectionModel().getSelectedIndex()), 1);
+            _currentSubname.updateRatingOfFile(_fileListView.getSelectionModel().getSelectedItem(), 1);
         }
-        _subnameListView.refresh();
+        _fileListView.refresh();
     }
 
     @FXML

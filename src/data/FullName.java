@@ -69,7 +69,6 @@ public class FullName implements Comparable<Object>{
         // After the recording is completed, the file is added to this Name's attempts
 
         _attempts.add(new File("userdata/attempts/" + attemptName + ".wav"));
-        System.out.println("done");
     }
 
     public void deleteAttempt(File attempt) {

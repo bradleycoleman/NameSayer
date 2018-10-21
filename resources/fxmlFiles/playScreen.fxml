@@ -22,7 +22,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<GridPane prefHeight="451.0" prefWidth="776.0" stylesheets="@NameSayerStyle.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.PlayScreenController">
+<GridPane prefHeight="451.0" prefWidth="776.0" stylesheets="@NameSayerStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.PlayScreenController">
   <columnConstraints>
     <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" percentWidth="100.0" prefWidth="300.0" />
   </columnConstraints>
@@ -249,7 +249,7 @@
                      <children>
                         <TitledPane fx:id="_subnamePane" collapsible="false" text="subnames" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                            <content>
-                              <ListView fx:id="_subnameListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="9999.0" prefWidth="9999.0" />
+                              <ListView fx:id="_fileListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="9999.0" prefWidth="9999.0" />
                            </content>
                            <font>
                               <Font size="16.0" />
