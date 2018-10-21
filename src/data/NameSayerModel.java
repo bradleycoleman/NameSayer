@@ -2,6 +2,7 @@ package data;
 
 import javafx.util.StringConverter;
 
+import javax.swing.text.html.ListView;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -112,6 +113,23 @@ public class NameSayerModel {
      */
     public void setPlaylist(Playlist playlist) {
         _playlist = playlist;
+    }
+
+    public void deletePlaylist(Playlist playlist) {
+        _playlists.remove(playlist);
+        List<File> allAttempts = new ArrayList<>();
+        for (Playlist p: _playlists) {
+            for (FullName f: p.getFullNames()) {
+                allAttempts.addAll(f.getAttempts());
+            }
+        }
+        for (FullName fullName: playlist.getFullNames()) {
+            for (File attempt: fullName.getAttempts()) {
+                if (!allAttempts.contains(attempt)) {
+                    FileCommands.deleteFile(attempt);
+                }
+            }
+        }
     }
 
     /**

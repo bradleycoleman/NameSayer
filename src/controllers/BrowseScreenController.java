@@ -130,12 +130,12 @@ public class BrowseScreenController {
     @FXML
     private void delete() {
         // User is asked to confirm delete before file is deleted
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete: " + _currentPlaylist +"?");
-        alert.setHeaderText("Delete Playlist");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Note: This will delete all attempt audio files" +
+                " except\nthose for names included in other playlists");
+        alert.setHeaderText("Delete " + _currentPlaylist + " and Attempts?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK){
-            FileCommands.deleteFile(_currentPlaylist.getFile());
-            _namesModel.getPlaylists().remove(_currentPlaylist);
+            _namesModel.deletePlaylist(_currentPlaylist);
             update();
         }
     }

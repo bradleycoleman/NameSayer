@@ -78,6 +78,7 @@ public class FileCommands {
         _process.destroy();
     }
 
+
     /**
      * This method will delete the file, if it exists
      * @param file the file to be deleted
