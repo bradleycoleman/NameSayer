@@ -129,6 +129,7 @@ public class BrowseScreenController {
 
     @FXML
     private void delete() {
+        // User is asked to confirm delete before file is deleted
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete: " + _currentPlaylist +"?");
         alert.setHeaderText("Delete Playlist");
         Optional<ButtonType> result = alert.showAndWait();

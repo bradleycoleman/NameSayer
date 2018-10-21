@@ -78,7 +78,7 @@ public class PlayScreenController {
                 }
             }
         });
-
+        // upon selecting a subname, the user is prompted to rate or play it
         _subnameListView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<Name>() {
             @Override
             public void onChanged(Change<? extends Name> c) {
@@ -89,7 +89,26 @@ public class PlayScreenController {
                 }
             }
         });
-
+        // The subnames are displayed with their rating
+        _subnameListView.setCellFactory(param -> new ListCell<Name>() {
+            @Override
+            protected void updateItem(Name subname, boolean empty) {
+                super.updateItem(subname, empty);
+                if (empty || subname == null || subname.toString() == null) {
+                    setText(null);
+                } else {
+                    // the valid audio file is the file at the index matching this names' index in the fullname
+                    File audioFile = _fullName.getAudioFiles().get(_subnameListView.getItems().indexOf(subname));
+                    if (subname.getRating(audioFile) == 2) {
+                        setText("✓ " + subname.toString());
+                    } else if (subname.getRating(audioFile) == 1) {
+                        setText("✕ " + subname.toString());
+                    } else {
+                        setText("(unrated) " + subname.toString());
+                    }
+                }
+            }
+        });
         _attemptsListView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<File>() {
             @Override
             public void onChanged(Change<? extends File> c) {
@@ -402,6 +421,30 @@ public class PlayScreenController {
                 _fullName.deleteAttempt(_selectedAttempt);
                 _attemptsListView.getItems().remove(_selectedAttempt);
             }
+        }
+    }
+
+    @FXML
+    private void rateGood() {
+        if (_currentSubname != null) {
+            _currentSubname.updateRatingOfFile(_fullName.getAudioFiles().get(_subnameListView.getSelectionModel().getSelectedIndex()), 2);
+        }
+        _subnameListView.refresh();
+    }
+
+    @FXML
+    private void rateBad() {
+        if (_currentSubname != null) {
+            _currentSubname.updateRatingOfFile(_fullName.getAudioFiles().get(_subnameListView.getSelectionModel().getSelectedIndex()), 1);
+        }
+        _subnameListView.refresh();
+    }
+
+    @FXML
+    private void playFile() {
+        // playing the audio file at the corresponding index for the currently selected subname
+        if (_currentSubname != null) {
+            au.playFile(_fullName.getAudioFiles().get(_fullName.getSubNames().indexOf(_currentSubname)));
         }
     }
 

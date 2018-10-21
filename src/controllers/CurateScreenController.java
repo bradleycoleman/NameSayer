@@ -204,7 +204,7 @@ public class CurateScreenController {
     }
 
     /**
-     * updates rating for name, then refreshes choices by removing and replacing.
+     * updates rating for name, then refreshes choices by removing and replacing from the choicebox.
      */
     private void updateRatingCurrentFile(int rating) {
         File selected = (File)_fileChooser.getValue();

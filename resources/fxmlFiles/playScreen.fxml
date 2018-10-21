@@ -22,7 +22,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<GridPane prefHeight="451.0" prefWidth="776.0" stylesheets="@NameSayerStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.PlayScreenController">
+<GridPane prefHeight="451.0" prefWidth="776.0" stylesheets="@NameSayerStyle.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.PlayScreenController">
   <columnConstraints>
     <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" percentWidth="100.0" prefWidth="300.0" />
   </columnConstraints>
@@ -266,7 +266,7 @@
                                        <font>
                                           <Font size="16.0" />
                                        </font></Label>
-                                    <Button mnemonicParsing="false">
+                                    <Button mnemonicParsing="false" onAction="#playFile">
                                        <graphic>
                                           <Polyline fill="CHARTREUSE" rotate="-90.0" strokeType="INSIDE">
                                              <points>
@@ -293,7 +293,7 @@
                                        <font>
                                           <Font size="16.0" />
                                        </font></Label>
-                                    <Button mnemonicParsing="false" prefHeight="29.0" prefWidth="29.0" text="✓">
+                                    <Button mnemonicParsing="false" onAction="#rateGood" prefHeight="29.0" prefWidth="29.0" text="✓">
                                        <font>
                                           <Font size="27.0" />
                                        </font>
@@ -304,7 +304,7 @@
                                           <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                                        </FlowPane.margin>
                                     </Button>
-                                    <Button mnemonicParsing="false" prefHeight="29.0" prefWidth="27.0" text="✕">
+                                    <Button mnemonicParsing="false" onAction="#rateBad" prefHeight="29.0" prefWidth="27.0" text="✕">
                                        <font>
                                           <Font size="27.0" />
                                        </font>
