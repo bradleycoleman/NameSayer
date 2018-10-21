@@ -14,6 +14,7 @@ import javafx.util.StringConverter;
 import main.Main;
 
 import java.io.File;
+import java.io.IOException;
 
 
 public class NameDatabaseScreenController {
@@ -26,6 +27,7 @@ public class NameDatabaseScreenController {
     private Main _main;
     private NameSayerModel _namesModel;
     private Name _currentName;
+    private AudioUtils au = new AudioUtils();
 
     public void initializeData(NameSayerModel namesModel, Main main) {
         _namesModel = namesModel;
@@ -81,7 +83,7 @@ public class NameDatabaseScreenController {
     private void updateRatingCurrentFile(int rating) {
         File selected = (File)_fileChooser.getValue();
         // updating the name object's rating
-        _currentName.updateRatingOfFile((File) _fileChooser.getValue(),rating);
+        _currentName.updateRatingOfFile(_fileChooser.getValue(),rating);
         // writing it to the file
         _namesModel.writeGoodBadNames();
         // resetting filechooser
@@ -92,11 +94,17 @@ public class NameDatabaseScreenController {
 
     @FXML
     private void play() {
-        AudioUtils au = new AudioUtils();
         if(_currentName == null){
             return;
         }
-        au.playFile((File)_fileChooser.getValue());
+        if (au.getClip() != null) {
+            try {
+                au.getClip().close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        au.playFile(_fileChooser.getValue());
     }
 
     @FXML

@@ -31,23 +31,21 @@ public class PlayScreenController {
     @FXML private Label _timer;
     @FXML private Button _play, _playAttempt, _playPastAttempt;
     @FXML private ProgressBar _databaseIndicator, _attemptIndicator;
-    private ProgressBar _progressIndicator;
     @FXML private Button _previous;
     @FXML private Button _next;
     @FXML private TextField _loopNo;
     @FXML private Button _playLoop;
-    @FXML private Button _rateGood, _rateBad;
-    @FXML private Label _ratingPrompt;
     @FXML private TitledPane _subnamePane, _attemptsPane;
     @FXML private ListView<File> _fileListView;
     @FXML private ListView<File> _attemptsListView;
 
     private Playlist _playlist;
+    private ProgressBar _progressIndicator;
     private int _index;
     private NameSayerModel _nameSayerModel;
     private Main _main;
     private FullName _fullName;
-    private File _recentAttempt;
+
     private Name _currentSubname;
     private enum State {IDLE, PLAYING, RECORDING}
     private Timer _timeWorker;
@@ -111,7 +109,6 @@ public class PlayScreenController {
             @Override
             public void onChanged(Change<? extends File> c) {
                 if (c.next()) {
-                    System.out.println("hi");
                     if (_attemptsListView.getItems().size() > 0) {
                         _playPastAttempt.setDisable(false);
                         _delete.setDisable(false);
@@ -170,10 +167,9 @@ public class PlayScreenController {
      */
     private void setIndex(int index) {
         _index = index;
-        _recentAttempt = null;
         _fullName = _playlist.getFullNames().get(index);
         _subnamePane.setText("Sub-names of " + _fullName.toString());
-        _attemptsPane.setText("Past Attempt of " + _fullName.toString());
+        _attemptsPane.setText("Past Attempts of " + _fullName.toString());
         setState(State.IDLE);
         _timer.setText("0s");
         _databaseIndicator.setProgress(0);
@@ -182,6 +178,9 @@ public class PlayScreenController {
         _currentName.setText(_fullName.toString());
         _fileListView.getItems().setAll(_fullName.getAudioFiles());
         _fileListView.getSelectionModel().selectFirst();
+        // these will be enabled if the setAll call adds anything
+        _delete.setDisable(true);
+        _playPastAttempt.setDisable(true);
         _attemptsListView.getItems().setAll(_fullName.getAttempts());
     }
 
@@ -215,7 +214,7 @@ public class PlayScreenController {
             _record.setVisible(true);
             _stop.setVisible(false);
             _stop.setDisable(true);
-            if (_recentAttempt == null) {
+            if (_fullName.getAttempts().size() == 0) {
                 // if no attempt has been made, then the user cannot move ahead
                 _next.setDisable(true);
                 _playAttempt.setDisable(true);
@@ -270,10 +269,6 @@ public class PlayScreenController {
      */
     @FXML
     private void recordAttempt() {
-        // If an attempt has been made, add it to the historic attempts so user can access it
-        if (_recentAttempt != null) {
-            _attemptsListView.getItems().add(_recentAttempt);
-        }
         Task<Void> recordTask = new Task<Void>() {
             @Override
             protected Void call() {
@@ -282,7 +277,8 @@ public class PlayScreenController {
             }
 
             protected void done() {
-                _recentAttempt = _fullName.getAttempts().get(_fullName.getAttempts().size()-1);
+                // adding the most recent attempt to the attempts list
+                _attemptsListView.getItems().add(_fullName.getAttempts().get(_fullName.getAttempts().size() -1));
                 _playlist.setCompletion(_index + 1);
                 Platform.runLater(() -> {
                     setState(PlayScreenController.State.IDLE);
@@ -315,14 +311,15 @@ public class PlayScreenController {
 
     @FXML
     private int playAttempt() {
-        if(_recentAttempt == null){
+        if(_fullName.getAttempts().size() == 0){
             return 0;
         }
         // The progress worker will reference the attempt progress bar
         _progressIndicator = _attemptIndicator;
         // playing the most recent attempt and scheduling progress bar
-        au.playFile(_recentAttempt);
-        int clipLength = au.getClipLength(_recentAttempt);
+        File recentAttempt = _fullName.getAttempts().get(_fullName.getAttempts().size()-1);
+        au.playFile(recentAttempt);
+        int clipLength = au.getClipLength(recentAttempt);
         _timeWorker = new Timer();
         setState(State.PLAYING);
         _timeWorker.schedule(new ProgressBarTask(),clipLength/20000, clipLength/20000);

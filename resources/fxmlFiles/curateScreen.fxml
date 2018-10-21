@@ -16,8 +16,8 @@
 
 <GridPane prefHeight="450.0" prefWidth="800.0" stylesheets="@NameSayerStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CurateScreenController">
       <columnConstraints>
-          <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="258.0" />
-          <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="236.0" />
+          <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="300.0" />
+          <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="195.0" />
           <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="305.0" />
       </columnConstraints>
       <rowConstraints>
@@ -39,7 +39,7 @@
          </GridPane.margin>
           </TitledPane>
             <Button fx:id="_shuffle" mnemonicParsing="false" onAction="#shuffle" text="Shuffle!" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-      <Label fx:id="_name" prefHeight="26.0" prefWidth="1013.0" text="Playlist Name">
+      <Label fx:id="_name" prefHeight="26.0" prefWidth="1013.0" text="Randomized Playlist">
          <font>
             <Font name="Berlin Sans FB" size="22.0" />
          </font>

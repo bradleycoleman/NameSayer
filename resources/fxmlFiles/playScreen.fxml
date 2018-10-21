@@ -126,7 +126,7 @@
                         </HBox>
                         <HBox fx:id="_attemptOption" alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="3">
                            <children>
-                              <Label text="Play Attempt:">
+                              <Label text="Play Last Attempt:">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
