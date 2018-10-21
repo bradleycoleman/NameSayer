@@ -248,7 +248,29 @@ public class CurateScreenController {
         Optional<String> result = newName.showAndWait();
 
         result.ifPresent(name -> {
-            _playlist.rename(name);
+
+            // checking if the name is unique
+            for (Playlist playlist : _nameSayerModel.getPlaylists()) {
+                if (playlist.toString().equals(name)) {
+                    Alert duplicateName = new Alert(Alert.AlertType.ERROR, "This name is already in use by " +
+                            "another playlist", ButtonType.OK);
+                    duplicateName.setHeaderText("Invalid Playlist Name");
+                    duplicateName.setTitle("Could not rename Playlist");
+                    duplicateName.showAndWait();
+                    return;
+                }
+            }
+            // checking if name is of the correct length and uses only the allowed characters
+            if (name.matches("[A-Za-z0-9 ,-]{1,15}")) {
+                // if it is ok, then rename the playlist
+                _playlist.rename(name);
+            } else {
+                Alert invalidChar = new Alert(Alert.AlertType.ERROR, "Names must be between 1 and 15 \nword " +
+                        "characters long");
+                invalidChar.setHeaderText("Invalid Playlist Name");
+                invalidChar.setTitle("Could not rename Playlist");
+                invalidChar.showAndWait();
+            }
         });
         refreshName();
     }
