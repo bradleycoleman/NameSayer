@@ -109,14 +109,18 @@ public class NameSayerModel {
 
     /**
      * Set the playlist to be referenced by the play screen and edit screen.
-     * @param playlist
      */
     public void setPlaylist(Playlist playlist) {
         _playlist = playlist;
     }
 
+    /**
+     * Deletes a playlist and the attempts associated with it, unless the attempt is also part of another playlist.
+     * This way if an attempt is no longer in use it will be deleted
+     */
     public void deletePlaylist(Playlist playlist) {
         _playlists.remove(playlist);
+        FileCommands.deleteFile(playlist.getFile());
         List<File> allAttempts = new ArrayList<>();
         for (Playlist p: _playlists) {
             for (FullName f: p.getFullNames()) {
