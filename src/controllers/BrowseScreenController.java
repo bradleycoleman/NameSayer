@@ -17,6 +17,7 @@ import javafx.scene.layout.GridPane;
 import main.Main;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 public class BrowseScreenController {
     @FXML private ListView<Playlist> _playlists;
@@ -100,7 +101,29 @@ public class BrowseScreenController {
         Optional<String> result = newName.showAndWait();
 
         result.ifPresent(name -> {
-            _main.setSceneToCurateNew(name);
+            // checking if the name is unique
+            for (Playlist playlist : _namesModel.getPlaylists()) {
+                if (playlist.toString().equals(name)) {
+                    Alert duplicateName = new Alert(Alert.AlertType.ERROR, "This name is already in use by " +
+                            "another playlist", ButtonType.OK);
+                    duplicateName.setHeaderText("Invalid Playlist Name");
+                    duplicateName.setTitle("Could not create Playlist");
+                    duplicateName.showAndWait();
+                    return;
+                }
+            }
+            // checking if name is of the correct length and uses only the allowed characters
+            if (name.matches("[A-Za-z0-9 ,-]{1,15}")) {
+                // if it is ok, set the scene to the curator
+                _main.setSceneToCurateNew(name);
+            } else {
+                Alert invalidChar = new Alert(Alert.AlertType.ERROR, "Names must be between 1 and 15 \nword " +
+                        "characters long");
+                invalidChar.setHeaderText("Invalid Playlist Name");
+                invalidChar.setTitle("Could not create Playlist");
+                invalidChar.showAndWait();
+            }
+
         });
     }
 
