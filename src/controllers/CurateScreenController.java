@@ -8,6 +8,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 import main.Main;
@@ -109,8 +110,7 @@ public class CurateScreenController {
         _nameOptions.setVisible(false);
         _playlist = playlist;
         refreshName();
-        // setting the playlistview to show the full names from the playlist
-        _playlistView.getItems().setAll(_playlist.getFullNames());
+        _playlistView.getItems().setAll(new ArrayList<>(playlist.getFullNames()));
     }
 
     /**
@@ -156,9 +156,9 @@ public class CurateScreenController {
         // If any of the names were left unfound, then alert the user before asking if they still want to add the name
         if (!fullName.toString().replaceAll("[ -]","").equals(fullNameText.replaceAll("[ -]",""))) {
             StringBuilder sb = new StringBuilder();
-            sb.append("The following names from ");
+            sb.append("The following names from \"");
             sb.append(fullNameText);
-            sb.append(" are not in the database:\n");
+            sb.append("\" are not in the database:\n");
             // removing all found subnames from the original fullnametext so the user knows what wasn't added
             for (Name subName: fullName.getSubNames()) {
                 fullNameText = fullNameText.replaceAll("(?i)(" + subName.toString() + "[ -]*)","");
@@ -170,6 +170,8 @@ public class CurateScreenController {
             sb.append("The full name will be added as: ");
             sb.append(fullName);
             Alert noNameAlert = new Alert(Alert.AlertType.CONFIRMATION, sb.toString(), ButtonType.YES, ButtonType.NO);
+            // Allows the dialog pane to be as long as the text requires it to be
+            noNameAlert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             noNameAlert.setTitle("Name Incomplete");
             noNameAlert.setHeaderText("Do you still want to add this incomplete name?");
             Optional<ButtonType> result = noNameAlert.showAndWait();
@@ -370,7 +372,6 @@ public class CurateScreenController {
     private void exit() {
         _playlist.setNames(_playlistView.getItems());
         _playlist.updateFile();
-
         _nameSayerModel.writeGoodBadNames();
         _main.setSceneToStart();
         if (_au != null && _au.getClip() != null) {
