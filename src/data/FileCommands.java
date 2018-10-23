@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This class includes various static methods relating to file manipulation. Many of the methods use bash processes
+ * This class includes various static methods relating to file manipulation. Many of the methods use bash processes.
  */
 public class FileCommands {
     private static Process _process;
