@@ -9,6 +9,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -62,6 +64,16 @@ public class Main extends Application {
 
         // Inject the data model into PlayScreen and StartScreen
         _nameSayerModel = new NameSayerModel();
+        if (_nameSayerModel.getDatabase().isEmpty()) {
+            Alert noNamesAleart = new Alert(Alert.AlertType.ERROR, "Application failed to start due to empty\n" +
+                    "names database. Please ensure the \"names\"\ndirectory is in the directory this application was\nlaunched " +
+                    "from and is populated with .wav files.\nApplication will now close.",
+                    ButtonType.OK);
+            noNamesAleart.setHeaderText("Could not start application");
+            noNamesAleart.showAndWait();
+            window.close();
+            return;
+        }
 
         _startScreenController = startPaneLoader.getController();
         _curateScreenController = curatePaneLoader.getController();

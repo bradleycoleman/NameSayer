@@ -77,37 +77,6 @@ public class Playlist {
         _file = new File("userdata/playlists/" + _name.replaceAll(" ","_") + ".txt");
     }
 
-    public void setCompletion(int completion) {
-        _completion = completion;
-        updateFile();
-    }
-
-    public void setNames(List<FullName> names) {
-        _fullNames = names;
-    }
-
-    @Override
-    public String toString() {
-        return _name;
-    }
-    public int getCompletion() {
-        return _completion;
-    }
-
-    public void rename(String newName) {
-        _name = newName;
-    }
-
-    public List<File> getAudioFiles(FullName fullName) {
-        return fullName.getAudioFiles();
-    }
-    public File getFile() {
-        return _file;
-    }
-    public List<FullName> getFullNames() {
-        return _fullNames;
-    }
-
     /**
      * Saves the .txt file with all the information about this playlist to be used later.
      */
@@ -132,5 +101,34 @@ public class Playlist {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setCompletion(int completion) {
+        _completion = completion;
+        updateFile();
+    }
+
+    public void setNames(List<FullName> names) {
+        _fullNames = names;
+    }
+
+    public String toString() {
+        return _name;
+    }
+
+    public int getCompletion() {
+        return _completion;
+    }
+
+    public void rename(String newName) {
+        _name = newName;
+    }
+
+    public File getFile() {
+        return _file;
+    }
+
+    public List<FullName> getFullNames() {
+        return _fullNames;
     }
 }

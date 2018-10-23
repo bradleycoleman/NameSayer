@@ -6,14 +6,13 @@ import data.NameSayerModel;
 import data.Playlist;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import main.Main;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 
@@ -28,6 +27,7 @@ public class StartScreenController {
     public void initializeData(NameSayerModel nameSayerModel, Main main) {
         _main = main;
         _nameSayerModel = nameSayerModel;
+
 
         Random rnd = new Random();
 

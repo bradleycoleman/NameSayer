@@ -27,7 +27,6 @@ public class AudioLevelListener {
 	 * Most of this code is taken from the Oracle Capturing Audio tutorial.
 	 * The tutorial can be found at:
 	 * 		https://docs.oracle.com/javase/tutorial/sound/capturing.html
-	 * @param main
 	 */
 	public AudioLevelListener(Main main) {
 		this.main = main;

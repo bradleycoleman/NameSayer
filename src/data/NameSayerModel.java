@@ -1,8 +1,5 @@
 package data;
 
-import javafx.util.StringConverter;
-
-import javax.swing.text.html.ListView;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,12 +19,11 @@ public class NameSayerModel {
     private List<Playlist> _filteredPlaylistList = new ArrayList<Playlist>();
     private Playlist _playlist;
     private List<Playlist> _playlists = new ArrayList<>();
+    private final File GOODNAMES = new File("userdata/goodNames.txt");
+    private final File BADNAMES = new File("userdata/badNames.txt");
 
 
     public NameSayerModel(){
-
-        File goodNames = new File("userdata/goodNames.txt");
-        File badNames = new File("userdata/badNames.txt");
         // making  the directories for userdata if they don't exist
         File playlistDir = new File("userdata/playlists");
         playlistDir.mkdirs();
@@ -67,12 +63,12 @@ public class NameSayerModel {
                             }
                         }
                     }
-                    _database.add(new Name(name, database, goodNames, badNames));
+                    _database.add(new Name(name, database, GOODNAMES, BADNAMES));
                 }
             } else {
                 // This will not have any other files with same name, as the name is the file name
                 name = file1.getName();
-                _database.add(new Name(name, database, goodNames, badNames));
+                _database.add(new Name(name, database, GOODNAMES, BADNAMES));
             }
 
         }
@@ -193,12 +189,11 @@ public class NameSayerModel {
         BufferedWriter goodWriter;
         BufferedWriter badWriter;
         try{
-            FileCommands.deleteFile(new File("userdata/goodNames.txt"));
-            FileCommands.deleteFile(new File("userdata/badNames.txt"));
-            File goodFile = new File("userdata/goodNames.txt");
-            File badFile = new File("userdata/badNames.txt");
-            goodWriter = new BufferedWriter(new FileWriter(goodFile, true));
-            badWriter = new BufferedWriter(new FileWriter(badFile, true));
+            // deleting the old files and making the new ones
+            FileCommands.deleteFile(GOODNAMES);
+            FileCommands.deleteFile(BADNAMES);
+            goodWriter = new BufferedWriter(new FileWriter(GOODNAMES, true));
+            badWriter = new BufferedWriter(new FileWriter(BADNAMES, true));
             for(Name n: _database){
                 for(File f: n.getFiles()){
                     //writing all good files to text file

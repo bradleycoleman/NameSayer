@@ -21,6 +21,13 @@ public class FullName implements Comparable<Object>{
     private List<File> _audioFiles;
     private String _name;
 
+    /**
+     * Constructor to be used if the audio files for each name are provided
+     * @param name The String representation of this full name
+     * @param subNames The Name objects that comprise this name, the order of the list is the order they will be said
+     * @param audioFiles The audio files for the full name. The index of each of these matches the index of their
+     *                   respective names in the subNames List
+     */
     public FullName(String name, List<Name> subNames, List<File> audioFiles) {
         _subNames = subNames;
         _name = name;
@@ -29,6 +36,9 @@ public class FullName implements Comparable<Object>{
         findAttempts();
     }
 
+    /**
+     * Constructor to be used if the default audio files for each name are to be used
+     */
     public FullName(String name, List<Name> subNames) {
         _name = name;
         _subNames = subNames;
@@ -51,7 +61,7 @@ public class FullName implements Comparable<Object>{
         List<File> attempts = Arrays.asList(attemptsLoc.listFiles());
         for (File attempt: attempts) {
             // tries to find files that match the patter of the name seperated by underscores, ending in an underscore
-            // and the int start of the date
+            // and the int start of the date (number)
             Pattern p = Pattern.compile(_name.replaceAll("[ -]", "_") + "_\\d");
             if (p.matcher(attempt.getName()).find()) {
                 _attempts.add(attempt);

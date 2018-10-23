@@ -4,23 +4,18 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 /**
  * Represents a name in the database.
- * Holds references to all original recordings and user attempts for this name,
- * as well as ratings for each original recording.
+ * Holds references to all original recordings for this name, as well as ratings for each original recording.
  */
 public class Name implements Comparable<Object> {
     private String _name;
     private HashMap<File, Integer> _filesToRatings = new HashMap<>();
     private List<File> _files;
-    private File _attempt;
     private int _rating;
 
     public Name(String name, List<File> database, File goodFiles, File badFiles) {
@@ -42,6 +37,13 @@ public class Name implements Comparable<Object> {
         }
     }
 
+    /**
+     * This method will read the provided text file for occurances of the files in this name. If it reads a line that
+     * matches the path of a file in _files, it will update the rating of that file in the hashmap depending on the
+     * boolen parameter
+     * @param textFile The text file to read from
+     * @param isGood Whether the text file indicates good or bad names
+     */
     private void setRatingGoodBad(File textFile, Boolean isGood){
         BufferedReader reader;
         try{
@@ -102,10 +104,6 @@ public class Name implements Comparable<Object> {
      */
     public void updateRatingOfFile(File file, int rating){
         _filesToRatings.replace(file, rating);
-        _rating = rating;
-    }
-
-    public void setRating(int rating){
         _rating = rating;
     }
 }

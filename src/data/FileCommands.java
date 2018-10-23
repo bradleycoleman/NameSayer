@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.regex.Matcher;
@@ -86,10 +85,8 @@ public class FileCommands {
     public static void deleteFile(File file) {
         try {
             Files.deleteIfExists(Paths.get(file.getPath()));
-        } catch (DirectoryNotEmptyException x) {
-            System.err.format("%s not empty%n", Paths.get(file.getPath()));
-        } catch (IOException x) {
-            System.err.println(x);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
