@@ -27,7 +27,6 @@ public class CurateScreenController {
 
 
     private Main _main;
-    private ObservableList<FullName> _fullNameList;
     private FullName _currentFullName;
     private Name _currentSubname;
     private Playlist _playlist;
@@ -42,12 +41,21 @@ public class CurateScreenController {
     public void initializeData(NameSayerModel nameSayerModel, Main main){
         _main = main;
         _nameSayerModel = nameSayerModel;
-        // selected a name from the playlist will make the name options appear
+        // selected a name from the playlist will make the name options appear, deleting the name will make the options
+        // change to another name, or disapper
         _playlistView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<FullName>() {
             @Override
             public void onChanged(Change<? extends FullName> c) {
                 if (c.next() && c.wasAdded()) {
                     setName(_playlistView.getSelectionModel().getSelectedItem());
+                } else if (c.wasRemoved()) {
+                    if (_playlistView.getItems().isEmpty()) {
+                        // this method removes the options if the input is null
+                        setName(null);
+                    } else {
+                        // Selected an arbitrary other name
+                        _playlistView.getSelectionModel().selectFirst();
+                    }
                 }
             }
         });
@@ -92,29 +100,44 @@ public class CurateScreenController {
         });
     }
 
+    /**
+     * Method called to initialize this screen with all the details of the entered playlist so that it can be edited
+     * @param playlist The Playlist to be edited
+     */
     public void editPlaylist(Playlist playlist) {
         // Options are initially invisible as no name is selected
         _nameOptions.setVisible(false);
         _playlist = playlist;
         refreshName();
-        _fullNameList = FXCollections.observableArrayList(_playlist.getFullNames());
-        _playlistView.setItems(_fullNameList);
+        // setting the playlistview to show the full names from the playlist
+        _playlistView.getItems().setAll(_playlist.getFullNames());
     }
 
+    /**
+     * Method called to initialize this screen with a new playlist
+     * @param name the name this playlist is to be called
+     */
     public void newPlaylist(String name) {
         // Options are initially invisible as no name is selected
         _nameOptions.setVisible(false);
         _playlist = new Playlist(name);
+        _playlistView.getItems().clear();
         refreshName();
-        _fullNameList = FXCollections.observableArrayList();
-        _playlistView.setItems(_fullNameList);
     }
 
+    /**
+     * Controls whether the Name Options tab is shown to the user, and set what details to be shown
+     * @param name The FullName to be displayed
+     */
     private void setName(FullName name) {
         _currentFullName = name;
-        _nameOptions.setVisible(true);
-        _subnames.setItems(FXCollections.observableArrayList(name.getSubNames()));
-        _subnames.getSelectionModel().selectFirst();
+        if (name != null) {
+            _nameOptions.setVisible(true);
+            _subnames.setItems(FXCollections.observableArrayList(name.getSubNames()));
+            _subnames.getSelectionModel().selectFirst();
+        } else {
+            _nameOptions.setVisible(false);
+        }
     }
 
     @FXML
@@ -154,7 +177,7 @@ public class CurateScreenController {
                 return;
             }
         }
-        _fullNameList.add(fullName);
+        _playlistView.getItems().add(fullName);
     }
 
     /**
@@ -234,7 +257,7 @@ public class CurateScreenController {
 
     @FXML
     private void remove() {
-        _fullNameList.remove(_currentFullName);
+        _playlistView.getItems().remove(_currentFullName);
     }
 
     @FXML
@@ -275,6 +298,9 @@ public class CurateScreenController {
         refreshName();
     }
 
+    /**
+     * Sets the titled pane, and the label in the top left corner to have the correct name from the playlist object
+     */
     private void refreshName() {
         _playlistBox.setText(_playlist.toString());
         _name.setText(_playlist.toString());
@@ -307,7 +333,7 @@ public class CurateScreenController {
                     }
                     if (newName != null) {
                         namesAdded++;
-                        _fullNameList.add(newName);
+                        _playlistView.getItems().add(newName);
                     }
                 }
             } catch (IOException e) {
@@ -338,7 +364,7 @@ public class CurateScreenController {
 
     @FXML
     private void exit() {
-        _playlist.setNames(_fullNameList);
+        _playlist.setNames(_playlistView.getItems());
         _playlist.updateFile();
 
         _nameSayerModel.writeGoodBadNames();
