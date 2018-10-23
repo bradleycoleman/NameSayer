@@ -156,7 +156,7 @@ public class CurateScreenController {
         // If any of the names were left unfound, then alert the user before asking if they still want to add the name
         if (!fullName.toString().replaceAll("[ -]","").equals(fullNameText.replaceAll("[ -]",""))) {
             StringBuilder sb = new StringBuilder();
-            sb.append("The following names from");
+            sb.append("The following names from ");
             sb.append(fullNameText);
             sb.append(" are not in the database:\n");
             // removing all found subnames from the original fullnametext so the user knows what wasn't added
@@ -205,10 +205,14 @@ public class CurateScreenController {
         }
         // removing unfound names from full name
         for (String unfound : unfoundNames) {
-            nameText = nameText.replace(unfound, "");
+            // for names in the middle, the start, and the end respectively
+            nameText = nameText.replaceAll("[ -]" + unfound + "[ -]", " ");
+            nameText = nameText.replaceAll(unfound + "[ -]*", "");
+            nameText = nameText.replaceAll("[ -]*" + unfound, "");
         }
         // if two or more spaces exist in a row, replace with 1 space
         nameText = nameText.replaceAll("[ -]{2,}"," ");
+
         if (!names.isEmpty()) {
             return new FullName(nameText,names);
         }

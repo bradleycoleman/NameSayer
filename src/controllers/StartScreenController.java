@@ -17,9 +17,7 @@ import java.util.Random;
 
 
 public class StartScreenController {
-    @FXML private Button _browse, _practice;
     @FXML private ListView _defaultNames;
-    @FXML private GridPane _grid;
     private Main _main;
     private NameSayerModel _nameSayerModel;
     private Playlist _randomizedPlaylist;
